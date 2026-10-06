@@ -12,11 +12,12 @@
    2. ✅ 새 Unity 프로젝트를 만들었다: `/Users/kyumin0412/Works/Unity/Projects/project_dust_scrapper`. GitHub 저장소(`odyo0/project_dust_scrapper`)가 이미 연결되어 있다. Unity 버전·패키지는 옛 프로젝트와 같다(`6000.3.25f1`, URP `17.3.0`, Input System `1.20.0`).
    3. ✅ 새 프로젝트(`Projects/project_dust_scrapper`)에 `AGENTS.md`를 만들었다(2026-10-06). Claude Code는 `CLAUDE.md`만 자동으로 읽으므로 `CLAUDE.md`에 `@AGENTS.md` 한 줄을 넣어 불러온다(사용자 선택: 다른 AI 도구를 쓸 수도 있어서). 규칙은 `AGENTS.md`에만 쓴다.
    4. 페이즈 1(조작감)부터 만든다: 이동 → 조준(다리/상체 분리 회전) → 카메라. 아래 "페이즈 기준"의 조작감 메모를 지킨다. 코드 원칙을 지킨다.
+      - 2026-10-06 진행: 2D 렌더러 전환, 입력 설정(`Assets/Input/GameControls.inputactions`), 이동·조준·카메라 스크립트, 시험용 `Assets/Scenes/Game.unity`(임시 네모, 벽 있는 방, Pixel Perfect Camera 잠정 32PPU·640x360)까지 만들었다. 이동 수치(최고 4.5칸/초, 가속 25, 감속 35, 다리 회전 720도/초, 카메라 밀림 1.5칸·멀리 보기 5칸)는 AI가 넣은 임시값이고 사용자가 해 보고 정한다. 같은 날 3D 템플릿 잔재(PC_/Mobile_ RPAsset·Renderer, SampleScene·Profile, TutorialInfo, Readme, InputSystem_Actions)를 지웠다. 사용자가 코드를 전부 확인하고 진행하라고 했다(2026-10-06). 다음: 페이즈 2(사격감).
 4. **사용자 답 대기**:
    - (없음) 옛 프로젝트의 남은 변경은 2026-10-06 사용자 지시로 커밋했다(`5ec9337`).
 5. **보류 중인 기획 빈칸**: 위험한 곳을 고르는 구체적 방식(사용자 고민 중), 강적의 정체, 열쇠 적 표시 방식, 스테이지식 세부, 시전 중 발사 불가(잠정). 한 줄 문장은 사용자가 다시 다듬자고 하기 전에는 건드리지 않는다.
 6. **세션 기억 주의**: Claude의 자동 메모리는 프로젝트 폴더마다 따로 있다. 2026-10-06 옛 폴더의 메모리를 새 폴더(`...project-dust-scrapper/memory/`)로 복사했다. 그래서 이 파일이 인계의 기준이다. 새 프로젝트의 `AGENTS.md`에 "먼저 `docs/planning-memory.md`의 다음 세션 시작점을 읽는다"를 넣었다. 자동 메모리의 사용자 협업 방식(사용자 말만 기록, 질문 1~3개, 장르 관례는 되묻지 않음, 확정/잠정/AI 제안 구분)은 이 파일 "작업 방식"에 이미 있다.
-7. 커밋: `main`에 직접 `feat: ...` 형식(한국어)으로 커밋하는 것이 사용자 방식(GamePlan 저장소 때부터). 푸시는 사용자가 직접 한다.
+7. 커밋: `feat: ...` 형식(한국어). 2026-10-06부터 새 프로젝트 작업은 **`dev` 브랜치**에서 하고, `main`에는 사용자가 직접 merge한다(사용자 결정). 푸시는 사용자가 직접 한다.
 
 ## 새 Unity 프로젝트 시작 메모 (2026-10-06)
 

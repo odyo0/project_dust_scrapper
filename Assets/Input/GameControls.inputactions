@@ -1,0 +1,33 @@
+{
+    "name": "GameControls",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "1217b2e1-fda2-4b4f-b9a8-cb52d710cfc0",
+            "actions": [
+                { "name": "Move", "type": "Value", "id": "3a28041e-1a3a-4b0f-8b51-51fa13700438", "expectedControlType": "Vector2", "processors": "", "interactions": "", "initialStateCheck": true },
+                { "name": "Aim", "type": "PassThrough", "id": "a6a9e863-9086-4984-9f3b-2b42d6291142", "expectedControlType": "Vector2", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "LookAhead", "type": "Button", "id": "1c0134c4-1534-42d5-92c6-cb908f3a2c79", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
+            ],
+            "bindings": [
+                { "name": "WASD", "id": "5b6f6d17-ed08-4efd-9dc5-80dfb4bfaf4e", "path": "2DVector", "interactions": "", "processors": "", "groups": "", "action": "Move", "isComposite": true, "isPartOfComposite": false },
+                { "name": "up", "id": "ea07cfc3-6551-4d78-881d-e3b43d0e55dc", "path": "<Keyboard>/w", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "Move", "isComposite": false, "isPartOfComposite": true },
+                { "name": "down", "id": "ffe7c5cf-6381-4969-90e1-f20feb52165e", "path": "<Keyboard>/s", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "Move", "isComposite": false, "isPartOfComposite": true },
+                { "name": "left", "id": "a888f5cf-b261-4472-a0d4-aaa81b208718", "path": "<Keyboard>/a", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "Move", "isComposite": false, "isPartOfComposite": true },
+                { "name": "right", "id": "f6dbfa1c-f103-4b39-9648-907d1848dc3a", "path": "<Keyboard>/d", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "Move", "isComposite": false, "isPartOfComposite": true },
+                { "name": "", "id": "20c58b5f-eca2-43c8-9ab1-4b9a13594a5c", "path": "<Mouse>/position", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "Aim", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "efa96022-ae90-4c01-8400-ec6b2b3b3c1b", "path": "<Keyboard>/shift", "interactions": "", "processors": "", "groups": "Keyboard&Mouse", "action": "LookAhead", "isComposite": false, "isPartOfComposite": false }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Keyboard&Mouse",
+            "bindingGroup": "Keyboard&Mouse",
+            "devices": [
+                { "devicePath": "<Keyboard>", "isOptional": false, "isOR": false },
+                { "devicePath": "<Mouse>", "isOptional": false, "isOR": false }
+            ]
+        }
+    ]
+}
