@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d3abf5d123649b2960db9e5617e31d, type: 3}
+  m_Name: Pistol
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.GunData
+  displayName: "\uAD8C\uCD1D"
+  prefab: {fileID: 5177620223783422538, guid: 846aca59114d7493f9036ef0490ca148, type: 3}
+  grip: 0
+  damage: 26
+  knockback: 1.6
+  drawTime: 0.2
+  fireMode: 0
+  shotsPerSecond: 7
+  pelletsPerShot: 1
+  projectile: {fileID: 2966782877653483519, guid: af140bdd0b74747c78100d2ab3852500, type: 3}
+  projectileSpeed: 32
+  range: 14
+  magazineSize: 12
+  reloadTime: 1.2
+  baseSpread: 0.8
+  spreadPerShot: 2.5
+  maxSpread: 7
+  spreadRecovery: 25
+  recoilKick: 0.12
