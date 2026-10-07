@@ -123,6 +123,66 @@ namespace DustScrapper.Controls
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""c208de34-54dc-4e18-9ba0-214be9e2ce71"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""a304a884-8f8e-440c-beda-558f771d74d3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Slot1"",
+                    ""type"": ""Button"",
+                    ""id"": ""941bb8f1-ed13-4a24-9fb9-9c4c26dc323b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Slot2"",
+                    ""type"": ""Button"",
+                    ""id"": ""95df094b-5cb0-40fe-b8ac-91989f6bf353"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Slot3"",
+                    ""type"": ""Button"",
+                    ""id"": ""112a4331-233f-4c88-b24e-e7e2aad6b01e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Slot4"",
+                    ""type"": ""Button"",
+                    ""id"": ""ac0ae7c1-2b69-434b-88a4-d1ca2569c0ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -202,6 +262,72 @@ namespace DustScrapper.Controls
                     ""action"": ""LookAhead"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""226589d2-165f-40f2-a9ef-188a607a504c"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8a0afb68-a751-48b5-a6e0-82d97b113948"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""827e1617-e7a7-4ca2-a095-74800916e462"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Slot1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ffbed9a8-078c-4485-828f-613cd037d787"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Slot2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""24ce5538-dc3e-467f-92ea-7c9a2acef519"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Slot3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ceab4af6-0372-45d7-8af0-a53cc79e416a"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Slot4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -230,6 +356,12 @@ namespace DustScrapper.Controls
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
             m_Player_LookAhead = m_Player.FindAction("LookAhead", throwIfNotFound: true);
+            m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+            m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
+            m_Player_Slot1 = m_Player.FindAction("Slot1", throwIfNotFound: true);
+            m_Player_Slot2 = m_Player.FindAction("Slot2", throwIfNotFound: true);
+            m_Player_Slot3 = m_Player.FindAction("Slot3", throwIfNotFound: true);
+            m_Player_Slot4 = m_Player.FindAction("Slot4", throwIfNotFound: true);
         }
 
         ~@GameControls()
@@ -313,6 +445,12 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Aim;
         private readonly InputAction m_Player_LookAhead;
+        private readonly InputAction m_Player_Fire;
+        private readonly InputAction m_Player_Reload;
+        private readonly InputAction m_Player_Slot1;
+        private readonly InputAction m_Player_Slot2;
+        private readonly InputAction m_Player_Slot3;
+        private readonly InputAction m_Player_Slot4;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -336,6 +474,30 @@ namespace DustScrapper.Controls
             /// Provides access to the underlying input action "Player/LookAhead".
             /// </summary>
             public InputAction @LookAhead => m_Wrapper.m_Player_LookAhead;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Fire".
+            /// </summary>
+            public InputAction @Fire => m_Wrapper.m_Player_Fire;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Reload".
+            /// </summary>
+            public InputAction @Reload => m_Wrapper.m_Player_Reload;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Slot1".
+            /// </summary>
+            public InputAction @Slot1 => m_Wrapper.m_Player_Slot1;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Slot2".
+            /// </summary>
+            public InputAction @Slot2 => m_Wrapper.m_Player_Slot2;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Slot3".
+            /// </summary>
+            public InputAction @Slot3 => m_Wrapper.m_Player_Slot3;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Slot4".
+            /// </summary>
+            public InputAction @Slot4 => m_Wrapper.m_Player_Slot4;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -371,6 +533,24 @@ namespace DustScrapper.Controls
                 @LookAhead.started += instance.OnLookAhead;
                 @LookAhead.performed += instance.OnLookAhead;
                 @LookAhead.canceled += instance.OnLookAhead;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
+                @Slot1.started += instance.OnSlot1;
+                @Slot1.performed += instance.OnSlot1;
+                @Slot1.canceled += instance.OnSlot1;
+                @Slot2.started += instance.OnSlot2;
+                @Slot2.performed += instance.OnSlot2;
+                @Slot2.canceled += instance.OnSlot2;
+                @Slot3.started += instance.OnSlot3;
+                @Slot3.performed += instance.OnSlot3;
+                @Slot3.canceled += instance.OnSlot3;
+                @Slot4.started += instance.OnSlot4;
+                @Slot4.performed += instance.OnSlot4;
+                @Slot4.canceled += instance.OnSlot4;
             }
 
             /// <summary>
@@ -391,6 +571,24 @@ namespace DustScrapper.Controls
                 @LookAhead.started -= instance.OnLookAhead;
                 @LookAhead.performed -= instance.OnLookAhead;
                 @LookAhead.canceled -= instance.OnLookAhead;
+                @Fire.started -= instance.OnFire;
+                @Fire.performed -= instance.OnFire;
+                @Fire.canceled -= instance.OnFire;
+                @Reload.started -= instance.OnReload;
+                @Reload.performed -= instance.OnReload;
+                @Reload.canceled -= instance.OnReload;
+                @Slot1.started -= instance.OnSlot1;
+                @Slot1.performed -= instance.OnSlot1;
+                @Slot1.canceled -= instance.OnSlot1;
+                @Slot2.started -= instance.OnSlot2;
+                @Slot2.performed -= instance.OnSlot2;
+                @Slot2.canceled -= instance.OnSlot2;
+                @Slot3.started -= instance.OnSlot3;
+                @Slot3.performed -= instance.OnSlot3;
+                @Slot3.canceled -= instance.OnSlot3;
+                @Slot4.started -= instance.OnSlot4;
+                @Slot4.performed -= instance.OnSlot4;
+                @Slot4.canceled -= instance.OnSlot4;
             }
 
             /// <summary>
@@ -465,6 +663,48 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnLookAhead(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Fire" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnFire(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Reload" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnReload(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Slot1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSlot1(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Slot2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSlot2(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Slot3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSlot3(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Slot4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSlot4(InputAction.CallbackContext context);
         }
     }
 }

@@ -22,6 +22,15 @@ namespace DustScrapper.Player
         /// <summary>멀리 보기 키를 누르고 있는가.</summary>
         public bool LookAheadHeld { get; private set; }
 
+        /// <summary>사용/발사 키를 누르고 있는가. 한 프레임 안에 눌렀다 뗀 짧은 클릭도 누른 것으로 본다.</summary>
+        public bool FireHeld { get; private set; }
+
+        /// <summary>이번 프레임에 재장전 키를 눌렀는가.</summary>
+        public bool ReloadPressed { get; private set; }
+
+        /// <summary>이번 프레임에 누른 무기 슬롯 번호(0부터). 누르지 않았으면 -1.</summary>
+        public int SlotPressed { get; private set; } = -1;
+
         void Awake()
         {
             controls = new GameControls();
@@ -37,6 +46,9 @@ namespace DustScrapper.Player
             controls.Player.Disable();
             Move = Vector2.zero;
             LookAheadHeld = false;
+            FireHeld = false;
+            ReloadPressed = false;
+            SlotPressed = -1;
         }
 
         void OnDestroy()
@@ -50,6 +62,18 @@ namespace DustScrapper.Player
             Move = Vector2.ClampMagnitude(player.Move.ReadValue<Vector2>(), 1f);
             AimScreenPosition = player.Aim.ReadValue<Vector2>();
             LookAheadHeld = player.LookAhead.IsPressed();
+            FireHeld = player.Fire.IsPressed() || player.Fire.WasPressedThisFrame();
+            ReloadPressed = player.Reload.WasPressedThisFrame();
+            SlotPressed = ReadSlotPressed(player);
+        }
+
+        static int ReadSlotPressed(GameControls.PlayerActions player)
+        {
+            if (player.Slot1.WasPressedThisFrame()) return 0;
+            if (player.Slot2.WasPressedThisFrame()) return 1;
+            if (player.Slot3.WasPressedThisFrame()) return 2;
+            if (player.Slot4.WasPressedThisFrame()) return 3;
+            return -1;
         }
     }
 }

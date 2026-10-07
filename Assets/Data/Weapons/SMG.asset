@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d3abf5d123649b2960db9e5617e31d, type: 3}
+  m_Name: SMG
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.GunData
+  displayName: "\uAE30\uAD00\uB2E8\uCD1D"
+  prefab: {fileID: 6997529736874793054, guid: 8530bd915d3f1444ca9f56e36b072c2e, type: 3}
+  grip: 1
+  damage: 12
+  knockback: 0.6
+  drawTime: 0.3
+  fireMode: 1
+  shotsPerSecond: 11
+  pelletsPerShot: 1
+  projectile: {fileID: 2966782877653483519, guid: af140bdd0b74747c78100d2ab3852500, type: 3}
+  projectileSpeed: 28
+  range: 14
+  magazineSize: 30
+  reloadTime: 1.8
+  baseSpread: 2
+  spreadPerShot: 1.1
+  maxSpread: 9
+  spreadRecovery: 20
+  recoilKick: 0.06
