@@ -1,3 +1,4 @@
+using DustScrapper.Noise;
 using UnityEngine;
 
 namespace DustScrapper.Weapons
@@ -21,6 +22,9 @@ namespace DustScrapper.Weapons
 
         /// <summary>꺼내는 중이 끝나 쓸 수 있는 상태인가.</summary>
         public bool IsDrawn => drawTimer <= 0f;
+
+        /// <summary>지금 다른 동작(꺼내기, 재장전, 휘두르기)을 하느라 바쁜가. AI가 공격 중에 멈칫하거나 방향을 고정할 때 읽는다.</summary>
+        public virtual bool IsBusy => !IsDrawn;
 
         /// <summary>WeaponLoadout이 무기를 만든 직후 한 번 부른다.</summary>
         public void Initialize(WeaponData data, WeaponLoadout owner)
@@ -76,6 +80,12 @@ namespace DustScrapper.Weapons
 
         /// <summary>매 프레임 무기 동작. 꺼내는 중에는 불리지 않는다.</summary>
         protected abstract void Tick(bool triggerPressed, bool triggerHeld, float deltaTime);
+
+        /// <summary>무기를 쓸 때 나는 소리를 퍼뜨린다. 크기는 데이터의 NoiseRadius.</summary>
+        protected void EmitUseNoise()
+        {
+            NoiseBus.Emit(new NoiseEvent(Owner.transform.position, Data.NoiseRadius, Owner.gameObject));
+        }
 
         protected virtual void OnInitialize() { }
         protected virtual void OnDrawn() { }

@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Sneak",
+                    "type": "Button",
+                    "id": "c756fd14-f0d7-47c7-8df3-d487b06b8438",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Fire",
                     "type": "Button",
                     "id": "c208de34-54dc-4e18-9ba0-214be9e2ce71",
@@ -162,6 +171,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "LookAhead",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a38d2f6-d26a-4c36-b2c2-cdd2d68b2371",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Sneak",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

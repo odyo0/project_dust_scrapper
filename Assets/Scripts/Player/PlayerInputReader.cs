@@ -22,6 +22,9 @@ namespace DustScrapper.Player
         /// <summary>멀리 보기 키를 누르고 있는가.</summary>
         public bool LookAheadHeld { get; private set; }
 
+        /// <summary>살금살금 키를 누르고 있는가.</summary>
+        public bool SneakHeld { get; private set; }
+
         /// <summary>사용/발사 키를 누르고 있는가. 한 프레임 안에 눌렀다 뗀 짧은 클릭도 누른 것으로 본다.</summary>
         public bool FireHeld { get; private set; }
 
@@ -46,6 +49,7 @@ namespace DustScrapper.Player
             controls.Player.Disable();
             Move = Vector2.zero;
             LookAheadHeld = false;
+            SneakHeld = false;
             FireHeld = false;
             ReloadPressed = false;
             SlotPressed = -1;
@@ -62,6 +66,7 @@ namespace DustScrapper.Player
             Move = Vector2.ClampMagnitude(player.Move.ReadValue<Vector2>(), 1f);
             AimScreenPosition = player.Aim.ReadValue<Vector2>();
             LookAheadHeld = player.LookAhead.IsPressed();
+            SneakHeld = player.Sneak.IsPressed();
             FireHeld = player.Fire.IsPressed() || player.Fire.WasPressedThisFrame();
             ReloadPressed = player.Reload.WasPressedThisFrame();
             SlotPressed = ReadSlotPressed(player);

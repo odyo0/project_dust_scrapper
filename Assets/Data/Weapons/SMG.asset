@@ -18,6 +18,7 @@ MonoBehaviour:
   damage: 12
   knockback: 0.6
   drawTime: 0.3
+  noiseRadius: 16
   fireMode: 1
   shotsPerSecond: 11
   pelletsPerShot: 1

@@ -18,6 +18,7 @@ MonoBehaviour:
   damage: 40
   knockback: 3
   drawTime: 0.15
+  noiseRadius: 2.5
   reach: 1.15
   arcAngle: 110
   windupTime: 0.04

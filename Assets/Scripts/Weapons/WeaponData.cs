@@ -31,11 +31,15 @@ namespace DustScrapper.Weapons
         [Tooltip("꺼낸 뒤 쓸 수 있게 되기까지 걸리는 시간 (초)")]
         [SerializeField, Min(0f)] float drawTime = 0.25f;
 
+        [Tooltip("쓸 때(쏘거나 휘두를 때) 나는 소리가 적에게 들리는 거리 (칸). 0이면 소리가 나지 않는다.")]
+        [SerializeField, Min(0f)] float noiseRadius;
+
         public string DisplayName => displayName;
         public Weapon Prefab => prefab;
         public GripType Grip => grip;
         public float Damage => damage;
         public float Knockback => knockback;
         public float DrawTime => drawTime;
+        public float NoiseRadius => noiseRadius;
     }
 }

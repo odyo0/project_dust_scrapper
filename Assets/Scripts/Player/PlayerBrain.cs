@@ -6,7 +6,7 @@ namespace DustScrapper.Player
 {
     /// <summary>
     /// 플레이어 입력(의도)을 몸에 전달한다: 이동 의도는 ActorMotor로, 조준점은 BodyAim으로,
-    /// 발사·재장전·슬롯 바꾸기는 WeaponLoadout으로.
+    /// 발사·재장전·슬롯 바꾸기는 WeaponLoadout으로. 살금살금 키를 누르면 이동 세기를 줄인다(발소리가 안 나는 속도).
     /// 적은 같은 몸 부품을 쓰고 이 자리에 자기 AI 두뇌를 붙인다.
     /// </summary>
     [DefaultExecutionOrder(-50)]
@@ -19,6 +19,9 @@ namespace DustScrapper.Player
         [SerializeField] WeaponLoadout loadout;
         [Tooltip("비워 두면 Main Camera를 쓴다.")]
         [SerializeField] Camera viewCamera;
+
+        [Tooltip("살금살금 걸을 때의 이동 세기 (최고 속도에 곱하는 0~1). 발소리가 나지 않는 속도보다 느리게 둔다.")]
+        [SerializeField, Range(0f, 1f)] float sneakIntent = 0.4f;
 
         void Awake()
         {
@@ -38,7 +41,7 @@ namespace DustScrapper.Player
 
         void Update()
         {
-            motor.MoveIntent = input.Move;
+            motor.MoveIntent = input.SneakHeld ? Vector2.ClampMagnitude(input.Move, sneakIntent) : input.Move;
 
             if (viewCamera != null)
             {

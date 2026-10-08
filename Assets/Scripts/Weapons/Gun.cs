@@ -23,6 +23,7 @@ namespace DustScrapper.Weapons
         public GunData GunData => gun;
         public int AmmoInMagazine { get; private set; }
         public bool IsReloading => reloadTimer > 0f;
+        public override bool IsBusy => base.IsBusy || IsReloading;
         public float ReloadProgress => IsReloading && gun.ReloadTime > 0f ? 1f - reloadTimer / gun.ReloadTime : 0f;
 
         /// <summary>지금 탄이 조준선에서 벗어날 수 있는 최대 각도(도). 조준점 표시가 읽는다.</summary>
@@ -116,6 +117,7 @@ namespace DustScrapper.Weapons
             }
 
             CurrentSpread = Mathf.Min(gun.MaxSpread, CurrentSpread + gun.SpreadPerShot);
+            EmitUseNoise();
             Fired?.Invoke(aim);
         }
 

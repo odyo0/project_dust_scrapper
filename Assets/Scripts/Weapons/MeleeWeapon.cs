@@ -34,6 +34,7 @@ namespace DustScrapper.Weapons
 
         public MeleeData MeleeData => melee;
         public MeleePhase Phase { get; private set; }
+        public override bool IsBusy => base.IsBusy || Phase != MeleePhase.Idle;
 
         /// <summary>지금 단계가 얼마나 진행됐는지 (0~1).</summary>
         public float PhaseProgress
@@ -89,6 +90,7 @@ namespace DustScrapper.Weapons
             pressBuffer = 0f;
             SwingCount++;
             hitThisSwing.Clear();
+            EmitUseNoise();
             EnterPhase(MeleePhase.Windup);
         }
 

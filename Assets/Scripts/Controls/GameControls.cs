@@ -125,6 +125,16 @@ namespace DustScrapper.Controls
                     ""priority"": 0
                 },
                 {
+                    ""name"": ""Sneak"",
+                    ""type"": ""Button"",
+                    ""id"": ""c756fd14-f0d7-47c7-8df3-d487b06b8438"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
                     ""name"": ""Fire"",
                     ""type"": ""Button"",
                     ""id"": ""c208de34-54dc-4e18-9ba0-214be9e2ce71"",
@@ -265,6 +275,17 @@ namespace DustScrapper.Controls
                 },
                 {
                     ""name"": """",
+                    ""id"": ""8a38d2f6-d26a-4c36-b2c2-cdd2d68b2371"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Sneak"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""226589d2-165f-40f2-a9ef-188a607a504c"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
@@ -356,6 +377,7 @@ namespace DustScrapper.Controls
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
             m_Player_LookAhead = m_Player.FindAction("LookAhead", throwIfNotFound: true);
+            m_Player_Sneak = m_Player.FindAction("Sneak", throwIfNotFound: true);
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
             m_Player_Slot1 = m_Player.FindAction("Slot1", throwIfNotFound: true);
@@ -445,6 +467,7 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Aim;
         private readonly InputAction m_Player_LookAhead;
+        private readonly InputAction m_Player_Sneak;
         private readonly InputAction m_Player_Fire;
         private readonly InputAction m_Player_Reload;
         private readonly InputAction m_Player_Slot1;
@@ -474,6 +497,10 @@ namespace DustScrapper.Controls
             /// Provides access to the underlying input action "Player/LookAhead".
             /// </summary>
             public InputAction @LookAhead => m_Wrapper.m_Player_LookAhead;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Sneak".
+            /// </summary>
+            public InputAction @Sneak => m_Wrapper.m_Player_Sneak;
             /// <summary>
             /// Provides access to the underlying input action "Player/Fire".
             /// </summary>
@@ -533,6 +560,9 @@ namespace DustScrapper.Controls
                 @LookAhead.started += instance.OnLookAhead;
                 @LookAhead.performed += instance.OnLookAhead;
                 @LookAhead.canceled += instance.OnLookAhead;
+                @Sneak.started += instance.OnSneak;
+                @Sneak.performed += instance.OnSneak;
+                @Sneak.canceled += instance.OnSneak;
                 @Fire.started += instance.OnFire;
                 @Fire.performed += instance.OnFire;
                 @Fire.canceled += instance.OnFire;
@@ -571,6 +601,9 @@ namespace DustScrapper.Controls
                 @LookAhead.started -= instance.OnLookAhead;
                 @LookAhead.performed -= instance.OnLookAhead;
                 @LookAhead.canceled -= instance.OnLookAhead;
+                @Sneak.started -= instance.OnSneak;
+                @Sneak.performed -= instance.OnSneak;
+                @Sneak.canceled -= instance.OnSneak;
                 @Fire.started -= instance.OnFire;
                 @Fire.performed -= instance.OnFire;
                 @Fire.canceled -= instance.OnFire;
@@ -663,6 +696,13 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnLookAhead(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Sneak" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSneak(InputAction.CallbackContext context);
             /// <summary>
             /// Method invoked when associated input action "Fire" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
