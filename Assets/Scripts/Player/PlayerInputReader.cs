@@ -6,6 +6,7 @@ namespace DustScrapper.Player
     /// <summary>
     /// 키보드·마우스 입력을 읽어 플레이어의 "의도"(어디로 가려는지, 어디를 보는지)로 정리해 둔다.
     /// Input System을 직접 만지는 곳은 여기 하나뿐이고, 나머지는 이 값만 읽는다.
+    /// 가방 화면처럼 마우스를 쓰는 창이 열려 있으면(MenuOpen) 이동만 받고, 조준·발사·재장전·상호작용·슬롯은 막는다.
     /// </summary>
     [DefaultExecutionOrder(-100)]
     [DisallowMultipleComponent]
@@ -34,6 +35,18 @@ namespace DustScrapper.Player
         /// <summary>상호작용 키(줍기·뒤지기)를 누르고 있는가.</summary>
         public bool InteractHeld { get; private set; }
 
+        /// <summary>이번 프레임에 가방 키(Tab)를 눌렀는가. 창이 열려 있어도 읽는다.</summary>
+        public bool InventoryPressed { get; private set; }
+
+        /// <summary>이번 프레임에 취소 키(Esc)를 눌렀는가. 창이 열려 있어도 읽는다.</summary>
+        public bool CancelPressed { get; private set; }
+
+        /// <summary>마우스를 쓰는 창이 열려 있는가. 열려 있는 동안 조준점은 마지막 자리에 멈춰 있다.</summary>
+        public bool MenuOpen { get; private set; }
+
+        /// <summary>마우스를 쓰는 창이 열리고 닫힐 때 그 창이 부른다.</summary>
+        public void SetMenuOpen(bool open) => MenuOpen = open;
+
         /// <summary>이번 프레임에 누른 무기 슬롯 번호(0부터). 누르지 않았으면 -1.</summary>
         public int SlotPressed { get; private set; } = -1;
 
@@ -56,6 +69,8 @@ namespace DustScrapper.Player
             FireHeld = false;
             ReloadPressed = false;
             InteractHeld = false;
+            InventoryPressed = false;
+            CancelPressed = false;
             SlotPressed = -1;
         }
 
@@ -68,9 +83,22 @@ namespace DustScrapper.Player
         {
             var player = controls.Player;
             Move = Vector2.ClampMagnitude(player.Move.ReadValue<Vector2>(), 1f);
+            SneakHeld = player.Sneak.IsPressed();
+            InventoryPressed = player.Inventory.WasPressedThisFrame();
+            CancelPressed = player.Cancel.WasPressedThisFrame();
+
+            if (MenuOpen)
+            {
+                LookAheadHeld = false;
+                FireHeld = false;
+                ReloadPressed = false;
+                InteractHeld = false;
+                SlotPressed = -1;
+                return;
+            }
+
             AimScreenPosition = player.Aim.ReadValue<Vector2>();
             LookAheadHeld = player.LookAhead.IsPressed();
-            SneakHeld = player.Sneak.IsPressed();
             FireHeld = player.Fire.IsPressed() || player.Fire.WasPressedThisFrame();
             ReloadPressed = player.Reload.WasPressedThisFrame();
             InteractHeld = player.Interact.IsPressed();

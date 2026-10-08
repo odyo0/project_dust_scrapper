@@ -5,7 +5,7 @@ using UnityEngine;
 namespace DustScrapper.UI
 {
     /// <summary>
-    /// 마우스 커서 자리에 그리는 조준점. 운영체제 커서는 숨긴다.
+    /// 마우스 커서 자리에 그리는 조준점. 운영체제 커서는 숨긴다. 가방 화면처럼 마우스를 쓰는 창이 열리면 조준점을 숨기고 커서를 보인다.
     /// 총을 들면 네 개의 눈금이 지금 탄 퍼짐만큼 벌어져서, 커서 거리에서 탄이 떨어질 수 있는 폭을 보여 준다.
     /// 연사하면 벌어지고 멈추면 모이므로 "끊어 쏘면 정확하다"를 화면에서 바로 읽을 수 있다.
     /// </summary>
@@ -27,6 +27,7 @@ namespace DustScrapper.UI
         [SerializeField, Min(0f)] float meleeGap = 2f;
 
         RectTransform rect;
+        bool hiddenForMenu;
 
         static readonly Vector2[] TickDirections = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
 
@@ -42,6 +43,16 @@ namespace DustScrapper.UI
         void LateUpdate()
         {
             if (input == null) return;
+
+            bool menuOpen = input.MenuOpen;
+            if (menuOpen != hiddenForMenu)
+            {
+                // 이 스크립트가 붙은 물체 자신은 켜 둔 채 그림(자식)만 숨긴다. 자신을 끄면 다시 켤 수 없다.
+                hiddenForMenu = menuOpen;
+                Cursor.visible = menuOpen;
+                foreach (Transform child in transform) child.gameObject.SetActive(!menuOpen);
+            }
+            if (menuOpen) return;
 
             Vector2 screen = input.AimScreenPosition;
             rect.position = screen;

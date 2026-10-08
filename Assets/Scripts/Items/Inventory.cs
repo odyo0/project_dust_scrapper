@@ -7,9 +7,10 @@ namespace DustScrapper.Items
     /// 칸으로 나뉜 물건 보관 공간. 플레이어 가방과 상자가 같은 스크립트를 쓴다(상자는 칸이 있는 가방일 뿐이다).
     /// 한 칸에 물건 한 묶음이 들어가고, 겹칠 수 있는 물건(탄약 등)은 한 칸에 최대 개수까지 겹친다.
     /// 무엇이 바뀌었는지는 Changed로만 알린다. 가방 화면, 총의 탄 세기 등은 이 칸들을 읽기만 한다.
+    /// 칸 사이 옮기기는 IItemSlots 창구로 한다(ItemTransfer).
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class Inventory : MonoBehaviour
+    public sealed class Inventory : MonoBehaviour, IItemSlots
     {
         [Tooltip("칸 수")]
         [SerializeField, Min(1)] int capacity = 12;
@@ -20,6 +21,19 @@ namespace DustScrapper.Items
         ItemStack[] slots;
 
         public int Capacity => Slots.Length;
+        public int SlotCount => Slots.Length;
+
+        public bool IsEmpty
+        {
+            get
+            {
+                foreach (var stack in Slots)
+                {
+                    if (!stack.IsEmpty) return false;
+                }
+                return true;
+            }
+        }
 
         /// <summary>칸 내용이 바뀔 때마다.</summary>
         public event Action Changed;
@@ -52,6 +66,30 @@ namespace DustScrapper.Items
         }
 
         public ItemStack GetSlot(int index) => Slots[index];
+
+        /// <summary>가방·상자 칸에는 어떤 물건이든 놓인다.</summary>
+        public bool CanPlace(int index, ItemStack stack) => true;
+
+        public ItemStack TakeSlot(int index)
+        {
+            ItemStack stack = Slots[index];
+            if (stack.IsEmpty) return ItemStack.Empty;
+            Slots[index] = ItemStack.Empty;
+            Changed?.Invoke();
+            return stack;
+        }
+
+        public void PlaceInEmptySlot(int index, ItemStack stack)
+        {
+            if (stack.IsEmpty) return;
+            if (!Slots[index].IsEmpty)
+            {
+                Debug.LogError($"{name}: {index}번 칸이 차 있어 놓지 못했다.", this);
+                return;
+            }
+            Slots[index] = stack;
+            Changed?.Invoke();
+        }
 
         /// <summary>이 물건이 모두 몇 개 있는가.</summary>
         public int CountOf(ItemData item)

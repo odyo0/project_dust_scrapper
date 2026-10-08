@@ -1,4 +1,5 @@
 using DustScrapper.Interaction;
+using DustScrapper.Player;
 using TMPro;
 using UnityEngine;
 
@@ -7,11 +8,13 @@ namespace DustScrapper.UI
     /// <summary>
     /// 손이 닿는 대상 위에 "무엇을 / E 무엇하기"를 띄우고, E를 누르고 있는 진행도를 막대로 보여 준다.
     /// 지금 할 수 없으면(가방이 가득 참 등) 키 안내 대신 그 이유를 경고색으로 띄운다.
+    /// 가방 화면처럼 마우스를 쓰는 창이 열려 있으면(E가 막혀 있으므로) 띄우지 않는다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class InteractionPrompt : MonoBehaviour
     {
         [SerializeField] PlayerInteractor interactor;
+        [SerializeField] PlayerInputReader input;
         [Tooltip("대상이 없을 때 숨길 묶음. 이 스크립트가 붙은 물체 자신이면 안 된다(꺼지면 다시 켤 수 없다).")]
         [SerializeField] RectTransform root;
         [SerializeField] TMP_Text targetLabel;
@@ -40,7 +43,8 @@ namespace DustScrapper.UI
 
         void LateUpdate()
         {
-            Interactable target = interactor != null && interactor.isActiveAndEnabled ? interactor.Target : null;
+            bool menuOpen = input != null && input.MenuOpen;
+            Interactable target = interactor != null && interactor.isActiveAndEnabled && !menuOpen ? interactor.Target : null;
             if (root.gameObject.activeSelf != (target != null)) root.gameObject.SetActive(target != null);
             if (target == null)
             {

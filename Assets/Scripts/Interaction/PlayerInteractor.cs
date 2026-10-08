@@ -1,3 +1,4 @@
+using System;
 using DustScrapper.Items;
 using DustScrapper.Weapons;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace DustScrapper.Interaction
     /// 손이 닿는 상호작용 대상 중 가장 가까운 하나를 고르고, E를 누르고 있는 시간을 잰다.
     /// 다 누르면 대상에게 맡기고, 대상은 이것을 통해 플레이어의 가방·무기 슬롯에 접근한다.
     /// 입력은 두뇌(PlayerBrain)가 SetHeld로 알려 준다. 고른 대상과 진행도는 화면 표시(InteractionPrompt)가 읽는다.
+    /// 상자를 열면 LootOpened로 알리고, 가방 화면이 그것을 듣고 상자 칸을 띄운다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class PlayerInteractor : MonoBehaviour
@@ -37,7 +39,13 @@ namespace DustScrapper.Interaction
         /// <summary>누르고 있는 진행도 (0~1).</summary>
         public float Progress => Target != null && Target.HoldTime > 0f ? Mathf.Clamp01(holdTimer / Target.HoldTime) : 0f;
 
+        /// <summary>상자를 열었을 때. 값은 연 상자의 칸.</summary>
+        public event Action<Inventory> LootOpened;
+
         public void SetHeld(bool value) => held = value;
+
+        /// <summary>상자 같은 대상이 자기 칸을 플레이어에게 보여 달라고 할 때 부른다.</summary>
+        public void OpenLoot(Inventory loot) => LootOpened?.Invoke(loot);
 
         void Awake()
         {
@@ -96,7 +104,9 @@ namespace DustScrapper.Interaction
             {
                 float distance = Vector2.Distance(origin, candidate.Position);
                 if (distance > bestDistance) continue;
-                if (Physics2D.Linecast(origin, candidate.Position, blockers).collider != null) continue;
+                // 상자처럼 대상 자신이 벽 레이어에 있으면 첫 번째로 부딪히는 게 대상이다. 그건 막힌 게 아니다.
+                Collider2D hit = Physics2D.Linecast(origin, candidate.Position, blockers).collider;
+                if (hit != null && !hit.transform.IsChildOf(candidate.transform)) continue;
                 best = candidate;
                 bestDistance = distance;
             }

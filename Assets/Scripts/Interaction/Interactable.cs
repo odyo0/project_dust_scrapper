@@ -18,7 +18,8 @@ namespace DustScrapper.Interaction
         /// <summary>지금 켜져 있는 모든 상호작용 대상.</summary>
         public static IReadOnlyList<Interactable> Active => active;
 
-        public float HoldTime => holdTime;
+        /// <summary>E를 누르고 있어야 하는 시간. 처음 뒤질 때만 오래 걸리는 상자처럼 상황에 따라 바뀔 수 있다.</summary>
+        public virtual float HoldTime => holdTime;
         public Vector2 Position => transform.position;
 
         /// <summary>화면에 띄울 동작 이름 (예: 줍기).</summary>

@@ -165,6 +165,26 @@ namespace DustScrapper.Controls
                     ""priority"": 0
                 },
                 {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""f1f12656-33c0-4e96-804e-735cb0525405"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""94d6e9a1-06d8-4ea0-a2b8-19debad1e974"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
                     ""name"": ""Slot1"",
                     ""type"": ""Button"",
                     ""id"": ""941bb8f1-ed13-4a24-9fb9-9c4c26dc323b"",
@@ -370,6 +390,28 @@ namespace DustScrapper.Controls
                     ""action"": ""Slot4"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eadb3711-52cd-45c5-b337-a9f0f84946cc"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""de5623a2-6f29-42cc-8000-343939fe1710"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -402,6 +444,8 @@ namespace DustScrapper.Controls
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+            m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
+            m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
             m_Player_Slot1 = m_Player.FindAction("Slot1", throwIfNotFound: true);
             m_Player_Slot2 = m_Player.FindAction("Slot2", throwIfNotFound: true);
             m_Player_Slot3 = m_Player.FindAction("Slot3", throwIfNotFound: true);
@@ -493,6 +537,8 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Fire;
         private readonly InputAction m_Player_Reload;
         private readonly InputAction m_Player_Interact;
+        private readonly InputAction m_Player_Inventory;
+        private readonly InputAction m_Player_Cancel;
         private readonly InputAction m_Player_Slot1;
         private readonly InputAction m_Player_Slot2;
         private readonly InputAction m_Player_Slot3;
@@ -536,6 +582,14 @@ namespace DustScrapper.Controls
             /// Provides access to the underlying input action "Player/Interact".
             /// </summary>
             public InputAction @Interact => m_Wrapper.m_Player_Interact;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Inventory".
+            /// </summary>
+            public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Cancel".
+            /// </summary>
+            public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
             /// <summary>
             /// Provides access to the underlying input action "Player/Slot1".
             /// </summary>
@@ -599,6 +653,12 @@ namespace DustScrapper.Controls
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
+                @Cancel.started += instance.OnCancel;
+                @Cancel.performed += instance.OnCancel;
+                @Cancel.canceled += instance.OnCancel;
                 @Slot1.started += instance.OnSlot1;
                 @Slot1.performed += instance.OnSlot1;
                 @Slot1.canceled += instance.OnSlot1;
@@ -643,6 +703,12 @@ namespace DustScrapper.Controls
                 @Interact.started -= instance.OnInteract;
                 @Interact.performed -= instance.OnInteract;
                 @Interact.canceled -= instance.OnInteract;
+                @Inventory.started -= instance.OnInventory;
+                @Inventory.performed -= instance.OnInventory;
+                @Inventory.canceled -= instance.OnInventory;
+                @Cancel.started -= instance.OnCancel;
+                @Cancel.performed -= instance.OnCancel;
+                @Cancel.canceled -= instance.OnCancel;
                 @Slot1.started -= instance.OnSlot1;
                 @Slot1.performed -= instance.OnSlot1;
                 @Slot1.canceled -= instance.OnSlot1;
@@ -757,6 +823,20 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnInteract(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Inventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnInventory(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Cancel" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnCancel(InputAction.CallbackContext context);
             /// <summary>
             /// Method invoked when associated input action "Slot1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>

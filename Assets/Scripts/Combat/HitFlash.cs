@@ -23,6 +23,7 @@ namespace DustScrapper.Combat
         {
             health = GetComponent<Health>();
             // 몸에 처음부터 붙어 있는 그림만 번쩍인다. 나중에 손에 쥐는 무기는 제외된다.
+            // 시작 무기가 먼저 만들어져 섞여 들어올 수 있고, 그 무기는 판 도중에 빠지면 사라지므로 번쩍일 때 사라진 그림은 건너뛴다.
             renderers = GetComponentsInChildren<SpriteRenderer>(true);
             originalColors = new Color[renderers.Length];
             for (int i = 0; i < renderers.Length; i++) originalColors[i] = renderers[i].color;
@@ -45,14 +46,20 @@ namespace DustScrapper.Combat
 
         void OnDamaged(DamageInfo info)
         {
-            for (int i = 0; i < renderers.Length; i++) renderers[i].color = flashColor;
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null) renderers[i].color = flashColor;
+            }
             remaining = duration;
         }
 
         void Restore()
         {
             remaining = 0f;
-            for (int i = 0; i < renderers.Length; i++) renderers[i].color = originalColors[i];
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null) renderers[i].color = originalColors[i];
+            }
         }
     }
 }
