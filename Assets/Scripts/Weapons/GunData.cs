@@ -1,3 +1,4 @@
+using DustScrapper.Items;
 using UnityEngine;
 
 namespace DustScrapper.Weapons
@@ -31,6 +32,8 @@ namespace DustScrapper.Weapons
         [SerializeField, Min(0.1f)] float range = 14f;
 
         [Header("탄창")]
+        [Tooltip("재장전할 때 가방에서 꺼내 쓰는 탄")]
+        [SerializeField] AmmoData ammo;
         [SerializeField, Min(1)] int magazineSize = 30;
         [Tooltip("재장전 시간 (초)")]
         [SerializeField, Min(0f)] float reloadTime = 1.6f;
@@ -55,6 +58,7 @@ namespace DustScrapper.Weapons
         public Projectile Projectile => projectile;
         public float ProjectileSpeed => projectileSpeed;
         public float Range => range;
+        public AmmoData Ammo => ammo;
         public int MagazineSize => magazineSize;
         public float ReloadTime => reloadTime;
         public float BaseSpread => baseSpread;

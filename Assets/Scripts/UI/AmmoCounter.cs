@@ -5,8 +5,8 @@ using UnityEngine;
 namespace DustScrapper.UI
 {
     /// <summary>
-    /// 손에 든 총의 탄창 표시 ("탄창 안 / 탄창 크기")와 재장전 진행 막대.
-    /// 근접 무기를 들면 통째로 숨긴다. 탄이 바닥나면 숫자를 경고색으로 바꾼다.
+    /// 손에 든 총의 탄 표시 ("탄창 안 / 가방 속 남은 탄")와 재장전 진행 막대.
+    /// 근접 무기를 들면 통째로 숨긴다. 탄창이 비면 숫자를 경고색으로, 가방 속 탄까지 없으면 더 흐린 경고색으로 바꾼다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class AmmoCounter : MonoBehaviour
@@ -20,10 +20,12 @@ namespace DustScrapper.UI
 
         [SerializeField] Color normalColor = Color.white;
         [SerializeField] Color emptyColor = new(1f, 0.35f, 0.3f);
+        [Tooltip("탄창도 가방도 비어 더 쏠 수 없을 때")]
+        [SerializeField] Color outOfAmmoColor = new(1f, 0.35f, 0.3f, 0.45f);
         [SerializeField] Color reloadingColor = new(1f, 1f, 1f, 0.4f);
 
         int shownAmmo = -1;
-        int shownSize = -1;
+        int shownReserve = -1;
 
         void Awake()
         {
@@ -37,16 +39,19 @@ namespace DustScrapper.UI
             if (gun == null || gun.GunData == null) return;
 
             int ammo = gun.AmmoInMagazine;
-            int size = gun.GunData.MagazineSize;
-            if (ammo != shownAmmo || size != shownSize)
+            int reserve = gun.ReserveAmmo;
+            if (ammo != shownAmmo || reserve != shownReserve)
             {
                 // 숫자가 바뀔 때만 글자를 새로 만든다(매 프레임 문자열을 만들지 않게).
-                label.SetText("{0} / {1}", ammo, size);
+                label.SetText("{0} / {1}", ammo, reserve);
                 shownAmmo = ammo;
-                shownSize = size;
+                shownReserve = reserve;
             }
 
-            label.color = gun.IsReloading ? reloadingColor : ammo == 0 ? emptyColor : normalColor;
+            label.color = gun.IsReloading ? reloadingColor
+                : ammo > 0 ? normalColor
+                : reserve > 0 ? emptyColor
+                : outOfAmmoColor;
 
             if (reloadFill != null)
             {

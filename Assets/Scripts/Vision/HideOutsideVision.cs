@@ -3,7 +3,7 @@ using UnityEngine;
 namespace DustScrapper.Vision
 {
     /// <summary>
-    /// 플레이어 시야 밖에 있으면 자기 그림(손에 든 무기 포함)을 모두 숨긴다. 적에 붙인다.
+    /// 플레이어 시야 밖에 있으면 자기 그림(손에 든 무기 포함)을 모두 숨긴다. 적과 바닥 물건에 붙인다.
     /// 그림을 끄는 데 renderer.enabled가 아니라 forceRenderingOff를 써서, 죽었을 때 그림을 끄는 Respawner와 서로 덮어쓰지 않는다.
     /// </summary>
     [DisallowMultipleComponent]

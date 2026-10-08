@@ -31,6 +31,9 @@ namespace DustScrapper.Player
         /// <summary>이번 프레임에 재장전 키를 눌렀는가.</summary>
         public bool ReloadPressed { get; private set; }
 
+        /// <summary>상호작용 키(줍기·뒤지기)를 누르고 있는가.</summary>
+        public bool InteractHeld { get; private set; }
+
         /// <summary>이번 프레임에 누른 무기 슬롯 번호(0부터). 누르지 않았으면 -1.</summary>
         public int SlotPressed { get; private set; } = -1;
 
@@ -52,6 +55,7 @@ namespace DustScrapper.Player
             SneakHeld = false;
             FireHeld = false;
             ReloadPressed = false;
+            InteractHeld = false;
             SlotPressed = -1;
         }
 
@@ -69,6 +73,7 @@ namespace DustScrapper.Player
             SneakHeld = player.Sneak.IsPressed();
             FireHeld = player.Fire.IsPressed() || player.Fire.WasPressedThisFrame();
             ReloadPressed = player.Reload.WasPressedThisFrame();
+            InteractHeld = player.Interact.IsPressed();
             SlotPressed = ReadSlotPressed(player);
         }
 

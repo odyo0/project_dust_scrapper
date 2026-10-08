@@ -155,6 +155,16 @@ namespace DustScrapper.Controls
                     ""priority"": 0
                 },
                 {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""caf46409-9809-48d4-b6ce-6468c8941ccd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
                     ""name"": ""Slot1"",
                     ""type"": ""Button"",
                     ""id"": ""941bb8f1-ed13-4a24-9fb9-9c4c26dc323b"",
@@ -308,6 +318,17 @@ namespace DustScrapper.Controls
                 },
                 {
                     ""name"": """",
+                    ""id"": ""e65c2da9-a594-4116-99da-e1bc9c3ee3fa"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""827e1617-e7a7-4ca2-a095-74800916e462"",
                     ""path"": ""<Keyboard>/1"",
                     ""interactions"": """",
@@ -380,6 +401,7 @@ namespace DustScrapper.Controls
             m_Player_Sneak = m_Player.FindAction("Sneak", throwIfNotFound: true);
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
+            m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
             m_Player_Slot1 = m_Player.FindAction("Slot1", throwIfNotFound: true);
             m_Player_Slot2 = m_Player.FindAction("Slot2", throwIfNotFound: true);
             m_Player_Slot3 = m_Player.FindAction("Slot3", throwIfNotFound: true);
@@ -470,6 +492,7 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Sneak;
         private readonly InputAction m_Player_Fire;
         private readonly InputAction m_Player_Reload;
+        private readonly InputAction m_Player_Interact;
         private readonly InputAction m_Player_Slot1;
         private readonly InputAction m_Player_Slot2;
         private readonly InputAction m_Player_Slot3;
@@ -509,6 +532,10 @@ namespace DustScrapper.Controls
             /// Provides access to the underlying input action "Player/Reload".
             /// </summary>
             public InputAction @Reload => m_Wrapper.m_Player_Reload;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Interact".
+            /// </summary>
+            public InputAction @Interact => m_Wrapper.m_Player_Interact;
             /// <summary>
             /// Provides access to the underlying input action "Player/Slot1".
             /// </summary>
@@ -569,6 +596,9 @@ namespace DustScrapper.Controls
                 @Reload.started += instance.OnReload;
                 @Reload.performed += instance.OnReload;
                 @Reload.canceled += instance.OnReload;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
                 @Slot1.started += instance.OnSlot1;
                 @Slot1.performed += instance.OnSlot1;
                 @Slot1.canceled += instance.OnSlot1;
@@ -610,6 +640,9 @@ namespace DustScrapper.Controls
                 @Reload.started -= instance.OnReload;
                 @Reload.performed -= instance.OnReload;
                 @Reload.canceled -= instance.OnReload;
+                @Interact.started -= instance.OnInteract;
+                @Interact.performed -= instance.OnInteract;
+                @Interact.canceled -= instance.OnInteract;
                 @Slot1.started -= instance.OnSlot1;
                 @Slot1.performed -= instance.OnSlot1;
                 @Slot1.canceled -= instance.OnSlot1;
@@ -717,6 +750,13 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnReload(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnInteract(InputAction.CallbackContext context);
             /// <summary>
             /// Method invoked when associated input action "Slot1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>

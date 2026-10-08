@@ -1,3 +1,4 @@
+using DustScrapper.Items;
 using UnityEngine;
 
 namespace DustScrapper.Weapons
@@ -11,12 +12,11 @@ namespace DustScrapper.Weapons
 
     /// <summary>
     /// 모든 무기가 공통으로 갖는 수치. 총은 GunData, 근접 무기는 MeleeData가 이것을 이어받아 자기 수치를 더한다.
+    /// 무기도 주워서 들고 다니는 물건이라 ItemData를 이어받는다(이름·가치는 거기에 있다). 무기는 겹쳐 담지 않는다.
     /// 무기를 늘릴 때는 코드가 아니라 이 데이터 파일을 새로 만든다.
     /// </summary>
-    public abstract class WeaponData : ScriptableObject
+    public abstract class WeaponData : ItemData
     {
-        [SerializeField] string displayName;
-
         [Tooltip("손에 들 때 만들 무기 프리팹. 프리팹의 무기 종류(Gun/MeleeWeapon)가 이 데이터 종류와 맞아야 한다.")]
         [SerializeField] Weapon prefab;
 
@@ -34,7 +34,7 @@ namespace DustScrapper.Weapons
         [Tooltip("쓸 때(쏘거나 휘두를 때) 나는 소리가 적에게 들리는 거리 (칸). 0이면 소리가 나지 않는다.")]
         [SerializeField, Min(0f)] float noiseRadius;
 
-        public string DisplayName => displayName;
+        public override int MaxStack => 1;
         public Weapon Prefab => prefab;
         public GripType Grip => grip;
         public float Damage => damage;

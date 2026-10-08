@@ -5,6 +5,7 @@ namespace DustScrapper.Weapons
 {
     /// <summary>
     /// 총. 방아쇠 상태를 받아 연사 방식에 맞게 탄을 쏘고, 탄창·재장전·탄 퍼짐을 관리한다.
+    /// 재장전할 때는 주인(WeaponLoadout)의 탄 공급원(가방)에서 이 총에 맞는 탄을 꺼낸다. 꺼낼 탄이 없으면 장전하지 못한다.
     /// 화면 반동이나 총구 불꽃 같은 연출은 하지 않고 Fired 이벤트만 알린다(연출은 GunFireVisual 등이 맡는다).
     /// </summary>
     public sealed class Gun : Weapon
@@ -23,6 +24,10 @@ namespace DustScrapper.Weapons
         public GunData GunData => gun;
         public int AmmoInMagazine { get; private set; }
         public bool IsReloading => reloadTimer > 0f;
+
+        /// <summary>탄창 밖에 남은, 이 총에 넣을 수 있는 탄 수(가방 안).</summary>
+        public int ReserveAmmo => Owner.AmmoSource != null ? Owner.AmmoSource.CountOf(gun.Ammo) : 0;
+
         public override bool IsBusy => base.IsBusy || IsReloading;
         public float ReloadProgress => IsReloading && gun.ReloadTime > 0f ? 1f - reloadTimer / gun.ReloadTime : 0f;
 
@@ -44,8 +49,15 @@ namespace DustScrapper.Weapons
                 enabled = false;
                 return;
             }
+            if (gun.Ammo == null) Debug.LogWarning($"{gun.name}: 탄약(Ammo)이 비어 있어 재장전할 수 없다.", gun);
             AmmoInMagazine = gun.MagazineSize;
             CurrentSpread = gun.BaseSpread;
+        }
+
+        /// <summary>탄창의 탄 수를 정한다. 주운 총이 버려질 때의 탄창을 그대로 이어받을 때 쓴다.</summary>
+        public void SetMagazine(int amount)
+        {
+            AmmoInMagazine = Mathf.Clamp(amount, 0, gun.MagazineSize);
         }
 
         protected override void OnHolstered()
@@ -57,6 +69,7 @@ namespace DustScrapper.Weapons
         public override void Reload()
         {
             if (!IsDrawn || IsReloading || AmmoInMagazine >= gun.MagazineSize) return;
+            if (ReserveAmmo <= 0) return;
 
             reloadTimer = gun.ReloadTime;
             ReloadStarted?.Invoke();
@@ -128,7 +141,9 @@ namespace DustScrapper.Weapons
         void FinishReload()
         {
             reloadTimer = 0f;
-            AmmoInMagazine = gun.MagazineSize;
+            // 탄은 장전이 끝날 때 꺼낸다. 중간에 무기를 바꿔 장전이 취소되면 탄이 줄지 않는다.
+            int wanted = gun.MagazineSize - AmmoInMagazine;
+            AmmoInMagazine += Owner.AmmoSource != null ? Owner.AmmoSource.Remove(gun.Ammo, wanted) : 0;
         }
     }
 }

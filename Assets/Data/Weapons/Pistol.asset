@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.GunData
   displayName: "\uAD8C\uCD1D"
+  maxStack: 1
+  value: 60
+  placeholderColor: {r: 0.62, g: 0.64, b: 0.7, a: 1}
   prefab: {fileID: 5177620223783422538, guid: 846aca59114d7493f9036ef0490ca148, type: 3}
   grip: 0
   damage: 26
@@ -25,6 +28,7 @@ MonoBehaviour:
   projectile: {fileID: 2966782877653483519, guid: af140bdd0b74747c78100d2ab3852500, type: 3}
   projectileSpeed: 32
   range: 14
+  ammo: {fileID: 11400000, guid: 034d4e4434cfe4a0c93c283d643dd855, type: 2}
   magazineSize: 12
   reloadTime: 1.2
   baseSpread: 0.8
