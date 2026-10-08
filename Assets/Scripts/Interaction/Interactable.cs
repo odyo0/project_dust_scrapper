@@ -22,6 +22,9 @@ namespace DustScrapper.Interaction
         public virtual float HoldTime => holdTime;
         public Vector2 Position => transform.position;
 
+        /// <summary>지금 상호작용 대상이 될 수 있는가. 이미 켠 신호기처럼 다 쓴 것은 false로 둬서 고르지 않게 한다.</summary>
+        public virtual bool IsAvailable => true;
+
         /// <summary>화면에 띄울 동작 이름 (예: 줍기).</summary>
         public abstract string ActionName { get; }
 

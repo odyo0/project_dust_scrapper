@@ -102,6 +102,7 @@ namespace DustScrapper.Interaction
 
             foreach (var candidate in Interactable.Active)
             {
+                if (!candidate.IsAvailable) continue;
                 float distance = Vector2.Distance(origin, candidate.Position);
                 if (distance > bestDistance) continue;
                 // 상자처럼 대상 자신이 벽 레이어에 있으면 첫 번째로 부딪히는 게 대상이다. 그건 막힌 게 아니다.

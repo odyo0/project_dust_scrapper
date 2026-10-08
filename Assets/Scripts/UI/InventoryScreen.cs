@@ -84,7 +84,7 @@ namespace DustScrapper.UI
             lootPanel.SetActive(container != null);
             lootGrid.Bind(container);
             root.SetActive(true);
-            input.SetMenuOpen(true);
+            input.SetMenuOpen(this, true);
         }
 
         void Close()
@@ -92,7 +92,7 @@ namespace DustScrapper.UI
             root.SetActive(false);
             loot = null;
             lootGrid.Bind(null);
-            input.SetMenuOpen(false);
+            input.SetMenuOpen(this, false);
         }
     }
 }

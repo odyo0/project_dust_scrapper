@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DustScrapper.Controls;
 using UnityEngine;
 
@@ -41,11 +42,20 @@ namespace DustScrapper.Player
         /// <summary>이번 프레임에 취소 키(Esc)를 눌렀는가. 창이 열려 있어도 읽는다.</summary>
         public bool CancelPressed { get; private set; }
 
-        /// <summary>마우스를 쓰는 창이 열려 있는가. 열려 있는 동안 조준점은 마지막 자리에 멈춰 있다.</summary>
-        public bool MenuOpen { get; private set; }
+        readonly HashSet<object> openMenus = new();
 
-        /// <summary>마우스를 쓰는 창이 열리고 닫힐 때 그 창이 부른다.</summary>
-        public void SetMenuOpen(bool open) => MenuOpen = open;
+        /// <summary>마우스를 쓰는 창이 하나라도 열려 있는가. 열려 있는 동안 조준점은 마지막 자리에 멈춰 있다.</summary>
+        public bool MenuOpen => openMenus.Count > 0;
+
+        /// <summary>
+        /// 마우스를 쓰는 창이 열리고 닫힐 때 그 창이 자기 자신을 넘겨 부른다.
+        /// 창마다 따로 기억해서, 한 창이 닫혀도 다른 창(결과 화면 등)이 열려 있으면 계속 막는다.
+        /// </summary>
+        public void SetMenuOpen(object menu, bool open)
+        {
+            if (open) openMenus.Add(menu);
+            else openMenus.Remove(menu);
+        }
 
         /// <summary>이번 프레임에 누른 무기 슬롯 번호(0부터). 누르지 않았으면 -1.</summary>
         public int SlotPressed { get; private set; } = -1;
