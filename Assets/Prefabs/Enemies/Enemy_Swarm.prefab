@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 6545251076152055598}
   - component: {fileID: 3845288158452077121}
   - component: {fileID: 473062247774941248}
+  - component: {fileID: 4409763137208750925}
   m_Layer: 0
   m_Name: Enemy_Swarm
   m_TagString: Untagged
@@ -358,6 +359,18 @@ MonoBehaviour:
   respawned:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4409763137208750925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359027299916403412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3436af6148ae4bf49d420ab5fd128f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Vision.HideOutsideVision
 --- !u!1 &6485442550647540226
 GameObject:
   m_ObjectHideFlags: 0
