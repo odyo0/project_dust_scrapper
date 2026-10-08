@@ -21,8 +21,16 @@ namespace DustScrapper.Audio
         [Tooltip("이 거리(칸)까지 들린다. 멀어질수록 작아진다. 적이 듣는 소음 거리와는 따로다.")]
         [SerializeField, Min(1f)] float maxDistance = 20f;
 
+        [Header("시야 밖 표시")]
+        [Tooltip("시야 밖에서 나면 그 자리에 빨간 원을 띄운다. 움직일 때만 나는 소리(발소리)에만 켠다 — 서 있는 적의 위치가 드러나면 안 되므로.")]
+        [SerializeField] bool showWhenUnseen;
+        [Tooltip("빨간 원이 퍼지는 크기 (칸, 지름)")]
+        [SerializeField, Min(0.1f)] float indicatorSize = 1.2f;
+
         public float Volume => volume;
         public float MaxDistance => maxDistance;
+        public bool ShowWhenUnseen => showWhenUnseen;
+        public float IndicatorSize => indicatorSize;
 
         public AudioClip PickClip()
         {

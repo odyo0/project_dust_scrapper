@@ -13,19 +13,33 @@ namespace DustScrapper.Enemies
         Idle,
         /// <summary>소리가 난 곳을 확인하러 간다.</summary>
         Investigate,
-        /// <summary>대상을 쫓고, 닿으면 공격한다.</summary>
+        /// <summary>대상(또는 팀이 마지막으로 본 위치)을 쫓고, 닿으면 공격한다.</summary>
         Chase,
-        /// <summary>대상을 놓친 곳에서 잠시 두리번거린다.</summary>
+        /// <summary>놓친 곳이나 확인한 곳에서 잠시 두리번거린다.</summary>
         Search,
-        /// <summary>처음 자리로 돌아간다.</summary>
+        /// <summary>기점 주변의 아무 곳으로 걸어가 잠시 서기를 되풀이한다.</summary>
+        Roam,
+        /// <summary>기점으로 돌아간다.</summary>
         Return,
     }
 
+    /// <summary>대상을 놓친 뒤 무엇을 하는가. 같은 두뇌라도 이 설정에 따라 적의 유형이 갈린다.</summary>
+    public enum LostTargetBehavior
+    {
+        /// <summary>잠깐 두리번거린 뒤 처음 자리로 돌아간다.</summary>
+        ReturnHome,
+        /// <summary>놓친 곳을 새 기점으로 삼아 그 주변을 계속 돌아다닌다.</summary>
+        SettleAndRoam,
+        /// <summary>놓친 곳 주변을 정해진 시간 동안 돌아다니다가 처음 자리로 돌아간다.</summary>
+        RoamThenReturn,
+    }
+
     /// <summary>
-    /// 근접으로 몰려오는 적(떼거리)의 두뇌. 감각(EnemySenses)이 알려 준 것을 보고 상태를 바꾸고,
+    /// 근접으로 몰려오는 적(떼거리)의 두뇌. 감각(EnemySenses)이 알려 준 것과 팀(EnemyTeam)이 공유한 위치를 보고 상태를 바꾸고,
     /// 몸 부품에 명령한다: 이동은 PathFollower가 알려 준 방향으로 ActorMotor에, 바라보기는 BodyAim에,
     /// 공격은 WeaponLoadout에. 플레이어 두뇌와 같은 자리에 끼우는 AI다.
-    /// 대상을 처음 발견하면 외침(소리)을 내서 주변 적을 부른다.
+    /// 대상을 처음 발견하면 외침(소음)을 낸다. 같은 팀이 들으면 팀이 본 위치로 달려오고, 다른 팀은 보통 소리처럼 걸어서 확인하러 온다
+    /// (다른 팀까지 달려오면 팀이 줄줄이 불려 와 맵 전체가 몰려온다).
     /// </summary>
     [DefaultExecutionOrder(-50)]
     [DisallowMultipleComponent]
@@ -38,9 +52,9 @@ namespace DustScrapper.Enemies
         [SerializeField] PathFollower pathFollower;
 
         [Header("움직임 (이동 세기 0~1, 최고 속도에 곱한다)")]
-        [Tooltip("소리를 확인하러 갈 때")]
+        [Tooltip("소리를 확인하러 갈 때(다른 팀의 외침 포함), 돌아다닐 때, 돌아갈 때")]
         [SerializeField, Range(0f, 1f)] float walkIntent = 0.45f;
-        [Tooltip("쫓을 때, 동료의 외침을 듣고 달려갈 때")]
+        [Tooltip("쫓을 때, 같은 팀의 외침을 듣고 달려갈 때")]
         [SerializeField, Range(0f, 1f)] float runIntent = 1f;
         [Tooltip("공격하는 동안. 낮을수록 휘두를 때 멈칫해서 피할 틈이 생긴다.")]
         [SerializeField, Range(0f, 1f)] float attackMoveIntent = 0.15f;
@@ -59,21 +73,44 @@ namespace DustScrapper.Enemies
         [Tooltip("두리번거릴 때 좌우로 고개를 돌리는 폭 (도)")]
         [SerializeField, Range(0f, 180f)] float searchSweepAngle = 70f;
 
+        [Header("놓친 뒤 행동 (적 유형)")]
+        [SerializeField] LostTargetBehavior lostTargetBehavior = LostTargetBehavior.ReturnHome;
+        [Tooltip("돌아다닐 때 기점에서 벗어나는 최대 거리 (칸)")]
+        [SerializeField, Min(0.5f)] float roamRadius = 4f;
+        [Tooltip("RoamThenReturn: 놓친 곳 주변을 돌아다니는 시간 (초)")]
+        [SerializeField, Min(0f)] float roamDuration = 15f;
+        [Tooltip("돌아다니다 한 곳에 멈춰 서 있는 시간 (초, 최소~최대)")]
+        [SerializeField] Vector2 roamPause = new(1f, 2.5f);
+
         [Header("동료 부르기")]
+        [Tooltip("끄면 발견해도 외치지 않는다. 조용히 다가오는 적. 이미 경계 중인 팀원과는 여전히 위치를 공유하지만, 쉬고 있는 팀원을 깨우지는 않는다.")]
+        [SerializeField] bool shoutsWhenSpotting = true;
         [Tooltip("대상을 발견했을 때 외침이 들리는 거리 (칸)")]
         [SerializeField, Min(0f)] float alarmRadius = 9f;
         [Tooltip("한 번 외친 뒤 다시 외칠 수 있을 때까지 (초)")]
         [SerializeField, Min(0f)] float alarmCooldown = 5f;
 
+        EnemyTeam team;
         Vector2 home;
+        Vector2 anchor;
+        bool settled;
         Vector2 facing;
         Vector2 searchBaseFacing;
         Vector2 pointOfInterest;
-        bool investigateUrgently;
+        bool lostTarget;
+        bool roamIsTimed;
+        bool roamWalking;
+        float roamPauseTimer;
+        float handledSightingTime;
         float stateTimer;
         float alarmTimer;
 
         public EnemyState State { get; private set; }
+
+        /// <summary>경계 중인가: 쫓거나, 놓쳐서 수색하거나, 놓친 곳 주변을 한동안 돌아다니는 중.</summary>
+        public bool IsAlerted => State == EnemyState.Chase ||
+                                 (State == EnemyState.Search && lostTarget) ||
+                                 (State == EnemyState.Roam && roamIsTimed);
 
         /// <summary>대상을 발견해 동료를 부르는 외침을 냈을 때. 외침 소리가 듣는다.</summary>
         public event Action Alarmed;
@@ -86,6 +123,10 @@ namespace DustScrapper.Enemies
             if (senses == null) senses = GetComponent<EnemySenses>();
             if (pathFollower == null) pathFollower = GetComponent<PathFollower>();
 
+            // 팀 물체 아래에 없으면 혼자 한 팀이 된다.
+            team = GetComponentInParent<EnemyTeam>();
+            if (team == null) team = gameObject.AddComponent<EnemyTeam>();
+
             home = transform.position;
             if (idleLookDirection.sqrMagnitude < 0.0001f) idleLookDirection = Vector2.down;
         }
@@ -94,6 +135,8 @@ namespace DustScrapper.Enemies
         {
             senses.NoiseHeard += OnNoiseHeard;
             // 처음 시작할 때, 죽었다 되살아날 때 모두 처음 자리를 보고 서 있는 상태에서 시작한다.
+            anchor = home;
+            settled = false;
             facing = idleLookDirection.normalized;
             alarmTimer = 0f;
             EnterState(EnemyState.Idle);
@@ -106,6 +149,7 @@ namespace DustScrapper.Enemies
             loadout.SetTrigger(false);
             pathFollower.Stop();
             senses.IsTracking = false;
+            team.SetAlerted(this, false);
         }
 
         void Update()
@@ -113,7 +157,16 @@ namespace DustScrapper.Enemies
             alarmTimer -= Time.deltaTime;
             stateTimer += Time.deltaTime;
 
-            if (senses.CanSeeTarget && State != EnemyState.Chase) StartChase();
+            if (senses.CanSeeTarget)
+            {
+                team.ReportSighting(senses.Target.position);
+                if (State != EnemyState.Chase) StartChase();
+            }
+            else if (IsAlerted && State != EnemyState.Chase && HasNewTeamSighting())
+            {
+                // 놓치고 수색하던 중에 같은 팀이 새로 발견했다 → 그곳으로 간다.
+                EnterState(EnemyState.Chase);
+            }
 
             switch (State)
             {
@@ -121,6 +174,7 @@ namespace DustScrapper.Enemies
                 case EnemyState.Investigate: UpdateInvestigate(); break;
                 case EnemyState.Chase: UpdateChase(); break;
                 case EnemyState.Search: UpdateSearch(); break;
+                case EnemyState.Roam: UpdateRoam(); break;
                 case EnemyState.Return: UpdateReturn(); break;
             }
         }
@@ -133,14 +187,14 @@ namespace DustScrapper.Enemies
 
         void UpdateInvestigate()
         {
-            MoveTo(pointOfInterest, investigateUrgently ? runIntent : walkIntent);
-            if (pathFollower.HasArrived || pathFollower.IsUnreachable) EnterState(EnemyState.Search);
+            MoveTo(pointOfInterest, walkIntent);
+            if (pathFollower.HasArrived || pathFollower.IsUnreachable) BeginSearch(false);
         }
 
         void UpdateChase()
         {
             bool canSee = senses.CanSeeTarget;
-            Vector2 goal = canSee ? (Vector2)senses.Target.position : senses.LastSeenPosition;
+            Vector2 goal = canSee ? (Vector2)senses.Target.position : team.LastKnownPosition;
             Vector2 toTarget = goal - (Vector2)transform.position;
 
             Weapon weapon = loadout.Current;
@@ -156,7 +210,8 @@ namespace DustScrapper.Enemies
             // 휘두르기 시작하면 방향을 고정한다. 준비 동작을 보고 옆으로 피할 수 있게.
             if (!busy) TurnTowards(canSee ? toTarget : pathFollower.DesiredDirection);
 
-            if (!canSee && (pathFollower.HasArrived || pathFollower.IsUnreachable)) EnterState(EnemyState.Search);
+            bool teamLostTrack = !team.HasSighting;
+            if (!canSee && (pathFollower.HasArrived || pathFollower.IsUnreachable || teamLostTrack)) BeginSearch(true);
         }
 
         void UpdateSearch()
@@ -164,30 +219,118 @@ namespace DustScrapper.Enemies
             Halt();
             float sweep = Mathf.Sin(stateTimer * 2.5f) * searchSweepAngle;
             TurnTowards(Quaternion.Euler(0f, 0f, sweep) * searchBaseFacing);
-            if (stateTimer >= searchDuration) EnterState(EnemyState.Return);
+            if (stateTimer < searchDuration) return;
+
+            if (!lostTarget)
+            {
+                // 소리만 확인했을 때는 유형과 상관없이 기점으로 돌아간다.
+                EnterState(EnemyState.Return);
+                return;
+            }
+
+            switch (lostTargetBehavior)
+            {
+                case LostTargetBehavior.SettleAndRoam:
+                    anchor = transform.position;
+                    settled = true;
+                    StartRoam(false);
+                    break;
+                case LostTargetBehavior.RoamThenReturn:
+                    anchor = transform.position;
+                    StartRoam(true);
+                    break;
+                default:
+                    EnterState(EnemyState.Return);
+                    break;
+            }
+        }
+
+        void UpdateRoam()
+        {
+            if (roamIsTimed && stateTimer >= roamDuration)
+            {
+                anchor = home;
+                EnterState(EnemyState.Return);
+                return;
+            }
+
+            if (roamWalking)
+            {
+                Vector2 direction = pathFollower.DesiredDirection;
+                motor.MoveIntent = direction * walkIntent;
+                TurnTowards(direction);
+                if (!pathFollower.HasArrived && !pathFollower.IsUnreachable) return;
+
+                roamWalking = false;
+                pathFollower.Stop();
+                roamPauseTimer = UnityEngine.Random.Range(roamPause.x, Mathf.Max(roamPause.x, roamPause.y));
+                searchBaseFacing = facing;
+                return;
+            }
+
+            // 멈춰 서서 두리번거리다가 다음 곳으로 간다.
+            Halt();
+            roamPauseTimer -= Time.deltaTime;
+            float sweep = Mathf.Sin(stateTimer * 1.8f) * searchSweepAngle * 0.6f;
+            TurnTowards(Quaternion.Euler(0f, 0f, sweep) * searchBaseFacing);
+            if (roamPauseTimer > 0f) return;
+
+            NavGrid grid = NavGrid.Active;
+            Vector2 next = anchor + UnityEngine.Random.insideUnitCircle * roamRadius;
+            if (grid != null && !grid.TryGetRandomWalkablePoint(anchor, roamRadius, out next)) return;
+            pathFollower.SetDestination(next);
+            roamWalking = true;
         }
 
         void UpdateReturn()
         {
-            MoveTo(home, walkIntent);
-            if (pathFollower.HasArrived || pathFollower.IsUnreachable) EnterState(EnemyState.Idle);
+            MoveTo(anchor, walkIntent);
+            if (!pathFollower.HasArrived && !pathFollower.IsUnreachable) return;
+
+            // 놓친 곳에 눌러앉은 적은 그 기점에서 다시 돌아다니고, 나머지는 제자리에 선다.
+            if (settled) StartRoam(false);
+            else EnterState(EnemyState.Idle);
         }
 
         void StartChase()
         {
             EnterState(EnemyState.Chase);
-            if (alarmTimer > 0f) return;
+            if (!shoutsWhenSpotting || alarmTimer > 0f) return;
             alarmTimer = alarmCooldown;
             NoiseBus.Emit(new NoiseEvent(transform.position, alarmRadius, gameObject, isAlarm: true));
             Alarmed?.Invoke();
         }
 
+        void BeginSearch(bool afterLosingTarget)
+        {
+            lostTarget = afterLosingTarget;
+            handledSightingTime = team.LastSightingTime;
+            EnterState(EnemyState.Search);
+        }
+
+        void StartRoam(bool timed)
+        {
+            roamIsTimed = timed;
+            roamWalking = false;
+            roamPauseTimer = 0f;
+            EnterState(EnemyState.Roam);
+        }
+
+        bool HasNewTeamSighting() => team.HasSighting && team.LastSightingTime > handledSightingTime;
+
         void OnNoiseHeard(NoiseEvent noise)
         {
             if (State == EnemyState.Chase) return;
+
+            // 같은 팀의 외침: 팀이 본 위치를 받아 그곳으로 달려간다.
+            if (noise.IsAlarm && team.Contains(noise.Source) && team.HasSighting)
+            {
+                EnterState(EnemyState.Chase);
+                return;
+            }
+
+            // 그 밖의 소리(다른 팀의 외침 포함): 소리 난 곳을 걸어서 확인하러 간다. 경계 중이면 무시하지 않고 그쪽도 본다.
             pointOfInterest = noise.Position;
-            // 이미 달려가는 중이면 뒤이은 작은 소리 때문에 걷기로 바뀌지 않게 한다.
-            investigateUrgently = noise.IsAlarm || (State == EnemyState.Investigate && investigateUrgently);
             if (State != EnemyState.Investigate) EnterState(EnemyState.Investigate);
             else pathFollower.SetDestination(pointOfInterest);
         }
@@ -198,6 +341,9 @@ namespace DustScrapper.Enemies
             stateTimer = 0f;
             senses.IsTracking = next == EnemyState.Chase;
             if (next != EnemyState.Chase) loadout.SetTrigger(false);
+            // "놓쳐서 수색 중"인지는 BeginSearch가 정한다. 경계와 상관없는 상태로 가면 지운다.
+            if (next == EnemyState.Idle || next == EnemyState.Investigate || next == EnemyState.Return) lostTarget = false;
+            if (next != EnemyState.Roam) roamIsTimed = false;
 
             switch (next)
             {
@@ -208,13 +354,15 @@ namespace DustScrapper.Enemies
                     pathFollower.SetDestination(pointOfInterest);
                     break;
                 case EnemyState.Search:
+                case EnemyState.Roam:
                     pathFollower.Stop();
                     searchBaseFacing = facing;
                     break;
                 case EnemyState.Return:
-                    pathFollower.SetDestination(home);
+                    pathFollower.SetDestination(anchor);
                     break;
             }
+            team.SetAlerted(this, IsAlerted);
         }
 
         void MoveTo(Vector2 point, float intent)

@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace DustScrapper.Audio
 {
@@ -17,6 +19,9 @@ namespace DustScrapper.Audio
         static AudioSource[] pool;
         static int next;
 
+        /// <summary>소리를 낼 때마다. 시야 밖 소리 표시가 듣는다.</summary>
+        public static event Action<SoundCue, Vector2> Played;
+
         public static void Play(SoundCue cue, Vector2 position)
         {
             if (cue == null) return;
@@ -30,6 +35,7 @@ namespace DustScrapper.Audio
             source.pitch = cue.PickPitch();
             source.maxDistance = cue.MaxDistance;
             source.Play();
+            Played?.Invoke(cue, position);
         }
 
         /// <summary>쉬고 있는 재생기를 찾는다. 모두 재생 중이면 가장 오래전에 쓴 것을 끊고 쓴다.</summary>
@@ -72,6 +78,10 @@ namespace DustScrapper.Audio
 
         // 도메인 다시 불러오기를 끈 설정에서도 지난 실행의 재생기 묶음을 쓰지 않게 비운다.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void ResetPool() => pool = null;
+        static void ResetPool()
+        {
+            pool = null;
+            Played = null;
+        }
     }
 }

@@ -292,6 +292,7 @@ MonoBehaviour:
   sightRange: 8
   sightAngle: 120
   awarenessRadius: 1.5
+  trackingRadius: 4
   sightBlockers:
     serializedVersion: 2
     m_Bits: 256
@@ -337,7 +338,11 @@ MonoBehaviour:
   attackRange: 1.1
   searchDuration: 3
   searchSweepAngle: 70
-  alarmRadius: 9
+  lostTargetBehavior: 0
+  roamRadius: 4
+  roamDuration: 15
+  roamPause: {x: 1, y: 2.5}
+  alarmRadius: 7
   alarmCooldown: 5
 --- !u!114 &473062247774941248
 MonoBehaviour:

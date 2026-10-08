@@ -28,6 +28,8 @@ namespace DustScrapper.Enemies
         [SerializeField, Range(0f, 360f)] float sightAngle = 120f;
         [Tooltip("이 거리(칸) 안이면 등 뒤라도 알아챈다")]
         [SerializeField, Min(0f)] float awarenessRadius = 1.5f;
+        [Tooltip("쫓는 중에는 이 거리(칸) 안이면 시야 각도와 상관없이 본다. 그보다 멀면 쫓는 중에도 부채꼴 안이어야 본다.")]
+        [SerializeField, Min(0f)] float trackingRadius = 4f;
         [Tooltip("시야를 가리는 레이어(벽). 다른 적이나 플레이어 몸은 시야를 가리지 않는다.")]
         [SerializeField] LayerMask sightBlockers;
 
@@ -47,8 +49,8 @@ namespace DustScrapper.Enemies
         public Vector2 LastSeenPosition { get; private set; }
 
         /// <summary>
-        /// 켜 두면 시야 각도를 무시하고 거리·벽만 본다. 쫓는 중에는 대상을 의식하고 있어서
-        /// 옆으로 돌아 들어가도 놓치지 않게 두뇌가 켠다.
+        /// 켜 두면 가까운 거리(trackingRadius) 안에서는 시야 각도를 무시한다. 쫓는 중에는 대상을 의식하고 있어서
+        /// 바로 옆으로 돌아 들어가도 놓치지 않게 두뇌가 켠다. 멀리서 모퉁이를 돌면 놓칠 수 있다.
         /// </summary>
         public bool IsTracking { get; set; }
 
@@ -93,7 +95,7 @@ namespace DustScrapper.Enemies
             float distance = toTarget.magnitude;
             if (distance > sightRange) return false;
 
-            bool inCone = IsTracking || distance <= awarenessRadius ||
+            bool inCone = distance <= awarenessRadius || (IsTracking && distance <= trackingRadius) ||
                           Vector2.Angle(bodyAim.AimDirection, toTarget) <= sightAngle * 0.5f;
             if (!inCone) return false;
 

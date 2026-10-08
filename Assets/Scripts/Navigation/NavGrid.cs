@@ -103,6 +103,21 @@ namespace DustScrapper.Navigation
             return false;
         }
 
+        /// <summary>center에서 radius(칸) 안의 갈 수 있는 지점을 무작위로 하나 고른다. 몇 번 시도해도 없으면 false.</summary>
+        public bool TryGetRandomWalkablePoint(Vector2 center, float radius, out Vector2 point)
+        {
+            const int Attempts = 12;
+            for (int i = 0; i < Attempts; i++)
+            {
+                Vector2 candidate = center + Random.insideUnitCircle * radius;
+                if (!IsWalkable(WorldToCell(candidate))) continue;
+                point = candidate;
+                return true;
+            }
+            point = center;
+            return false;
+        }
+
         /// <summary>캐릭터가 두 점 사이를 벽에 걸리지 않고 곧장 걸어갈 수 있는가.</summary>
         public bool IsWalkLineClear(Vector2 from, Vector2 to)
         {

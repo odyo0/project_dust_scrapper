@@ -19,3 +19,5 @@ MonoBehaviour:
   volume: 0.4
   pitchRange: {x: 0.85, y: 1.15}
   maxDistance: 12
+  showWhenUnseen: 1
+  indicatorSize: 1.2

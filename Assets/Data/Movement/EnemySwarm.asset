@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b07e8675d654d4e5584815534279c2f7, type: 3}
   m_Name: EnemySwarm
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Actors.MovementProfile
-  maxSpeed: 4
+  maxSpeed: 3.3
   acceleration: 20
   deceleration: 25
