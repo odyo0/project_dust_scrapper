@@ -52,6 +52,9 @@ namespace DustScrapper.Weapons
         /// <summary>대상을 맞혔을 때.</summary>
         public event Action<DamageInfo> Hit;
 
+        /// <summary>단계가 바뀌었을 때(준비 시작, 휘두름 시작 등). 값은 새 단계.</summary>
+        public event Action<MeleePhase> PhaseChanged;
+
         protected override void OnInitialize()
         {
             melee = Data as MeleeData;
@@ -108,6 +111,7 @@ namespace DustScrapper.Weapons
         {
             Phase = phase;
             phaseTimer = PhaseLength(phase);
+            PhaseChanged?.Invoke(phase);
             // 준비 시간이 0이면 누른 그 프레임에 바로 맞힌다.
             if (phase == MeleePhase.Active) HitTargetsInArc();
         }

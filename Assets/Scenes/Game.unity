@@ -7124,6 +7124,9 @@ GameObject:
   - component: {fileID: 2115828601}
   - component: {fileID: 2115828605}
   - component: {fileID: 2115828606}
+  - component: {fileID: 2115828609}
+  - component: {fileID: 2115828608}
+  - component: {fileID: 2115828607}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -7424,6 +7427,43 @@ MonoBehaviour:
   sightBlockers:
     serializedVersion: 2
     m_Bits: 256
+--- !u!81 &2115828607
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115828590}
+  m_Enabled: 1
+--- !u!114 &2115828608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115828590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1780d1f55c694b3391f3ab0ba199b37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Audio.FootstepAudio
+  step: {fileID: 11400000, guid: bfdd993276a9c434995005ed87665c99, type: 2}
+  silentSpeed: 2.2
+  stepInterval: 0.32
+--- !u!114 &2115828609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115828590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66c7fd0b7e12d4931a50e9e5868a7f2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Audio.DamageAudio
+  damaged: {fileID: 11400000, guid: 32e53f50f25564c9885b23be92c0d882, type: 2}
+  died: {fileID: 0}
 --- !u!1 &2141404748
 GameObject:
   m_ObjectHideFlags: 0

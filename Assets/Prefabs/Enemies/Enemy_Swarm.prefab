@@ -88,6 +88,9 @@ GameObject:
   - component: {fileID: 3845288158452077121}
   - component: {fileID: 473062247774941248}
   - component: {fileID: 4409763137208750925}
+  - component: {fileID: 6510026999988801657}
+  - component: {fileID: 2420279989185477060}
+  - component: {fileID: 410077985806831624}
   m_Layer: 0
   m_Name: Enemy_Swarm
   m_TagString: Untagged
@@ -371,6 +374,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3436af6148ae4bf49d420ab5fd128f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Vision.HideOutsideVision
+--- !u!114 &6510026999988801657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359027299916403412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66c7fd0b7e12d4931a50e9e5868a7f2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Audio.DamageAudio
+  damaged: {fileID: 11400000, guid: de65e75d196924e7793185439a49a25e, type: 2}
+  died: {fileID: 11400000, guid: b9034269458c144c898752ab8123baeb, type: 2}
+--- !u!114 &2420279989185477060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359027299916403412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1780d1f55c694b3391f3ab0ba199b37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Audio.FootstepAudio
+  step: {fileID: 11400000, guid: ae6134a61620e4654bbdf09b1ae66d10, type: 2}
+  silentSpeed: 1
+  stepInterval: 0.32
+--- !u!114 &410077985806831624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359027299916403412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4b7e7b674ac4a91907e68ec5228abe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Audio.AlarmAudio
+  alarm: {fileID: 11400000, guid: 221facf7e25a24faf8ed37b9146b5dd7, type: 2}
 --- !u!1 &6485442550647540226
 GameObject:
   m_ObjectHideFlags: 0

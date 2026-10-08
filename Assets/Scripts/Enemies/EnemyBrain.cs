@@ -75,8 +75,8 @@ namespace DustScrapper.Enemies
 
         public EnemyState State { get; private set; }
 
-        /// <summary>상태가 바뀌었을 때. 소리·표정 같은 연출이 듣는다.</summary>
-        public event Action<EnemyState> StateChanged;
+        /// <summary>대상을 발견해 동료를 부르는 외침을 냈을 때. 외침 소리가 듣는다.</summary>
+        public event Action Alarmed;
 
         void Awake()
         {
@@ -179,6 +179,7 @@ namespace DustScrapper.Enemies
             if (alarmTimer > 0f) return;
             alarmTimer = alarmCooldown;
             NoiseBus.Emit(new NoiseEvent(transform.position, alarmRadius, gameObject, isAlarm: true));
+            Alarmed?.Invoke();
         }
 
         void OnNoiseHeard(NoiseEvent noise)
@@ -214,7 +215,6 @@ namespace DustScrapper.Enemies
                     pathFollower.SetDestination(home);
                     break;
             }
-            StateChanged?.Invoke(next);
         }
 
         void MoveTo(Vector2 point, float intent)

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 989960289892718028}
   - component: {fileID: 4466716217094211534}
   - component: {fileID: 4424064744967192359}
+  - component: {fileID: 253848204560345384}
   m_Layer: 0
   m_Name: Claw
   m_TagString: Untagged
@@ -62,6 +63,20 @@ MonoBehaviour:
   pivot: {fileID: 3710983639396974245}
   slashEffect: {fileID: 4443015904020189293}
   restAngle: -20
+--- !u!114 &253848204560345384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872388037030131541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06c2da4b82c93472a9912c15ab7d0f24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Audio.MeleeAudio
+  windup: {fileID: 11400000, guid: 69fece3ddf9b345ac827729b576f2f7c, type: 2}
+  swing: {fileID: 11400000, guid: 212a848559a6545098cf16a7ade1be15, type: 2}
 --- !u!1 &4526521074094424847
 GameObject:
   m_ObjectHideFlags: 0

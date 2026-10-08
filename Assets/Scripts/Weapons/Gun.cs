@@ -32,6 +32,9 @@ namespace DustScrapper.Weapons
         /// <summary>한 번 쏠 때마다. 값은 조준 방향(퍼짐 적용 전).</summary>
         public event Action<Vector2> Fired;
 
+        /// <summary>재장전을 시작했을 때.</summary>
+        public event Action ReloadStarted;
+
         protected override void OnInitialize()
         {
             gun = Data as GunData;
@@ -56,6 +59,7 @@ namespace DustScrapper.Weapons
             if (!IsDrawn || IsReloading || AmmoInMagazine >= gun.MagazineSize) return;
 
             reloadTimer = gun.ReloadTime;
+            ReloadStarted?.Invoke();
             if (reloadTimer <= 0f) FinishReload();
         }
 
