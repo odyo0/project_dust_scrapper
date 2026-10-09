@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "55c86264-c523-404d-ad33-30db824f7c57",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Sneak",
                     "type": "Button",
                     "id": "c756fd14-f0d7-47c7-8df3-d487b06b8438",
@@ -112,15 +121,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Slot4",
-                    "type": "Button",
-                    "id": "ac0ae7c1-2b69-434b-88a4-d1ca2569c0ed",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -193,11 +193,22 @@
                 {
                     "name": "",
                     "id": "efa96022-ae90-4c01-8400-ec6b2b3b3c1b",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/v",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "LookAhead",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f73e616-ad06-48a4-8195-eafabcc5d46d",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -275,17 +286,6 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Slot3",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ceab4af6-0372-45d7-8af0-a53cc79e416a",
-                    "path": "<Keyboard>/4",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Slot4",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

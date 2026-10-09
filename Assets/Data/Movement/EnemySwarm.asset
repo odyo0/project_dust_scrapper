@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: EnemySwarm
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Actors.MovementProfile
   maxSpeed: 3.3
+  sprintSpeed: 7
   acceleration: 20
   deceleration: 25

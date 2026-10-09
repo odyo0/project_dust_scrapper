@@ -7,7 +7,7 @@ namespace DustScrapper.Player
     /// <summary>
     /// 키보드·마우스 입력을 읽어 플레이어의 "의도"(어디로 가려는지, 어디를 보는지)로 정리해 둔다.
     /// Input System을 직접 만지는 곳은 여기 하나뿐이고, 나머지는 이 값만 읽는다.
-    /// 가방 화면처럼 마우스를 쓰는 창이 열려 있으면(MenuOpen) 이동만 받고, 조준·발사·재장전·상호작용·슬롯은 막는다.
+    /// 가방 화면처럼 마우스를 쓰는 창이 열려 있으면(MenuOpen) 이동(달리기·살금살금 포함)만 받고, 조준·발사·재장전·상호작용·슬롯은 막는다.
     /// </summary>
     [DefaultExecutionOrder(-100)]
     [DisallowMultipleComponent]
@@ -23,6 +23,9 @@ namespace DustScrapper.Player
 
         /// <summary>멀리 보기 키를 누르고 있는가.</summary>
         public bool LookAheadHeld { get; private set; }
+
+        /// <summary>달리기 키를 누르고 있는가.</summary>
+        public bool SprintHeld { get; private set; }
 
         /// <summary>살금살금 키를 누르고 있는가.</summary>
         public bool SneakHeld { get; private set; }
@@ -75,6 +78,7 @@ namespace DustScrapper.Player
             controls.Player.Disable();
             Move = Vector2.zero;
             LookAheadHeld = false;
+            SprintHeld = false;
             SneakHeld = false;
             FireHeld = false;
             ReloadPressed = false;
@@ -93,6 +97,7 @@ namespace DustScrapper.Player
         {
             var player = controls.Player;
             Move = Vector2.ClampMagnitude(player.Move.ReadValue<Vector2>(), 1f);
+            SprintHeld = player.Sprint.IsPressed();
             SneakHeld = player.Sneak.IsPressed();
             InventoryPressed = player.Inventory.WasPressedThisFrame();
             CancelPressed = player.Cancel.WasPressedThisFrame();
@@ -120,7 +125,6 @@ namespace DustScrapper.Player
             if (player.Slot1.WasPressedThisFrame()) return 0;
             if (player.Slot2.WasPressedThisFrame()) return 1;
             if (player.Slot3.WasPressedThisFrame()) return 2;
-            if (player.Slot4.WasPressedThisFrame()) return 3;
             return -1;
         }
     }

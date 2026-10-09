@@ -340,8 +340,9 @@ MonoBehaviour:
   input: {fileID: 6955516852487233608}
   aimPush: 1.5
   smoothTime: 0.15
-  lookAheadDistance: 5
+  lookAheadEdgeMargin: 1.5
   lookAheadSmoothTime: 0.3
+  viewCamera: {fileID: 0}
 --- !u!1 &494750072287190801
 GameObject:
   m_ObjectHideFlags: 0
@@ -2722,6 +2723,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cc8390fe592bd4a4aa12684ba5f8f410, type: 2}
   - {fileID: 0}
   - {fileID: 0}
+  unarmed: {fileID: 11400000, guid: f8c501a502b0d46f987659842c0330be, type: 2}
   ammoSource: {fileID: 8143237740379748116}
 --- !u!114 &6818699586869997258
 MonoBehaviour:
@@ -2753,7 +2755,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Noise.FootstepNoise
   silentSpeed: 2.2
-  radiusAtFullSpeed: 4
+  radiusAtWalkSpeed: 4
+  radiusAtSprintSpeed: 7
   radiusAtSilentSpeed: 2
   stepInterval: 0.35
 --- !u!114 &8415010509041656916

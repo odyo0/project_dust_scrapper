@@ -7,6 +7,8 @@ namespace DustScrapper.Weapons
 {
     /// <summary>
     /// 지금 바로 꺼내 쓸 수 있는 무기 슬롯. 슬롯마다 무기를 만들어 손에 붙여 두고, 하나만 꺼내 둔다.
+    /// 아무 슬롯도 들지 않은 상태가 "빈손"이다. 빈손일 때 쓸 무기(주먹)를 따로 하나 두면 그것을 꺼내 든다.
+    /// 주먹은 슬롯에 들어가지 않아서 가방 화면에 보이지 않고 떨어뜨릴 수도 없다.
     /// 판 도중에 주운 무기를 넣거나(PutWeapon) 뺄 수 있고, 가방 화면에서는 가방과 같은 칸 창구(IItemSlots)로 옮겨진다.
     /// 두뇌(플레이어 입력이나 AI)는 이곳에 방아쇠·재장전·슬롯 바꾸기만 요청하고, 손에 든 무기가 무엇인지는 몰라도 된다.
     /// 주운 물건을 담는 가방(Inventory)과는 따로이고, 총이 재장전할 탄만 가방에서 꺼낸다.
@@ -18,22 +20,30 @@ namespace DustScrapper.Weapons
         [SerializeField] Transform hand;
         [SerializeField] BodyAim aim;
 
-        [Tooltip("시작할 때 슬롯마다 들 무기. 칸 수가 곧 슬롯 수다(숫자키는 1~4까지). 빈 칸은 비워 둔다. 시작 무기는 탄창이 가득 찬 채로 나온다.")]
+        [Tooltip("시작할 때 슬롯마다 들 무기. 칸 수가 곧 슬롯 수다(숫자키는 1~3까지). 빈 칸은 비워 둔다. 시작 무기는 탄창이 가득 찬 채로 나온다.")]
         [SerializeField] WeaponData[] slots = new WeaponData[3];
+
+        [Tooltip("빈손일 때 드는 무기(주먹). 슬롯에 들어가지 않는다. 비워 두면 빈손일 때 아무것도 들지 않는다(공격 못 함).")]
+        [SerializeField] WeaponData unarmed;
 
         [Tooltip("총이 재장전할 때 탄을 꺼낼 곳(가방). 비워 두면 탄창에 든 탄만 쓴다.")]
         [SerializeField] Inventory ammoSource;
 
         Weapon[] weapons;
+        Weapon unarmedWeapon;
         bool triggerHeld;
 
         public int SlotCount => slots.Length;
+
+        /// <summary>손에 든 슬롯 번호. 빈손이면 -1.</summary>
         public int CurrentIndex { get; private set; } = -1;
-        public Weapon Current => CurrentIndex >= 0 ? weapons[CurrentIndex] : null;
+
+        /// <summary>지금 꺼내 든 무기. 빈손이면 주먹(없으면 null).</summary>
+        public Weapon Current { get; private set; }
         public Vector2 AimDirection => aim.AimDirection;
         public Inventory AmmoSource => ammoSource;
 
-        /// <summary>손에 든 무기가 바뀌었을 때. 값은 새 무기(아무것도 안 들었으면 null).</summary>
+        /// <summary>손에 든 무기가 바뀌었을 때. 값은 새 무기(빈손이면 주먹, 주먹도 없으면 null).</summary>
         public event Action<Weapon> CurrentChanged;
 
         /// <summary>슬롯에 무기가 들어오거나 빠졌을 때.</summary>
@@ -50,6 +60,7 @@ namespace DustScrapper.Weapons
             {
                 if (slots[i] != null) weapons[i] = CreateWeapon(slots[i]);
             }
+            if (unarmed != null) unarmedWeapon = CreateWeapon(unarmed);
             EquipFirstAvailable();
         }
 
@@ -67,15 +78,26 @@ namespace DustScrapper.Weapons
             Current.Holster();
         }
 
-        /// <summary>해당 슬롯의 무기로 바꿔 든다. 비었거나 이미 든 슬롯이면 무시한다.</summary>
+        /// <summary>
+        /// 해당 슬롯을 든다. 빈 슬롯이면 들고 있던 무기를 집어넣고 빈손이 된다.
+        /// 이미 든 슬롯이거나 슬롯 번호가 범위 밖이면 무시한다.
+        /// </summary>
         public void Equip(int index)
         {
-            if (!isActiveAndEnabled && CurrentIndex >= 0) return;
-            if (GetWeapon(index) == null || index == CurrentIndex) return;
+            if (!isActiveAndEnabled && Current != null) return;
+            if (index < 0 || index >= weapons.Length) return;
+            if (weapons[index] == null) index = -1;
+            if (index == CurrentIndex) return;
+            Hold(index);
+        }
 
+        /// <summary>슬롯(-1이면 빈손)으로 바꿔 든다. 하던 동작은 집어넣으면서 취소된다.</summary>
+        void Hold(int index)
+        {
             if (Current != null) Current.Holster();
             CurrentIndex = index;
-            Current.Draw(triggerHeld);
+            Current = index >= 0 ? weapons[index] : unarmedWeapon;
+            if (Current != null) Current.Draw(triggerHeld);
             CurrentChanged?.Invoke(Current);
         }
 
@@ -128,17 +150,18 @@ namespace DustScrapper.Weapons
         /// <summary>무기 슬롯에는 무기만 놓인다.</summary>
         public bool CanPlace(int index, ItemStack stack) => stack.Item is WeaponData;
 
-        /// <summary>슬롯의 무기를 빼서 물건 묶음으로 돌려준다. 손에 든 무기였으면 남은 무기 중 첫 번째를 든다.</summary>
+        /// <summary>슬롯의 무기를 빼서 물건 묶음으로 돌려준다. 손에 든 무기였으면 남은 무기 중 첫 번째를(없으면 빈손을) 든다.</summary>
         public ItemStack TakeSlot(int index)
         {
             ItemStack stack = RemoveWeapon(index);
             if (stack.IsEmpty) return stack;
-            if (CurrentIndex < 0) EquipFirstAvailable();
+            // 일부러 빈손(주먹)으로 있던 중이면 그대로 둔다. 손에 든 무기가 빠졌을 때만 새로 든다.
+            if (Current == null) EquipFirstAvailable();
             Changed?.Invoke();
             return stack;
         }
 
-        /// <summary>빈 슬롯에 무기를 넣는다. 아무것도 안 들고 있었으면 바로 든다.</summary>
+        /// <summary>빈 슬롯에 무기를 넣는다. 빈손이었으면 바로 든다.</summary>
         public void PlaceInEmptySlot(int index, ItemStack stack)
         {
             if (!(stack.Item is WeaponData data) || GetWeapon(index) != null) return;
@@ -156,7 +179,7 @@ namespace DustScrapper.Weapons
             return true;
         }
 
-        /// <summary>슬롯을 비운다. 손에 든 무기였으면 아무것도 안 든 상태가 된다(다음에 무엇을 들지는 부른 쪽이 정한다).</summary>
+        /// <summary>슬롯을 비운다. 손에 든 무기였으면 주먹도 꺼내지 않은 상태가 된다(다음에 무엇을 들지는 부른 쪽이 정한다).</summary>
         ItemStack RemoveWeapon(int index)
         {
             Weapon weapon = GetWeapon(index);
@@ -170,21 +193,23 @@ namespace DustScrapper.Weapons
                 weapon.SetTrigger(false);
                 weapon.Holster();
                 CurrentIndex = -1;
+                Current = null;
             }
             weapons[index] = null;
             Destroy(weapon.gameObject);
             return stack;
         }
 
+        /// <summary>첫 번째로 무기가 있는 슬롯을 든다. 하나도 없으면 빈손.</summary>
         void EquipFirstAvailable()
         {
             for (int i = 0; i < weapons.Length; i++)
             {
                 if (weapons[i] == null) continue;
-                Equip(i);
+                Hold(i);
                 return;
             }
-            CurrentChanged?.Invoke(null);
+            Hold(-1);
         }
 
         Weapon CreateWeapon(WeaponData data)

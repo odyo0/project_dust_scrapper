@@ -8,6 +8,7 @@ namespace DustScrapper.Player
     /// <summary>
     /// 플레이어 입력(의도)을 몸에 전달한다: 이동 의도는 ActorMotor로, 조준점은 BodyAim으로,
     /// 발사·재장전·슬롯 바꾸기는 WeaponLoadout으로, 줍기·뒤지기 키는 PlayerInteractor로. 살금살금 키를 누르면 이동 세기를 줄인다(발소리가 안 나는 속도).
+    /// 달리기 키를 누르면 몸에 달리라고 알린다. 살금살금 키와 같이 누르면 살금살금이 이긴다(조용히 하려던 것이 무시되어 들키지 않게).
     /// 적은 같은 몸 부품을 쓰고 이 자리에 자기 AI 두뇌를 붙인다.
     /// </summary>
     [DefaultExecutionOrder(-50)]
@@ -39,6 +40,7 @@ namespace DustScrapper.Player
         {
             // 꺼진 뒤에도 마지막 명령이 남아 혼자 걷거나 쏘지 않게 비운다.
             motor.MoveIntent = Vector2.zero;
+            motor.Sprinting = false;
             if (loadout != null) loadout.SetTrigger(false);
             if (interactor != null) interactor.SetHeld(false);
         }
@@ -46,6 +48,7 @@ namespace DustScrapper.Player
         void Update()
         {
             motor.MoveIntent = input.SneakHeld ? Vector2.ClampMagnitude(input.Move, sneakIntent) : input.Move;
+            motor.Sprinting = input.SprintHeld && !input.SneakHeld;
 
             if (viewCamera != null)
             {

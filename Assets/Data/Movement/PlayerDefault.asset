@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: PlayerDefault
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Actors.MovementProfile
   maxSpeed: 4.5
+  sprintSpeed: 7
   acceleration: 25
   deceleration: 35

@@ -125,6 +125,16 @@ namespace DustScrapper.Controls
                     ""priority"": 0
                 },
                 {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""55c86264-c523-404d-ad33-30db824f7c57"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
                     ""name"": ""Sneak"",
                     ""type"": ""Button"",
                     ""id"": ""c756fd14-f0d7-47c7-8df3-d487b06b8438"",
@@ -213,16 +223,6 @@ namespace DustScrapper.Controls
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
-                },
-                {
-                    ""name"": ""Slot4"",
-                    ""type"": ""Button"",
-                    ""id"": ""ac0ae7c1-2b69-434b-88a4-d1ca2569c0ed"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false,
-                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -295,11 +295,22 @@ namespace DustScrapper.Controls
                 {
                     ""name"": """",
                     ""id"": ""efa96022-ae90-4c01-8400-ec6b2b3b3c1b"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""path"": ""<Keyboard>/v"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""LookAhead"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f73e616-ad06-48a4-8195-eafabcc5d46d"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Sprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -382,17 +393,6 @@ namespace DustScrapper.Controls
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ceab4af6-0372-45d7-8af0-a53cc79e416a"",
-                    ""path"": ""<Keyboard>/4"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Slot4"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""eadb3711-52cd-45c5-b337-a9f0f84946cc"",
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
@@ -440,6 +440,7 @@ namespace DustScrapper.Controls
             m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
             m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
             m_Player_LookAhead = m_Player.FindAction("LookAhead", throwIfNotFound: true);
+            m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
             m_Player_Sneak = m_Player.FindAction("Sneak", throwIfNotFound: true);
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
@@ -449,7 +450,6 @@ namespace DustScrapper.Controls
             m_Player_Slot1 = m_Player.FindAction("Slot1", throwIfNotFound: true);
             m_Player_Slot2 = m_Player.FindAction("Slot2", throwIfNotFound: true);
             m_Player_Slot3 = m_Player.FindAction("Slot3", throwIfNotFound: true);
-            m_Player_Slot4 = m_Player.FindAction("Slot4", throwIfNotFound: true);
         }
 
         ~@GameControls()
@@ -533,6 +533,7 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Move;
         private readonly InputAction m_Player_Aim;
         private readonly InputAction m_Player_LookAhead;
+        private readonly InputAction m_Player_Sprint;
         private readonly InputAction m_Player_Sneak;
         private readonly InputAction m_Player_Fire;
         private readonly InputAction m_Player_Reload;
@@ -542,7 +543,6 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Slot1;
         private readonly InputAction m_Player_Slot2;
         private readonly InputAction m_Player_Slot3;
-        private readonly InputAction m_Player_Slot4;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -566,6 +566,10 @@ namespace DustScrapper.Controls
             /// Provides access to the underlying input action "Player/LookAhead".
             /// </summary>
             public InputAction @LookAhead => m_Wrapper.m_Player_LookAhead;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Sprint".
+            /// </summary>
+            public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
             /// <summary>
             /// Provides access to the underlying input action "Player/Sneak".
             /// </summary>
@@ -603,10 +607,6 @@ namespace DustScrapper.Controls
             /// </summary>
             public InputAction @Slot3 => m_Wrapper.m_Player_Slot3;
             /// <summary>
-            /// Provides access to the underlying input action "Player/Slot4".
-            /// </summary>
-            public InputAction @Slot4 => m_Wrapper.m_Player_Slot4;
-            /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
             public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -641,6 +641,9 @@ namespace DustScrapper.Controls
                 @LookAhead.started += instance.OnLookAhead;
                 @LookAhead.performed += instance.OnLookAhead;
                 @LookAhead.canceled += instance.OnLookAhead;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
                 @Sneak.started += instance.OnSneak;
                 @Sneak.performed += instance.OnSneak;
                 @Sneak.canceled += instance.OnSneak;
@@ -668,9 +671,6 @@ namespace DustScrapper.Controls
                 @Slot3.started += instance.OnSlot3;
                 @Slot3.performed += instance.OnSlot3;
                 @Slot3.canceled += instance.OnSlot3;
-                @Slot4.started += instance.OnSlot4;
-                @Slot4.performed += instance.OnSlot4;
-                @Slot4.canceled += instance.OnSlot4;
             }
 
             /// <summary>
@@ -691,6 +691,9 @@ namespace DustScrapper.Controls
                 @LookAhead.started -= instance.OnLookAhead;
                 @LookAhead.performed -= instance.OnLookAhead;
                 @LookAhead.canceled -= instance.OnLookAhead;
+                @Sprint.started -= instance.OnSprint;
+                @Sprint.performed -= instance.OnSprint;
+                @Sprint.canceled -= instance.OnSprint;
                 @Sneak.started -= instance.OnSneak;
                 @Sneak.performed -= instance.OnSneak;
                 @Sneak.canceled -= instance.OnSneak;
@@ -718,9 +721,6 @@ namespace DustScrapper.Controls
                 @Slot3.started -= instance.OnSlot3;
                 @Slot3.performed -= instance.OnSlot3;
                 @Slot3.canceled -= instance.OnSlot3;
-                @Slot4.started -= instance.OnSlot4;
-                @Slot4.performed -= instance.OnSlot4;
-                @Slot4.canceled -= instance.OnSlot4;
             }
 
             /// <summary>
@@ -796,6 +796,13 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnLookAhead(InputAction.CallbackContext context);
             /// <summary>
+            /// Method invoked when associated input action "Sprint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSprint(InputAction.CallbackContext context);
+            /// <summary>
             /// Method invoked when associated input action "Sneak" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
             /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -858,13 +865,6 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnSlot3(InputAction.CallbackContext context);
-            /// <summary>
-            /// Method invoked when associated input action "Slot4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-            /// </summary>
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-            void OnSlot4(InputAction.CallbackContext context);
         }
     }
 }
