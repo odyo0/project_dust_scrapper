@@ -146,7 +146,7 @@ namespace DustScrapper.Enemies
         {
             senses.NoiseHeard -= OnNoiseHeard;
             motor.MoveIntent = Vector2.zero;
-            loadout.SetTrigger(false);
+            loadout.SetPrimary(false);
             pathFollower.Stop();
             senses.IsTracking = false;
             team.SetAlerted(this, false);
@@ -201,7 +201,7 @@ namespace DustScrapper.Enemies
             bool busy = weapon != null && weapon.IsBusy;
             bool inRange = canSee && toTarget.sqrMagnitude <= attackRange * attackRange;
             // 근접 무기는 "새로 누를 때" 휘두르므로, 한 번 휘두르는 동안은 방아쇠를 뗐다가 끝나면 다시 누른다.
-            loadout.SetTrigger(inRange && !busy);
+            loadout.SetPrimary(inRange && !busy);
 
             pathFollower.SetDestination(goal);
             // 닿을 거리에서는 밀어붙이지 않고 멈칫한다. 플레이어를 벽까지 밀고 가지 않게.
@@ -340,7 +340,7 @@ namespace DustScrapper.Enemies
             State = next;
             stateTimer = 0f;
             senses.IsTracking = next == EnemyState.Chase;
-            if (next != EnemyState.Chase) loadout.SetTrigger(false);
+            if (next != EnemyState.Chase) loadout.SetPrimary(false);
             // "놓쳐서 수색 중"인지는 BeginSearch가 정한다. 경계와 상관없는 상태로 가면 지운다.
             if (next == EnemyState.Idle || next == EnemyState.Investigate || next == EnemyState.Return) lostTarget = false;
             if (next != EnemyState.Roam) roamIsTimed = false;

@@ -42,7 +42,7 @@ namespace DustScrapper.Enemies
 
         void OnDisable()
         {
-            if (loadout != null) loadout.SetTrigger(false);
+            if (loadout != null) loadout.SetPrimary(false);
             cycleTimer = 0f;
         }
 
@@ -64,7 +64,7 @@ namespace DustScrapper.Enemies
             bool inBurst = cycle > 0f && cycleTimer % cycle >= pauseDuration;
             bool aligned = canSee && Vector2.Angle(aimDirection, toTarget) <= fireAngle;
 
-            loadout.SetTrigger(inBurst && aligned);
+            loadout.SetPrimary(inBurst && aligned);
         }
 
         bool CanSeeTarget(out Vector2 toTarget)

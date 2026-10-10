@@ -14,11 +14,13 @@ namespace DustScrapper.Weapons
     }
 
     /// <summary>
-    /// 근접 무기. 누르면 준비 → 휘두름 → 회복 순서로 한 번 휘두른다.
+    /// 근접 공격 스킬(베기, 주먹질, 할퀴기, 펀치). 누르면 준비 → 휘두름 → 회복 순서로 한 번 휘두른다.
     /// 휘두름 단계 동안 캐릭터 앞쪽 부채꼴 안의 대상을 맞히고, 한 번 휘두를 때 같은 대상은 한 번만 맞는다.
     /// 벽 너머의 대상은 맞지 않는다. 휘두르는 모습은 MeleeSwingVisual이 단계를 읽어 그린다.
+    /// 수치는 보통 장비 데이터(MeleeData)를 쓰고, 장비와 다른 수치가 필요하면(오른손 빈손의 펀치 등) stats에 따로 넣는다.
     /// </summary>
-    public sealed class MeleeWeapon : Weapon
+    [DisallowMultipleComponent]
+    public sealed class MeleeAttack : Skill
     {
         /// <summary>휘두르는 중에 누른 클릭을 이 시간(초) 동안 기억했다가 바로 다음 공격으로 잇는다.</summary>
         const float PressBufferTime = 0.2f;
@@ -28,13 +30,16 @@ namespace DustScrapper.Weapons
 
         readonly HashSet<Health> hitThisSwing = new();
 
+        [Tooltip("이 공격의 수치. 비워 두면 장비 데이터(MeleeData)를 쓴다.")]
+        [SerializeField] MeleeData stats;
+
         MeleeData melee;
         float phaseTimer;
         float pressBuffer;
 
         public MeleeData MeleeData => melee;
         public MeleePhase Phase { get; private set; }
-        public override bool IsBusy => base.IsBusy || Phase != MeleePhase.Idle;
+        public override bool IsBusy => Phase != MeleePhase.Idle;
 
         /// <summary>지금 단계가 얼마나 진행됐는지 (0~1).</summary>
         public float PhaseProgress
@@ -55,26 +60,26 @@ namespace DustScrapper.Weapons
         /// <summary>단계가 바뀌었을 때(준비 시작, 휘두름 시작 등). 값은 새 단계.</summary>
         public event Action<MeleePhase> PhaseChanged;
 
-        protected override void OnInitialize()
+        protected override void OnBind()
         {
-            melee = Data as MeleeData;
+            melee = stats != null ? stats : Weapon.Data as MeleeData;
             if (melee == null)
             {
-                Debug.LogError($"{name}: MeleeWeapon 프리팹에는 MeleeData를 써야 한다.", this);
+                Debug.LogError($"{name}: 근접 공격 스킬은 stats를 넣거나 MeleeData 장비에 붙인다.", this);
                 enabled = false;
             }
         }
 
-        protected override void OnHolstered()
+        protected override void OnCancel()
         {
             Phase = MeleePhase.Idle;
             phaseTimer = 0f;
             pressBuffer = 0f;
         }
 
-        protected override void Tick(bool triggerPressed, bool triggerHeld, float deltaTime)
+        protected override void Tick(bool pressed, bool held, float deltaTime)
         {
-            pressBuffer = triggerPressed ? PressBufferTime : pressBuffer - deltaTime;
+            pressBuffer = pressed ? PressBufferTime : pressBuffer - deltaTime;
 
             if (Phase == MeleePhase.Active) HitTargetsInArc();
 
@@ -93,7 +98,7 @@ namespace DustScrapper.Weapons
             pressBuffer = 0f;
             SwingCount++;
             hitThisSwing.Clear();
-            EmitUseNoise();
+            EmitNoise(melee.NoiseRadius);
             EnterPhase(MeleePhase.Windup);
         }
 
@@ -126,9 +131,9 @@ namespace DustScrapper.Weapons
 
         void HitTargetsInArc()
         {
-            Transform ownerRoot = Owner.transform;
+            Transform ownerRoot = Holder.transform;
             Vector2 origin = ownerRoot.position;
-            Vector2 aim = Owner.AimDirection;
+            Vector2 aim = Holder.AimDirection;
             float halfArc = melee.ArcAngle * 0.5f;
 
             int count = Physics2D.OverlapCircle(origin, melee.Reach, SolidOnly, Overlaps);
@@ -148,7 +153,7 @@ namespace DustScrapper.Weapons
 
                 hitThisSwing.Add(health);
                 Vector2 direction = toPoint.sqrMagnitude > 0.0001f ? toPoint : aim;
-                var info = new DamageInfo(melee.Damage, point, direction, melee.Knockback, Owner.gameObject);
+                var info = new DamageInfo(melee.Damage, point, direction, melee.Knockback, Holder.gameObject);
                 if (health.TakeDamage(info)) Hit?.Invoke(info);
             }
         }

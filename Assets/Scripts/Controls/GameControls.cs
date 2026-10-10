@@ -155,6 +155,26 @@ namespace DustScrapper.Controls
                     ""priority"": 0
                 },
                 {
+                    ""name"": ""SupportPrimary"",
+                    ""type"": ""Button"",
+                    ""id"": ""0cfddc20-944d-4f48-80e5-6ff3c8bd6ea7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""SupportSpecial"",
+                    ""type"": ""Button"",
+                    ""id"": ""63636076-8c26-4f3a-a446-416c174fcd0c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
                     ""name"": ""Reload"",
                     ""type"": ""Button"",
                     ""id"": ""a304a884-8f8e-440c-beda-558f771d74d3"",
@@ -338,6 +358,28 @@ namespace DustScrapper.Controls
                 },
                 {
                     ""name"": """",
+                    ""id"": ""66be683b-2ac7-49e5-ab3b-5d9f6ad66a92"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SupportPrimary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""004d9d22-cc8a-4b76-b9c9-3e03b61bf339"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""SupportSpecial"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""8a0afb68-a751-48b5-a6e0-82d97b113948"",
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
@@ -443,6 +485,8 @@ namespace DustScrapper.Controls
             m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
             m_Player_Sneak = m_Player.FindAction("Sneak", throwIfNotFound: true);
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+            m_Player_SupportPrimary = m_Player.FindAction("SupportPrimary", throwIfNotFound: true);
+            m_Player_SupportSpecial = m_Player.FindAction("SupportSpecial", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
             m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
@@ -536,6 +580,8 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Sprint;
         private readonly InputAction m_Player_Sneak;
         private readonly InputAction m_Player_Fire;
+        private readonly InputAction m_Player_SupportPrimary;
+        private readonly InputAction m_Player_SupportSpecial;
         private readonly InputAction m_Player_Reload;
         private readonly InputAction m_Player_Interact;
         private readonly InputAction m_Player_Inventory;
@@ -578,6 +624,14 @@ namespace DustScrapper.Controls
             /// Provides access to the underlying input action "Player/Fire".
             /// </summary>
             public InputAction @Fire => m_Wrapper.m_Player_Fire;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/SupportPrimary".
+            /// </summary>
+            public InputAction @SupportPrimary => m_Wrapper.m_Player_SupportPrimary;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/SupportSpecial".
+            /// </summary>
+            public InputAction @SupportSpecial => m_Wrapper.m_Player_SupportSpecial;
             /// <summary>
             /// Provides access to the underlying input action "Player/Reload".
             /// </summary>
@@ -650,6 +704,12 @@ namespace DustScrapper.Controls
                 @Fire.started += instance.OnFire;
                 @Fire.performed += instance.OnFire;
                 @Fire.canceled += instance.OnFire;
+                @SupportPrimary.started += instance.OnSupportPrimary;
+                @SupportPrimary.performed += instance.OnSupportPrimary;
+                @SupportPrimary.canceled += instance.OnSupportPrimary;
+                @SupportSpecial.started += instance.OnSupportSpecial;
+                @SupportSpecial.performed += instance.OnSupportSpecial;
+                @SupportSpecial.canceled += instance.OnSupportSpecial;
                 @Reload.started += instance.OnReload;
                 @Reload.performed += instance.OnReload;
                 @Reload.canceled += instance.OnReload;
@@ -700,6 +760,12 @@ namespace DustScrapper.Controls
                 @Fire.started -= instance.OnFire;
                 @Fire.performed -= instance.OnFire;
                 @Fire.canceled -= instance.OnFire;
+                @SupportPrimary.started -= instance.OnSupportPrimary;
+                @SupportPrimary.performed -= instance.OnSupportPrimary;
+                @SupportPrimary.canceled -= instance.OnSupportPrimary;
+                @SupportSpecial.started -= instance.OnSupportSpecial;
+                @SupportSpecial.performed -= instance.OnSupportSpecial;
+                @SupportSpecial.canceled -= instance.OnSupportSpecial;
                 @Reload.started -= instance.OnReload;
                 @Reload.performed -= instance.OnReload;
                 @Reload.canceled -= instance.OnReload;
@@ -816,6 +882,20 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnFire(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "SupportPrimary" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSupportPrimary(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "SupportSpecial" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSupportSpecial(InputAction.CallbackContext context);
             /// <summary>
             /// Method invoked when associated input action "Reload" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>

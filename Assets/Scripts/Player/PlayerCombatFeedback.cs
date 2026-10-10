@@ -1,14 +1,17 @@
+using System;
 using DustScrapper.Cameras;
 using DustScrapper.Combat;
+using DustScrapper.Magic;
 using DustScrapper.Weapons;
 using UnityEngine;
 
 namespace DustScrapper.Player
 {
     /// <summary>
-    /// 플레이어의 전투 사건을 화면 반응으로 잇는다.
+    /// 플레이어의 전투 사건을 화면 반응으로 잇는다. 무기 손과 보조 손을 똑같이 본다.
     /// - 총을 쏘면 화면이 쏜 방향 반대로 튄다(무기마다 세기가 다르다: GunData.RecoilKick).
-    /// - 근접 무기로 맞히면 화면이 짧게 떨린다.
+    /// - 마법 탄이 나가면 화면이 쏜 방향 반대로 살짝 튄다.
+    /// - 근접 공격으로 맞히면 화면이 짧게 떨린다.
     /// - 맞으면 화면이 크게 떨린다.
     /// 적이 쏘거나 맞을 때는 화면이 움직이면 안 되므로, 이 연결은 플레이어에게만 둔다.
     /// </summary>
@@ -17,51 +20,60 @@ namespace DustScrapper.Player
     {
         [SerializeField] Health health;
         [SerializeField] WeaponLoadout loadout;
+        [SerializeField] SupportHand supportHand;
         [SerializeField] CameraShake cameraShake;
 
         [Tooltip("맞았을 때 더할 화면 충격 (0~1)")]
         [SerializeField, Range(0f, 1f)] float damagedTrauma = 0.45f;
-        [Tooltip("근접 무기로 맞혔을 때 더할 화면 충격 (0~1)")]
+        [Tooltip("근접 공격으로 맞혔을 때 더할 화면 충격 (0~1)")]
         [SerializeField, Range(0f, 1f)] float meleeHitTrauma = 0.25f;
+        [Tooltip("마법 탄이 나갈 때 화면이 튀는 거리 (칸)")]
+        [SerializeField, Min(0f)] float spellKick = 0.05f;
 
-        Gun currentGun;
-        MeleeWeapon currentMelee;
+        HandWatch weaponHandWatch;
+        HandWatch supportHandWatch;
 
         void Awake()
         {
             if (health == null) health = GetComponent<Health>();
             if (loadout == null) loadout = GetComponent<WeaponLoadout>();
+            if (supportHand == null) supportHand = GetComponent<SupportHand>();
+            weaponHandWatch = new HandWatch(this);
+            supportHandWatch = new HandWatch(this);
         }
 
         void OnEnable()
         {
             health.Damaged += OnDamaged;
-            loadout.CurrentChanged += OnWeaponChanged;
-            OnWeaponChanged(loadout.Current);
+            if (loadout != null)
+            {
+                loadout.CurrentChanged += weaponHandWatch.Watch;
+                weaponHandWatch.Watch(loadout.Current);
+            }
+            if (supportHand != null)
+            {
+                supportHand.CurrentChanged += supportHandWatch.Watch;
+                supportHandWatch.Watch(supportHand.Current);
+            }
         }
 
         void OnDisable()
         {
             health.Damaged -= OnDamaged;
-            loadout.CurrentChanged -= OnWeaponChanged;
-            OnWeaponChanged(null);
+            if (loadout != null) loadout.CurrentChanged -= weaponHandWatch.Watch;
+            if (supportHand != null) supportHand.CurrentChanged -= supportHandWatch.Watch;
+            weaponHandWatch.Watch(null);
+            supportHandWatch.Watch(null);
         }
 
-        void OnWeaponChanged(Weapon weapon)
+        void OnGunFired(GunFire gun, Vector2 direction)
         {
-            if (currentGun != null) currentGun.Fired -= OnGunFired;
-            if (currentMelee != null) currentMelee.Hit -= OnMeleeHit;
-
-            currentGun = weapon as Gun;
-            currentMelee = weapon as MeleeWeapon;
-
-            if (currentGun != null) currentGun.Fired += OnGunFired;
-            if (currentMelee != null) currentMelee.Hit += OnMeleeHit;
+            if (cameraShake != null) cameraShake.Kick(-direction, gun.GunData.RecoilKick);
         }
 
-        void OnGunFired(Vector2 direction)
+        void OnSpellReleased(Vector2 direction)
         {
-            if (cameraShake != null) cameraShake.Kick(-direction, currentGun.GunData.RecoilKick);
+            if (cameraShake != null) cameraShake.Kick(-direction, spellKick);
         }
 
         void OnMeleeHit(DamageInfo info)
@@ -72,6 +84,40 @@ namespace DustScrapper.Player
         void OnDamaged(DamageInfo info)
         {
             if (cameraShake != null) cameraShake.AddTrauma(damagedTrauma);
+        }
+
+        /// <summary>
+        /// 한 손에 든 장비의 스킬 사건을 듣는다. 장비가 바뀌면 옛 장비에서 떼고 새 장비에 붙는다.
+        /// 손마다 하나씩 두어서 두 손이 서로의 구독을 건드리지 않게 한다.
+        /// </summary>
+        sealed class HandWatch
+        {
+            readonly PlayerCombatFeedback owner;
+            readonly Action<Vector2> onGunFired;
+            GunFire gun;
+            MeleeAttack melee;
+            SpellCast spell;
+
+            public HandWatch(PlayerCombatFeedback owner)
+            {
+                this.owner = owner;
+                onGunFired = direction => owner.OnGunFired(gun, direction);
+            }
+
+            public void Watch(Weapon weapon)
+            {
+                if (gun != null) gun.Fired -= onGunFired;
+                if (melee != null) melee.Hit -= owner.OnMeleeHit;
+                if (spell != null) spell.Released -= owner.OnSpellReleased;
+
+                gun = weapon != null ? weapon.FindSkill<GunFire>() : null;
+                melee = weapon != null ? weapon.FindSkill<MeleeAttack>() : null;
+                spell = weapon != null ? weapon.FindSkill<SpellCast>() : null;
+
+                if (gun != null) gun.Fired += onGunFired;
+                if (melee != null) melee.Hit += owner.OnMeleeHit;
+                if (spell != null) spell.Released += owner.OnSpellReleased;
+            }
         }
     }
 }

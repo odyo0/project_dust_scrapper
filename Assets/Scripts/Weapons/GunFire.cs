@@ -4,11 +4,12 @@ using UnityEngine;
 namespace DustScrapper.Weapons
 {
     /// <summary>
-    /// 총. 방아쇠 상태를 받아 연사 방식에 맞게 탄을 쏘고, 탄창·재장전·탄 퍼짐을 관리한다.
-    /// 재장전할 때는 주인(WeaponLoadout)의 탄 공급원(가방)에서 이 총에 맞는 탄을 꺼낸다. 꺼낼 탄이 없으면 장전하지 못한다.
+    /// 총 쏘기 스킬. 키 상태를 받아 연사 방식에 맞게 탄을 쏘고, 탄창·재장전·탄 퍼짐을 관리한다. 수치는 장비 데이터(GunData)에서 읽는다.
+    /// 재장전할 때는 든 쪽의 탄 공급원(가방)에서 이 총에 맞는 탄을 꺼낸다. 꺼낼 탄이 없으면 장전하지 못한다.
     /// 화면 반동이나 총구 불꽃 같은 연출은 하지 않고 Fired 이벤트만 알린다(연출은 GunFireVisual 등이 맡는다).
     /// </summary>
-    public sealed class Gun : Weapon
+    [DisallowMultipleComponent]
+    public sealed class GunFire : Skill
     {
         /// <summary>단발 총에서 쿨다운 중에 누른 클릭을 이 시간(초) 동안 기억했다가 쏜다. 빠른 연타가 씹히지 않게.</summary>
         const float PressBufferTime = 0.12f;
@@ -26,9 +27,9 @@ namespace DustScrapper.Weapons
         public bool IsReloading => reloadTimer > 0f;
 
         /// <summary>탄창 밖에 남은, 이 총에 넣을 수 있는 탄 수(가방 안).</summary>
-        public int ReserveAmmo => Owner.AmmoSource != null ? Owner.AmmoSource.CountOf(gun.Ammo) : 0;
+        public int ReserveAmmo => Holder.AmmoSource != null ? Holder.AmmoSource.CountOf(gun.Ammo) : 0;
 
-        public override bool IsBusy => base.IsBusy || IsReloading;
+        public override bool IsBusy => IsReloading;
         public float ReloadProgress => IsReloading && gun.ReloadTime > 0f ? 1f - reloadTimer / gun.ReloadTime : 0f;
 
         /// <summary>지금 탄이 조준선에서 벗어날 수 있는 최대 각도(도). 조준점 표시가 읽는다.</summary>
@@ -40,12 +41,12 @@ namespace DustScrapper.Weapons
         /// <summary>재장전을 시작했을 때.</summary>
         public event Action ReloadStarted;
 
-        protected override void OnInitialize()
+        protected override void OnBind()
         {
-            gun = Data as GunData;
+            gun = Weapon.Data as GunData;
             if (gun == null)
             {
-                Debug.LogError($"{name}: Gun 프리팹에는 GunData를 써야 한다.", this);
+                Debug.LogError($"{name}: 총 쏘기 스킬은 GunData 장비에만 붙인다.", this);
                 enabled = false;
                 return;
             }
@@ -60,7 +61,7 @@ namespace DustScrapper.Weapons
             AmmoInMagazine = Mathf.Clamp(amount, 0, gun.MagazineSize);
         }
 
-        protected override void OnHolstered()
+        protected override void OnCancel()
         {
             reloadTimer = 0f;
             pressBuffer = 0f;
@@ -68,7 +69,7 @@ namespace DustScrapper.Weapons
 
         public override void Reload()
         {
-            if (!IsDrawn || IsReloading || AmmoInMagazine >= gun.MagazineSize) return;
+            if (IsReloading || AmmoInMagazine >= gun.MagazineSize) return;
             if (ReserveAmmo <= 0) return;
 
             reloadTimer = gun.ReloadTime;
@@ -76,10 +77,10 @@ namespace DustScrapper.Weapons
             if (reloadTimer <= 0f) FinishReload();
         }
 
-        protected override void Tick(bool triggerPressed, bool triggerHeld, float deltaTime)
+        protected override void Tick(bool pressed, bool held, float deltaTime)
         {
             cooldown -= deltaTime;
-            pressBuffer = triggerPressed ? PressBufferTime : pressBuffer - deltaTime;
+            pressBuffer = pressed ? PressBufferTime : pressBuffer - deltaTime;
             CurrentSpread = Mathf.MoveTowards(CurrentSpread, gun.BaseSpread, gun.SpreadRecovery * deltaTime);
 
             if (IsReloading)
@@ -91,7 +92,7 @@ namespace DustScrapper.Weapons
                 return;
             }
 
-            bool wantsToFire = gun.FireMode == FireMode.FullAuto ? triggerHeld : pressBuffer > 0f;
+            bool wantsToFire = gun.FireMode == FireMode.FullAuto ? held : pressBuffer > 0f;
             if (!wantsToFire || cooldown > 0f)
             {
                 // 쏘지 않는 동안 쿨다운이 음수로 쌓이면 다음에 한꺼번에 여러 발이 나가므로 0에서 멈춘다.
@@ -117,8 +118,8 @@ namespace DustScrapper.Weapons
             cooldown += 1f / gun.ShotsPerSecond;
             pressBuffer = 0f;
 
-            Vector2 aim = Owner.AimDirection;
-            Vector2 start = Owner.transform.position;
+            Vector2 aim = Holder.AimDirection;
+            Vector2 start = Holder.transform.position;
             Vector2 muzzlePoint = muzzle != null ? (Vector2)muzzle.position : start;
             float muzzleDistance = Vector2.Distance(start, muzzlePoint);
 
@@ -130,11 +131,11 @@ namespace DustScrapper.Weapons
                 // 총구가 벽 너머로 삐져나와 있어도 벽을 뚫지 않게 하려는 것이다.
                 Projectile projectile = Instantiate(gun.Projectile, start, Quaternion.identity);
                 projectile.Launch(start, direction, muzzleDistance, gun.ProjectileSpeed, gun.Range,
-                    gun.Damage, gun.Knockback, Owner.gameObject);
+                    gun.Damage, gun.Knockback, Holder.gameObject);
             }
 
             CurrentSpread = Mathf.Min(gun.MaxSpread, CurrentSpread + gun.SpreadPerShot);
-            EmitUseNoise();
+            EmitNoise(gun.NoiseRadius);
             Fired?.Invoke(aim);
         }
 
@@ -143,7 +144,7 @@ namespace DustScrapper.Weapons
             reloadTimer = 0f;
             // 탄은 장전이 끝날 때 꺼낸다. 중간에 무기를 바꿔 장전이 취소되면 탄이 줄지 않는다.
             int wanted = gun.MagazineSize - AmmoInMagazine;
-            AmmoInMagazine += Owner.AmmoSource != null ? Owner.AmmoSource.Remove(gun.Ammo, wanted) : 0;
+            AmmoInMagazine += Holder.AmmoSource != null ? Holder.AmmoSource.Remove(gun.Ammo, wanted) : 0;
         }
     }
 }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5177620223783422538}
   - component: {fileID: 8044312664460440849}
   - component: {fileID: 1989940499010760730}
+  - component: {fileID: 2250674448581308316}
   m_Layer: 0
   m_Name: Gun_Pistol
   m_TagString: Untagged
@@ -81,6 +82,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Audio.GunAudio
   fire: {fileID: 11400000, guid: ab5f8b9b3bee147c9a4c8df79903b0df, type: 2}
   reload: {fileID: 11400000, guid: 5324661b432cf4c77847847bd85b4175, type: 2}
+--- !u!114 &2250674448581308316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802053546011727084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 499ffaf56c08840049ebf956ff399a5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.Weapon
+  primary: {fileID: 5177620223783422538}
+  special: {fileID: 0}
 --- !u!1 &8049597874853256191
 GameObject:
   m_ObjectHideFlags: 0

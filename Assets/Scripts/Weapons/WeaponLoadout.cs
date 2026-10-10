@@ -1,22 +1,24 @@
 using System;
 using DustScrapper.Actors;
 using DustScrapper.Items;
+using DustScrapper.Magic;
 using UnityEngine;
 
 namespace DustScrapper.Weapons
 {
     /// <summary>
-    /// 지금 바로 꺼내 쓸 수 있는 무기 슬롯. 슬롯마다 무기를 만들어 손에 붙여 두고, 하나만 꺼내 둔다.
+    /// 무기 손(왼손잡이 기준 왼손)의 무기 슬롯. 슬롯마다 무기를 만들어 손에 붙여 두고, 하나만 꺼내 둔다.
+    /// 든 무기의 기본 스킬은 좌클릭, 특수 스킬은 Space다(플레이어는 SkillRouter를 거쳐 받는다).
     /// 아무 슬롯도 들지 않은 상태가 "빈손"이다. 빈손일 때 쓸 무기(주먹)를 따로 하나 두면 그것을 꺼내 든다.
     /// 주먹은 슬롯에 들어가지 않아서 가방 화면에 보이지 않고 떨어뜨릴 수도 없다.
     /// 판 도중에 주운 무기를 넣거나(PutWeapon) 뺄 수 있고, 가방 화면에서는 가방과 같은 칸 창구(IItemSlots)로 옮겨진다.
-    /// 두뇌(플레이어 입력이나 AI)는 이곳에 방아쇠·재장전·슬롯 바꾸기만 요청하고, 손에 든 무기가 무엇인지는 몰라도 된다.
+    /// 두뇌(플레이어 입력이나 AI)는 이곳에 기본·특수 스킬 키·재장전·슬롯 바꾸기만 요청하고, 손에 든 무기가 무엇인지는 몰라도 된다.
     /// 주운 물건을 담는 가방(Inventory)과는 따로이고, 총이 재장전할 탄만 가방에서 꺼낸다.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class WeaponLoadout : MonoBehaviour, IItemSlots
+    public sealed class WeaponLoadout : MonoBehaviour, IItemSlots, IWeaponHolder
     {
-        [Tooltip("무기를 붙일 손 위치. 상체 아래에 두어 조준을 따라 돌게 한다.")]
+        [Tooltip("무기를 붙일 손 위치. 상체 아래에 두어 조준을 따라 돌게 한다. 손잡이는 이 위치와 보조 손 위치를 맞바꿔 정한다.")]
         [SerializeField] Transform hand;
         [SerializeField] BodyAim aim;
 
@@ -29,9 +31,13 @@ namespace DustScrapper.Weapons
         [Tooltip("총이 재장전할 때 탄을 꺼낼 곳(가방). 비워 두면 탄창에 든 탄만 쓴다.")]
         [SerializeField] Inventory ammoSource;
 
+        [Tooltip("마법 장비(마법서 등)가 쓸 MP. 비워 두면 같은 물체에서 찾고, 없으면 마법을 못 쓴다.")]
+        [SerializeField] Mana mana;
+
         Weapon[] weapons;
         Weapon unarmedWeapon;
-        bool triggerHeld;
+        bool primaryHeld;
+        bool specialHeld;
 
         public int SlotCount => slots.Length;
 
@@ -42,6 +48,7 @@ namespace DustScrapper.Weapons
         public Weapon Current { get; private set; }
         public Vector2 AimDirection => aim.AimDirection;
         public Inventory AmmoSource => ammoSource;
+        public Mana Mana => mana;
 
         /// <summary>손에 든 무기가 바뀌었을 때. 값은 새 무기(빈손이면 주먹, 주먹도 없으면 null).</summary>
         public event Action<Weapon> CurrentChanged;
@@ -54,27 +61,28 @@ namespace DustScrapper.Weapons
         void Awake()
         {
             if (aim == null) aim = GetComponent<BodyAim>();
+            if (mana == null) mana = GetComponent<Mana>();
 
             weapons = new Weapon[slots.Length];
             for (int i = 0; i < slots.Length; i++)
             {
-                if (slots[i] != null) weapons[i] = CreateWeapon(slots[i]);
+                if (slots[i] != null) weapons[i] = Weapon.Spawn(slots[i], hand, this);
             }
-            if (unarmed != null) unarmedWeapon = CreateWeapon(unarmed);
+            if (unarmed != null) unarmedWeapon = Weapon.Spawn(unarmed, hand, this);
             EquipFirstAvailable();
         }
 
         void OnEnable()
         {
             // 죽었다 살아나는 등 꺼졌다 켜졌을 때 들고 있던 무기를 다시 꺼낸다.
-            if (Current != null && !Current.gameObject.activeSelf) Current.Draw(false);
+            if (Current != null && !Current.gameObject.activeSelf) Current.Draw(false, false);
         }
 
         void OnDisable()
         {
-            triggerHeld = false;
+            primaryHeld = false;
+            specialHeld = false;
             if (Current == null) return;
-            Current.SetTrigger(false);
             Current.Holster();
         }
 
@@ -97,14 +105,22 @@ namespace DustScrapper.Weapons
             if (Current != null) Current.Holster();
             CurrentIndex = index;
             Current = index >= 0 ? weapons[index] : unarmedWeapon;
-            if (Current != null) Current.Draw(triggerHeld);
+            if (Current != null) Current.Draw(primaryHeld, specialHeld);
             CurrentChanged?.Invoke(Current);
         }
 
-        public void SetTrigger(bool held)
+        /// <summary>기본 스킬 키(플레이어는 좌클릭)를 누르고 있는가.</summary>
+        public void SetPrimary(bool held)
         {
-            triggerHeld = held;
-            if (Current != null) Current.SetTrigger(held);
+            primaryHeld = held;
+            if (Current != null) Current.SetPrimary(held);
+        }
+
+        /// <summary>특수 스킬 키(플레이어는 Space)를 누르고 있는가.</summary>
+        public void SetSpecial(bool held)
+        {
+            specialHeld = held;
+            if (Current != null) Current.SetSpecial(held);
         }
 
         public void Reload()
@@ -144,7 +160,7 @@ namespace DustScrapper.Weapons
         {
             Weapon weapon = GetWeapon(index);
             if (weapon == null) return ItemStack.Empty;
-            return new ItemStack(weapon.Data, 1, weapon is Gun gun ? gun.AmmoInMagazine : 0);
+            return new ItemStack(weapon.Data, 1, LoadedAmmoOf(weapon));
         }
 
         /// <summary>무기 슬롯에는 무기만 놓인다.</summary>
@@ -172,9 +188,10 @@ namespace DustScrapper.Weapons
 
         bool Install(int index, WeaponData data, int loadedAmmo)
         {
-            Weapon weapon = CreateWeapon(data);
+            Weapon weapon = Weapon.Spawn(data, hand, this);
             if (weapon == null) return false;
-            if (weapon is Gun gun) gun.SetMagazine(loadedAmmo);
+            GunFire gun = weapon.FindSkill<GunFire>();
+            if (gun != null) gun.SetMagazine(loadedAmmo);
             weapons[index] = weapon;
             return true;
         }
@@ -185,12 +202,10 @@ namespace DustScrapper.Weapons
             Weapon weapon = GetWeapon(index);
             if (weapon == null) return ItemStack.Empty;
 
-            int loaded = weapon is Gun gun ? gun.AmmoInMagazine : 0;
-            var stack = new ItemStack(weapon.Data, 1, loaded);
+            var stack = new ItemStack(weapon.Data, 1, LoadedAmmoOf(weapon));
 
             if (index == CurrentIndex)
             {
-                weapon.SetTrigger(false);
                 weapon.Holster();
                 CurrentIndex = -1;
                 Current = null;
@@ -212,19 +227,11 @@ namespace DustScrapper.Weapons
             Hold(-1);
         }
 
-        Weapon CreateWeapon(WeaponData data)
+        /// <summary>총이면 지금 탄창 탄 수, 아니면 0. 무기를 물건 묶음으로 바꿀 때 탄창을 함께 넘긴다.</summary>
+        static int LoadedAmmoOf(Weapon weapon)
         {
-            if (data.Prefab == null)
-            {
-                Debug.LogError($"{name}: {data.name}에 무기 프리팹이 없다.", data);
-                return null;
-            }
-
-            Weapon weapon = Instantiate(data.Prefab, hand);
-            weapon.name = data.name;
-            weapon.Initialize(data, this);
-            weapon.gameObject.SetActive(false);
-            return weapon;
+            GunFire gun = weapon.FindSkill<GunFire>();
+            return gun != null ? gun.AmmoInMagazine : 0;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace DustScrapper.UI
 
         [Tooltip("퍼짐이 0일 때도 띄워 둘 최소 간격 (화면 기준 크기)")]
         [SerializeField, Min(0f)] float minGap = 4f;
-        [Tooltip("근접 무기를 들었을 때 간격")]
+        [Tooltip("총이 아닌 것을 들었을 때 간격")]
         [SerializeField, Min(0f)] float meleeGap = 2f;
 
         RectTransform rect;
@@ -57,7 +57,8 @@ namespace DustScrapper.UI
             Vector2 screen = input.AimScreenPosition;
             rect.position = screen;
 
-            float gap = loadout != null && loadout.Current is Gun gun ? SpreadGap(gun, screen) : meleeGap;
+            GunFire gun = loadout != null && loadout.Current != null ? loadout.Current.FindSkill<GunFire>() : null;
+            float gap = gun != null ? SpreadGap(gun, screen) : meleeGap;
             for (int i = 0; i < ticks.Length && i < TickDirections.Length; i++)
             {
                 if (ticks[i] != null) ticks[i].anchoredPosition = TickDirections[i] * gap;
@@ -65,7 +66,7 @@ namespace DustScrapper.UI
         }
 
         /// <summary>커서까지의 거리에서 퍼짐 각도만큼 벌어지는 폭을 화면 크기로 바꾼다.</summary>
-        float SpreadGap(Gun gun, Vector2 screen)
+        float SpreadGap(GunFire gun, Vector2 screen)
         {
             if (viewCamera == null || !viewCamera.orthographic) return minGap;
 

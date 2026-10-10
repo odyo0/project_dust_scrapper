@@ -7,7 +7,7 @@ namespace DustScrapper.Player
 {
     /// <summary>
     /// 플레이어 입력(의도)을 몸에 전달한다: 이동 의도는 ActorMotor로, 조준점은 BodyAim으로,
-    /// 발사·재장전·슬롯 바꾸기는 WeaponLoadout으로, 줍기·뒤지기 키는 PlayerInteractor로. 살금살금 키를 누르면 이동 세기를 줄인다(발소리가 안 나는 속도).
+    /// 스킬 키(좌클릭·우클릭·F)와 재장전은 SkillRouter로(어느 손의 어느 스킬인지는 거기서 정한다), 슬롯 바꾸기는 WeaponLoadout으로, 줍기·뒤지기 키는 PlayerInteractor로. 살금살금 키를 누르면 이동 세기를 줄인다(발소리가 안 나는 속도).
     /// 달리기 키를 누르면 몸에 달리라고 알린다. 살금살금 키와 같이 누르면 살금살금이 이긴다(조용히 하려던 것이 무시되어 들키지 않게).
     /// 적은 같은 몸 부품을 쓰고 이 자리에 자기 AI 두뇌를 붙인다.
     /// </summary>
@@ -19,6 +19,7 @@ namespace DustScrapper.Player
         [SerializeField] ActorMotor motor;
         [SerializeField] BodyAim bodyAim;
         [SerializeField] WeaponLoadout loadout;
+        [SerializeField] SkillRouter skills;
         [SerializeField] PlayerInteractor interactor;
         [Tooltip("비워 두면 Main Camera를 쓴다.")]
         [SerializeField] Camera viewCamera;
@@ -32,6 +33,7 @@ namespace DustScrapper.Player
             if (motor == null) motor = GetComponent<ActorMotor>();
             if (bodyAim == null) bodyAim = GetComponent<BodyAim>();
             if (loadout == null) loadout = GetComponent<WeaponLoadout>();
+            if (skills == null) skills = GetComponent<SkillRouter>();
             if (interactor == null) interactor = GetComponent<PlayerInteractor>();
             if (viewCamera == null) viewCamera = Camera.main;
         }
@@ -41,7 +43,7 @@ namespace DustScrapper.Player
             // 꺼진 뒤에도 마지막 명령이 남아 혼자 걷거나 쏘지 않게 비운다.
             motor.MoveIntent = Vector2.zero;
             motor.Sprinting = false;
-            if (loadout != null) loadout.SetTrigger(false);
+            if (skills != null) skills.ReleaseAll();
             if (interactor != null) interactor.SetHeld(false);
         }
 
@@ -58,10 +60,12 @@ namespace DustScrapper.Player
 
             if (interactor != null) interactor.SetHeld(input.InteractHeld);
 
-            if (loadout == null) return;
-            if (input.SlotPressed >= 0) loadout.Equip(input.SlotPressed);
-            if (input.ReloadPressed) loadout.Reload();
-            loadout.SetTrigger(input.FireHeld);
+            if (loadout != null && input.SlotPressed >= 0) loadout.Equip(input.SlotPressed);
+
+            if (skills == null) return;
+            if (input.ReloadPressed) skills.Reload();
+            skills.SetWeaponHand(input.FireHeld, false);
+            skills.SetSupportHand(input.SupportPrimaryHeld, input.SupportSpecialHeld);
         }
     }
 }

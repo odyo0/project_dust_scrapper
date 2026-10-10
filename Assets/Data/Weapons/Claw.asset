@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: Claw
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.MeleeData
   displayName: Claw
-  prefab: {fileID: 4466716217094211534, guid: ff3c5447427d441598185a81b59f606e, type: 3}
+  maxStack: 1
+  value: 0
+  placeholderColor: {r: 1, g: 1, b: 1, a: 1}
+  prefab: {fileID: 7946516936456497775, guid: ff3c5447427d441598185a81b59f606e, type: 3}
   grip: 0
   damage: 15
   knockback: 3

@@ -7,7 +7,7 @@ namespace DustScrapper.Player
     /// <summary>
     /// 키보드·마우스 입력을 읽어 플레이어의 "의도"(어디로 가려는지, 어디를 보는지)로 정리해 둔다.
     /// Input System을 직접 만지는 곳은 여기 하나뿐이고, 나머지는 이 값만 읽는다.
-    /// 가방 화면처럼 마우스를 쓰는 창이 열려 있으면(MenuOpen) 이동(달리기·살금살금 포함)만 받고, 조준·발사·재장전·상호작용·슬롯은 막는다.
+    /// 가방 화면처럼 마우스를 쓰는 창이 열려 있으면(MenuOpen) 이동(달리기·살금살금 포함)만 받고, 조준·발사·마법·재장전·상호작용·슬롯은 막는다.
     /// </summary>
     [DefaultExecutionOrder(-100)]
     [DisallowMultipleComponent]
@@ -32,6 +32,12 @@ namespace DustScrapper.Player
 
         /// <summary>사용/발사 키를 누르고 있는가. 한 프레임 안에 눌렀다 뗀 짧은 클릭도 누른 것으로 본다.</summary>
         public bool FireHeld { get; private set; }
+
+        /// <summary>보조 손 기본 스킬 키(우클릭)를 누르고 있는가. 한 프레임 안에 눌렀다 뗀 짧은 클릭도 누른 것으로 본다.</summary>
+        public bool SupportPrimaryHeld { get; private set; }
+
+        /// <summary>보조 손 특수 스킬 키(F)를 누르고 있는가. 짧게 톡 눌러도 놓치지 않는다.</summary>
+        public bool SupportSpecialHeld { get; private set; }
 
         /// <summary>이번 프레임에 재장전 키를 눌렀는가.</summary>
         public bool ReloadPressed { get; private set; }
@@ -81,6 +87,8 @@ namespace DustScrapper.Player
             SprintHeld = false;
             SneakHeld = false;
             FireHeld = false;
+            SupportPrimaryHeld = false;
+            SupportSpecialHeld = false;
             ReloadPressed = false;
             InteractHeld = false;
             InventoryPressed = false;
@@ -106,6 +114,8 @@ namespace DustScrapper.Player
             {
                 LookAheadHeld = false;
                 FireHeld = false;
+                SupportPrimaryHeld = false;
+                SupportSpecialHeld = false;
                 ReloadPressed = false;
                 InteractHeld = false;
                 SlotPressed = -1;
@@ -115,6 +125,8 @@ namespace DustScrapper.Player
             AimScreenPosition = player.Aim.ReadValue<Vector2>();
             LookAheadHeld = player.LookAhead.IsPressed();
             FireHeld = player.Fire.IsPressed() || player.Fire.WasPressedThisFrame();
+            SupportPrimaryHeld = player.SupportPrimary.IsPressed() || player.SupportPrimary.WasPressedThisFrame();
+            SupportSpecialHeld = player.SupportSpecial.IsPressed() || player.SupportSpecial.WasPressedThisFrame();
             ReloadPressed = player.Reload.WasPressedThisFrame();
             InteractHeld = player.Interact.IsPressed();
             SlotPressed = ReadSlotPressed(player);

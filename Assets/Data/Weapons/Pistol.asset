@@ -16,7 +16,7 @@ MonoBehaviour:
   maxStack: 1
   value: 60
   placeholderColor: {r: 0.62, g: 0.64, b: 0.7, a: 1}
-  prefab: {fileID: 5177620223783422538, guid: 846aca59114d7493f9036ef0490ca148, type: 3}
+  prefab: {fileID: 2250674448581308316, guid: 846aca59114d7493f9036ef0490ca148, type: 3}
   grip: 0
   damage: 26
   knockback: 1.6

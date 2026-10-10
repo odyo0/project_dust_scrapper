@@ -6,7 +6,7 @@ namespace DustScrapper.Weapons
     /// 총을 쏠 때의 총 자체 연출: 총 그림이 뒤로 튀었다 돌아오고, 총구 불꽃이 아주 잠깐 보인다.
     /// 화면 반동은 여기서 하지 않는다(카메라는 플레이어 쪽에서만 움직여야 해서 PlayerCombatFeedback이 맡는다).
     /// </summary>
-    [RequireComponent(typeof(Gun))]
+    [RequireComponent(typeof(GunFire))]
     [DisallowMultipleComponent]
     public sealed class GunFireVisual : MonoBehaviour
     {
@@ -21,14 +21,14 @@ namespace DustScrapper.Weapons
         [SerializeField, Min(0.1f)] float returnSharpness = 25f;
         [SerializeField, Min(0f)] float flashDuration = 0.04f;
 
-        Gun gun;
+        GunFire gun;
         Vector3 bodyRestPosition;
         Vector3 flashBaseScale = Vector3.one;
         float flashTimer;
 
         void Awake()
         {
-            gun = GetComponent<Gun>();
+            gun = GetComponent<GunFire>();
             if (body != null) bodyRestPosition = body.localPosition;
             if (muzzleFlash != null)
             {

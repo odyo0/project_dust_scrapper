@@ -4,16 +4,16 @@ using UnityEngine;
 namespace DustScrapper.Audio
 {
     /// <summary>총 프리팹에 붙어서 총의 사건(쏘기, 재장전 시작)을 소리로 바꾼다. 총 스크립트는 소리를 모른다.</summary>
-    [RequireComponent(typeof(Gun))]
+    [RequireComponent(typeof(GunFire))]
     [DisallowMultipleComponent]
     public sealed class GunAudio : MonoBehaviour
     {
         [SerializeField] SoundCue fire;
         [SerializeField] SoundCue reload;
 
-        Gun gun;
+        GunFire gun;
 
-        void Awake() => gun = GetComponent<Gun>();
+        void Awake() => gun = GetComponent<GunFire>();
 
         void OnEnable()
         {

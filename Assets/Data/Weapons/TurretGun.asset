@@ -13,17 +13,22 @@ MonoBehaviour:
   m_Name: TurretGun
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.GunData
   displayName: "\uD3EC\uD0D1 \uCD1D"
-  prefab: {fileID: 535578523520972447, guid: 69363a71619554250a5013596528d3c6, type: 3}
+  maxStack: 1
+  value: 0
+  placeholderColor: {r: 1, g: 1, b: 1, a: 1}
+  prefab: {fileID: 5935643673782445848, guid: 69363a71619554250a5013596528d3c6, type: 3}
   grip: 1
   damage: 10
   knockback: 1.2
   drawTime: 0
+  noiseRadius: 0
   fireMode: 1
   shotsPerSecond: 5
   pelletsPerShot: 1
   projectile: {fileID: 4609622063979298941, guid: 4713e33cfa3eb4bb4912d3096f7e69a9, type: 3}
   projectileSpeed: 9
   range: 13
+  ammo: {fileID: 0}
   magazineSize: 20
   reloadTime: 2
   baseSpread: 3

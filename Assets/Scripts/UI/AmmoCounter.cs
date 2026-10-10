@@ -6,7 +6,7 @@ namespace DustScrapper.UI
 {
     /// <summary>
     /// 손에 든 총의 탄 표시 ("탄창 안 / 가방 속 남은 탄")와 재장전 진행 막대.
-    /// 근접 무기를 들면 통째로 숨긴다. 탄창이 비면 숫자를 경고색으로, 가방 속 탄까지 없으면 더 흐린 경고색으로 바꾼다.
+    /// 총이 아닌 것을 들면 통째로 숨긴다. 탄창이 비면 숫자를 경고색으로, 가방 속 탄까지 없으면 더 흐린 경고색으로 바꾼다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class AmmoCounter : MonoBehaviour
@@ -34,7 +34,7 @@ namespace DustScrapper.UI
 
         void Update()
         {
-            Gun gun = loadout != null ? loadout.Current as Gun : null;
+            GunFire gun = loadout != null && loadout.Current != null ? loadout.Current.FindSkill<GunFire>() : null;
             if (root != null && root.activeSelf != (gun != null)) root.SetActive(gun != null);
             if (gun == null || gun.GunData == null) return;
 

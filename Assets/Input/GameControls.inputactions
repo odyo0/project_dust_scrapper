@@ -60,6 +60,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SupportPrimary",
+                    "type": "Button",
+                    "id": "0cfddc20-944d-4f48-80e5-6ff3c8bd6ea7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SupportSpecial",
+                    "type": "Button",
+                    "id": "63636076-8c26-4f3a-a446-416c174fcd0c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Reload",
                     "type": "Button",
                     "id": "a304a884-8f8e-440c-beda-558f771d74d3",
@@ -231,6 +249,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "66be683b-2ac7-49e5-ab3b-5d9f6ad66a92",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SupportPrimary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "004d9d22-cc8a-4b76-b9c9-3e03b61bf339",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SupportSpecial",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
