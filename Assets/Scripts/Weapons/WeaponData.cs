@@ -1,8 +1,20 @@
 using DustScrapper.Items;
+using DustScrapper.Magic;
 using UnityEngine;
 
 namespace DustScrapper.Weapons
 {
+    /// <summary>어느 칸에 끼울 수 있는가. 무기 칸 = 무기 손(좌클릭·Space), 보조 칸 = 보조 손(우클릭·F).</summary>
+    public enum HandSlotRule
+    {
+        /// <summary>무기 칸에만 (총, 칼, 마법서, 왼손 글러브 등)</summary>
+        WeaponSlot,
+        /// <summary>보조 칸에만 (오른손 글러브 등)</summary>
+        SupportSlot,
+        /// <summary>어느 칸이든 (스태프 등)</summary>
+        Either,
+    }
+
     /// <summary>무기를 쥐는 방식. 나중에 상체·팔 그림 레이어를 고를 때 쓴다(그림 수 = 쥐는 방식 × 동작).</summary>
     public enum GripType
     {
@@ -22,7 +34,16 @@ namespace DustScrapper.Weapons
         [Tooltip("손에 들 때 만들 장비 프리팹(Weapon). 프리팹의 스킬 부품이 이 데이터 종류와 맞아야 한다(총 쏘기 = GunData 등).")]
         [SerializeField] Weapon prefab;
 
+        [Tooltip("두손 무기를 무기 칸에 들면, '두손 무기와 같이 못 씀' 장비를 낀 보조 칸은 빈손으로 친다.")]
         [SerializeField] GripType grip = GripType.OneHanded;
+
+        [Header("칸·속성")]
+        [Tooltip("어느 칸에 끼울 수 있는가")]
+        [SerializeField] HandSlotRule slotRule = HandSlotRule.WeaponSlot;
+        [Tooltip("보조 칸에 있을 때 무기 칸에 두손 무기를 들면 쓰지 못하고 보조 손을 빈손으로 친다 (스태프)")]
+        [SerializeField] bool conflictsWithTwoHanded;
+        [Tooltip("이 장비의 속성. 비워 두면 무속성. 반대 손 장비의 마법 이펙트를 바꾼다.")]
+        [SerializeField] ElementData element;
 
         [Tooltip("한 번 맞힐 때 피해 (총 쏘기·근접 공격 스킬이 쓴다)")]
         [SerializeField, Min(0f)] float damage = 10f;
@@ -39,6 +60,10 @@ namespace DustScrapper.Weapons
         public override int MaxStack => 1;
         public Weapon Prefab => prefab;
         public GripType Grip => grip;
+        public bool FitsWeaponSlot => slotRule != HandSlotRule.SupportSlot;
+        public bool FitsSupportSlot => slotRule != HandSlotRule.WeaponSlot;
+        public bool ConflictsWithTwoHanded => conflictsWithTwoHanded;
+        public ElementData Element => element;
         public float Damage => damage;
         public float Knockback => knockback;
         public float DrawTime => drawTime;

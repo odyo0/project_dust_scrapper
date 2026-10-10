@@ -15,14 +15,19 @@ namespace DustScrapper.Magic
     /// 탄을 쏘는 마법 스킬. 누르면 MP를 쓰고 시전(짧은 준비) → 탄 발사 → 다음 시전까지 기다리기 순서로 돈다.
     /// 누르고 있으면 기다리는 시간이 끝날 때마다 계속 나간다. MP가 모자라면 나가지 않고 MP 쪽이 SpendFailed를 알린다.
     /// 시전하는 동안은 IsCasting이 켜져서 반대 손 공격이 막힌다(SkillRouter). 탄은 총과 같은 Projectile을 쓴다.
+    /// 이펙트(지금은 탄 색): 반대 손 장비의 속성이 reactsTo에 있으면 그 속성 색, 아니면 이 장비 자기 속성 색, 둘 다 없으면 탄 프리팹 그대로.
+    /// 스태프는 reactsTo를 많이, 글러브는 적게 채워서 "속성 영향을 얼마나 받나"를 데이터로 정한다.
+    /// 한 장비에 기본·특수 두 마법이 붙을 수 있어서 한 물체에 여러 개 붙일 수 있다.
     /// </summary>
-    [DisallowMultipleComponent]
     public sealed class SpellCast : Skill
     {
         /// <summary>기다리는 중에 누른 클릭을 이 시간(초) 동안 기억했다가 바로 다음 시전으로 잇는다.</summary>
         const float PressBufferTime = 0.15f;
 
         [SerializeField] SpellData spell;
+
+        [Tooltip("반대 손에 이 속성의 장비를 들면 이펙트가 그 속성으로 바뀐다. 비워 두면 반대 손 속성에 반응하지 않는다.")]
+        [SerializeField] ElementData[] reactsTo;
 
         float phaseTimer;
         float pressBuffer;
@@ -104,6 +109,7 @@ namespace DustScrapper.Magic
             float handDistance = Vector2.Distance(start, transform.position);
 
             Projectile projectile = Instantiate(spell.Projectile, start, Quaternion.identity);
+            ApplyLook(projectile);
             projectile.Launch(start, aim, handDistance, spell.ProjectileSpeed, spell.Range,
                 spell.Damage, spell.Knockback, Holder.gameObject);
 
@@ -112,6 +118,27 @@ namespace DustScrapper.Magic
             phaseTimer = spell.Cooldown;
             Released?.Invoke(aim);
             if (phaseTimer <= 0f) Phase = SpellPhase.Ready;
+        }
+
+        /// <summary>지금 이펙트를 정하는 속성. 반대 손 속성에 반응하면 그것, 아니면 이 장비 자기 속성. 없으면 null(무속성).</summary>
+        public ElementData CurrentElement
+        {
+            get
+            {
+                ElementData opposite = Weapon.OppositeElement;
+                if (opposite != null && reactsTo != null && Array.IndexOf(reactsTo, opposite) >= 0) return opposite;
+                return Weapon.Data != null ? Weapon.Data.Element : null;
+            }
+        }
+
+        /// <summary>탄 크기와 속성 색을 입힌다. 지금 속성이 바꾸는 것은 이 이펙트뿐이다(기획 잠정).</summary>
+        void ApplyLook(Projectile projectile)
+        {
+            if (!Mathf.Approximately(spell.ProjectileScale, 1f)) projectile.transform.localScale *= spell.ProjectileScale;
+
+            ElementData element = CurrentElement;
+            if (element == null) return;
+            foreach (SpriteRenderer sprite in projectile.GetComponentsInChildren<SpriteRenderer>()) sprite.color = element.Color;
         }
     }
 }

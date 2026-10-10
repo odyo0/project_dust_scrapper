@@ -96,7 +96,8 @@ namespace DustScrapper.Player
             readonly Action<Vector2> onGunFired;
             GunFire gun;
             MeleeAttack melee;
-            SpellCast spell;
+            SpellCast primarySpell;
+            SpellCast specialSpell;
 
             public HandWatch(PlayerCombatFeedback owner)
             {
@@ -108,15 +109,19 @@ namespace DustScrapper.Player
             {
                 if (gun != null) gun.Fired -= onGunFired;
                 if (melee != null) melee.Hit -= owner.OnMeleeHit;
-                if (spell != null) spell.Released -= owner.OnSpellReleased;
+                if (primarySpell != null) primarySpell.Released -= owner.OnSpellReleased;
+                if (specialSpell != null) specialSpell.Released -= owner.OnSpellReleased;
 
                 gun = weapon != null ? weapon.FindSkill<GunFire>() : null;
                 melee = weapon != null ? weapon.FindSkill<MeleeAttack>() : null;
-                spell = weapon != null ? weapon.FindSkill<SpellCast>() : null;
+                // 마법은 기본·특수 둘 다 마법일 수 있어서(마법서 등) 칸마다 따로 본다.
+                primarySpell = weapon != null ? weapon.Primary as SpellCast : null;
+                specialSpell = weapon != null ? weapon.Special as SpellCast : null;
 
                 if (gun != null) gun.Fired += onGunFired;
                 if (melee != null) melee.Hit += owner.OnMeleeHit;
-                if (spell != null) spell.Released += owner.OnSpellReleased;
+                if (primarySpell != null) primarySpell.Released += owner.OnSpellReleased;
+                if (specialSpell != null) specialSpell.Released += owner.OnSpellReleased;
             }
         }
     }

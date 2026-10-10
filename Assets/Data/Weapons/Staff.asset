@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93a0b7fdaa0a477b9e27f07a60f4e11, type: 3}
+  m_Name: Staff
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.WeaponData
+  displayName: "\uC2A4\uD0DC\uD504"
+  maxStack: 1
+  value: 50
+  placeholderColor: {r: 0.5, g: 0.35, b: 0.2, a: 1}
+  prefab: {fileID: 9207949915665980443, guid: 571abc15c461845beaddc3f58fa14469, type: 3}
+  grip: 0
+  slotRule: 2
+  conflictsWithTwoHanded: 1
+  element: {fileID: 0}
+  damage: 0
+  knockback: 0
+  drawTime: 0.25
+  noiseRadius: 0

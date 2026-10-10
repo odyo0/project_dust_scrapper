@@ -61,6 +61,9 @@ namespace DustScrapper.Weapons
         /// <summary>슬롯에 무기가 들어오거나 빠졌을 때.</summary>
         public event Action Changed;
 
+        /// <summary>빈 슬롯이 하나라도 있는가.</summary>
+        public bool HasEmptySlot => Array.IndexOf(weapons, null) >= 0;
+
         public Weapon GetWeapon(int index) => index >= 0 && index < weapons.Length ? weapons[index] : null;
 
         void Awake()
@@ -142,9 +145,9 @@ namespace DustScrapper.Weapons
         /// </summary>
         public ItemStack PutWeapon(ItemStack stack)
         {
-            if (!(stack.Item is WeaponData data))
+            if (!(stack.Item is WeaponData data) || !data.FitsWeaponSlot)
             {
-                Debug.LogError($"{name}: 무기가 아닌 물건은 슬롯에 넣을 수 없다.", this);
+                Debug.LogError($"{name}: 무기 칸에 낄 수 없는 물건이다.", this);
                 return stack;
             }
 
@@ -171,8 +174,8 @@ namespace DustScrapper.Weapons
             return new ItemStack(weapon.Data, 1, LoadedAmmoOf(weapon));
         }
 
-        /// <summary>무기 슬롯에는 무기만 놓인다.</summary>
-        public bool CanPlace(int index, ItemStack stack) => stack.Item is WeaponData;
+        /// <summary>무기 슬롯에는 무기 칸에 맞는 장비만 놓인다(오른손 글러브처럼 보조 칸 전용은 안 됨).</summary>
+        public bool CanPlace(int index, ItemStack stack) => stack.Item is WeaponData data && data.FitsWeaponSlot;
 
         /// <summary>슬롯의 무기를 빼서 물건 묶음으로 돌려준다. 손에 든 무기였으면 남은 무기 중 첫 번째를(없으면 빈손을) 든다.</summary>
         public ItemStack TakeSlot(int index)
@@ -202,7 +205,7 @@ namespace DustScrapper.Weapons
         /// <summary>빈 슬롯에 무기를 넣는다. 빈손이었으면 바로 든다.</summary>
         public void PlaceInEmptySlot(int index, ItemStack stack)
         {
-            if (!(stack.Item is WeaponData data) || GetWeapon(index) != null) return;
+            if (!(stack.Item is WeaponData data) || !data.FitsWeaponSlot || GetWeapon(index) != null) return;
             if (!Install(index, data, stack.LoadedAmmo)) return;
             if (CurrentIndex < 0) Equip(index);
             Changed?.Invoke();

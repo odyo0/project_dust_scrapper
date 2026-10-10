@@ -25,6 +25,7 @@ namespace DustScrapper.Raid
         DisableOnDeath playerDowned;
         Inventory bag;
         WeaponLoadout weapons;
+        SupportHand support;
         PlayerInteractor interactor;
         float startTime;
         float pendingDeathTimer = -1f;
@@ -50,6 +51,7 @@ namespace DustScrapper.Raid
             playerDowned = player.GetComponent<DisableOnDeath>();
             bag = player.GetComponent<Inventory>();
             weapons = player.GetComponent<WeaponLoadout>();
+            support = player.GetComponent<SupportHand>();
             interactor = player.GetComponent<PlayerInteractor>();
         }
 
@@ -106,6 +108,7 @@ namespace DustScrapper.Raid
         {
             var items = new List<ItemStack>();
             AddAll(weapons, items);
+            AddAll(support, items);
             AddAll(bag, items);
             return items;
         }

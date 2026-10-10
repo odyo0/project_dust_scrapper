@@ -82,11 +82,21 @@ namespace DustScrapper.UI
             if (dragging != null || slot.Stack.IsEmpty) return;
 
             IItemSlots from = slot.Grid.Source;
-            IItemSlots to = null;
-            if (from == screen.Loot || from == screen.Weapons) to = screen.Bag;
-            else if (from == screen.Bag) to = screen.Loot ?? (screen.Weapons.CanPlace(0, slot.Stack) ? screen.Weapons : null);
+            if (from == screen.Loot || from == screen.Weapons || from == screen.Support)
+            {
+                ItemTransfer.QuickMove(from, slot.Index, screen.Bag);
+                return;
+            }
+            if (from != screen.Bag) return;
 
-            if (to != null) ItemTransfer.QuickMove(from, slot.Index, to);
+            // 가방에서: 상자를 열었으면 상자로. 아니면 장비 칸으로(무기 칸 먼저, 자리가 없거나 맞지 않으면 보조 칸).
+            if (screen.Loot != null)
+            {
+                ItemTransfer.QuickMove(from, slot.Index, screen.Loot);
+                return;
+            }
+            if (screen.Weapons.CanPlace(0, slot.Stack) && ItemTransfer.QuickMove(from, slot.Index, screen.Weapons)) return;
+            if (screen.Support != null && screen.Support.CanPlace(0, slot.Stack)) ItemTransfer.QuickMove(from, slot.Index, screen.Support);
         }
 
         void CancelDrag()

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93a0b7fdaa0a477b9e27f07a60f4e11, type: 3}
+  m_Name: Spellbook_Fire
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.WeaponData
+  displayName: "\uBD88 \uB9C8\uBC95\uC11C"
+  maxStack: 1
+  value: 40
+  placeholderColor: {r: 0.75, g: 0.3, b: 0.1, a: 1}
+  prefab: {fileID: 8194228742348688888, guid: 0bc943692609641bb9a47f1d3a8b6669, type: 3}
+  grip: 0
+  slotRule: 0
+  conflictsWithTwoHanded: 0
+  element: {fileID: 11400000, guid: 2d23d28f42db24f349f0e40e04d55a9b, type: 2}
+  damage: 0
+  knockback: 0
+  drawTime: 0.25
+  noiseRadius: 0

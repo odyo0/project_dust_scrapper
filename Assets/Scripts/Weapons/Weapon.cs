@@ -1,3 +1,4 @@
+using DustScrapper.Magic;
 using UnityEngine;
 
 namespace DustScrapper.Weapons
@@ -34,6 +35,9 @@ namespace DustScrapper.Weapons
 
         /// <summary>마법을 시전하는 중인가.</summary>
         public bool IsCasting => (primary != null && primary.IsCasting) || (special != null && special.IsCasting);
+
+        /// <summary>반대 손에 지금 든 장비의 속성 (무속성이면 null). SkillRouter가 매 프레임 넣고, 마법 스킬이 이펙트를 고를 때 읽는다.</summary>
+        public ElementData OppositeElement { get; set; }
 
         /// <summary>반대 손이 시전 중이라 공격을 막는가. 켜져 있는 동안 누름은 버리고, 재장전처럼 하던 일은 계속한다.</summary>
         public bool AttackBlocked { get; set; }

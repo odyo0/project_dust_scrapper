@@ -29,6 +29,8 @@ namespace DustScrapper.Magic
         [SerializeField, Min(0f)] float damage = 15f;
         [Tooltip("맞은 대상을 밀어내는 힘")]
         [SerializeField, Min(0f)] float knockback = 1.5f;
+        [Tooltip("탄 그림 크기 배율 (1 = 탄 프리팹 그대로). 큰 불덩이처럼 같은 탄 프리팹을 크기만 바꿔 쓸 때.")]
+        [SerializeField, Min(0.1f)] float projectileScale = 1f;
 
         [Header("소리")]
         [Tooltip("탄이 나갈 때 나는 소리가 적에게 들리는 거리 (칸). 0이면 소리가 나지 않는다.")]
@@ -42,6 +44,7 @@ namespace DustScrapper.Magic
         public float Range => range;
         public float Damage => damage;
         public float Knockback => knockback;
+        public float ProjectileScale => projectileScale;
         public float NoiseRadius => noiseRadius;
     }
 }

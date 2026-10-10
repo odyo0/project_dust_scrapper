@@ -16,6 +16,7 @@ namespace DustScrapper.Interaction
     {
         [SerializeField] Inventory inventory;
         [SerializeField] WeaponLoadout loadout;
+        [SerializeField] SupportHand supportHand;
 
         [Tooltip("손이 닿는 거리 (칸)")]
         [SerializeField, Min(0.1f)] float reach = 1.2f;
@@ -29,6 +30,7 @@ namespace DustScrapper.Interaction
 
         public Inventory Inventory => inventory;
         public WeaponLoadout Loadout => loadout;
+        public SupportHand SupportHand => supportHand;
 
         /// <summary>지금 고른 대상. 없으면 null.</summary>
         public Interactable Target { get; private set; }
@@ -51,6 +53,7 @@ namespace DustScrapper.Interaction
         {
             if (inventory == null) inventory = GetComponent<Inventory>();
             if (loadout == null) loadout = GetComponent<WeaponLoadout>();
+            if (supportHand == null) supportHand = GetComponent<SupportHand>();
         }
 
         void OnDisable()

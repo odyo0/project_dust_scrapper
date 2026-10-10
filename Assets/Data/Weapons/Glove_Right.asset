@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93a0b7fdaa0a477b9e27f07a60f4e11, type: 3}
+  m_Name: Glove_Right
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.WeaponData
+  displayName: "\uC624\uB978\uC190 \uAE00\uB7EC\uBE0C"
+  maxStack: 1
+  value: 35
+  placeholderColor: {r: 0.55, g: 0.6, b: 0.7, a: 1}
+  prefab: {fileID: 6807536740639943056, guid: 5728542cfcee9495da69def4a8bd4377, type: 3}
+  grip: 0
+  slotRule: 1
+  conflictsWithTwoHanded: 0
+  element: {fileID: 0}
+  damage: 0
+  knockback: 0
+  drawTime: 0.25
+  noiseRadius: 0
