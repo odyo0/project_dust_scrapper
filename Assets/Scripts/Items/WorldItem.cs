@@ -7,9 +7,9 @@ namespace DustScrapper.Items
 {
     /// <summary>
     /// 바닥에 놓인 물건 한 묶음. E를 누르고 있으면 줍는다.
-    /// 손 장비는 맞는 칸으로 간다: 무기 칸에 맞으면 무기 칸(다 찼으면 든 무기와 바꿈), 보조 칸에만 맞으면 보조 칸(차 있으면 낀 것과 바꿈),
-    /// 둘 다 맞으면(스태프) 무기 칸에 빈자리가 있을 때 무기 칸, 없으면 보조 칸. 바꿔서 빠진 장비는 가방으로 들어가고, 가방에 자리가 없을 때만 이 자리에 남는다.
-    /// 몸 장비는 그 부위 칸이 비어 있으면 바로 끼고, 차 있으면 가방으로 간다. 나머지는 가방으로 간다.
+    /// 장비는 맞는 빈 칸이 있으면 바로 끼고(무기는 무기 칸에 넣고 바로 든다), 맞는 칸이 다 차 있으면 가방으로 간다.
+    /// 들고 있거나 낀 장비와 맞바꾸지 않는다(기획). 스태프처럼 두 칸에 다 맞으면 무기 칸 빈자리 → 보조 칸 빈자리 → 가방 순서.
+    /// 몸 장비도 같다(그 부위 칸이 비어 있으면 착용, 차 있으면 가방). 나머지 물건은 가방으로 간다.
     /// 가방에 다 안 들어가면 남은 만큼 바닥에 남는다.
     /// </summary>
     public sealed class WorldItem : Interactable
@@ -54,24 +54,21 @@ namespace DustScrapper.Items
 
         public override string BlockedReason(PlayerInteractor interactor)
         {
-            if (stack.Item is WeaponData data)
-            {
-                bool canWeapon = data.FitsWeaponSlot && interactor.Loadout != null;
-                bool canSupport = data.FitsSupportSlot && interactor.SupportHand != null;
-                return canWeapon || canSupport ? null : "장비를 낄 수 없다";
-            }
+            if (FindEmptyHandSlot(interactor) != HandTarget.None) return null;
             if (stack.Item is BodyGearData && interactor.Body != null && interactor.Body.HasEmptySlotFor(stack)) return null;
             return interactor.Inventory != null && interactor.Inventory.HasRoomFor(stack.Item) ? null : "가방이 가득 찼다";
         }
 
         public override void Interact(PlayerInteractor interactor)
         {
-            if (stack.Item is WeaponData data)
+            switch (FindEmptyHandSlot(interactor))
             {
-                ItemStack replaced = ToWeaponSlot(data, interactor) ? interactor.Loadout.PutWeapon(stack) : interactor.SupportHand.PutItem(stack);
-                // 바꿔서 빠진 장비는 가방으로. 가방에 다 안 들어가면 남은 것이 이 자리에 남는다.
-                SetStack(replaced.IsEmpty || interactor.Inventory == null ? replaced : replaced.WithCount(interactor.Inventory.Add(replaced)));
-                return;
+                case HandTarget.WeaponSlot:
+                    SetStack(interactor.Loadout.PutWeapon(stack));
+                    return;
+                case HandTarget.SupportSlot:
+                    SetStack(interactor.SupportHand.PutItem(stack));
+                    return;
             }
 
             if (stack.Item is BodyGearData && interactor.Body != null && interactor.Body.TryEquip(stack))
@@ -84,14 +81,15 @@ namespace DustScrapper.Items
             SetStack(stack.WithCount(left));
         }
 
-        /// <summary>장비를 무기 칸으로 보낼지(아니면 보조 칸). 둘 다 맞으면 무기 칸에 빈자리가 있을 때만 무기 칸.</summary>
-        static bool ToWeaponSlot(WeaponData data, PlayerInteractor interactor)
+        enum HandTarget { None, WeaponSlot, SupportSlot }
+
+        /// <summary>손 장비를 넣을 빈 칸. 무기 칸 빈자리 → 보조 칸 빈자리 순서. 손 장비가 아니거나 맞는 빈 칸이 없으면 None(가방으로).</summary>
+        HandTarget FindEmptyHandSlot(PlayerInteractor interactor)
         {
-            bool canWeapon = data.FitsWeaponSlot && interactor.Loadout != null;
-            bool canSupport = data.FitsSupportSlot && interactor.SupportHand != null;
-            if (!canSupport) return true;
-            if (!canWeapon) return false;
-            return interactor.Loadout.HasEmptySlot;
+            if (!(stack.Item is WeaponData data)) return HandTarget.None;
+            if (data.FitsWeaponSlot && interactor.Loadout != null && interactor.Loadout.HasEmptySlot) return HandTarget.WeaponSlot;
+            if (data.FitsSupportSlot && interactor.SupportHand != null && interactor.SupportHand.EquippedData == null) return HandTarget.SupportSlot;
+            return HandTarget.None;
         }
 
         void RefreshLook()

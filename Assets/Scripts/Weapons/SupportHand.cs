@@ -107,15 +107,14 @@ namespace DustScrapper.Weapons
         }
 
         /// <summary>
-        /// 장비를 보조 칸에 끼운다(바닥에서 주울 때). 칸이 차 있으면 낀 장비와 바꾸고, 빠진 장비를 돌려준다
-        /// (바닥에 떨어뜨리는 건 부른 쪽 몫이다). 보조 칸에 낄 수 없는 물건이면 그대로 돌려준다.
+        /// 장비를 빈 보조 칸에 끼운다(바닥에서 주울 때). 끼웠으면 빈 묶음, 칸이 차 있거나 낄 수 없으면 그대로 돌려준다.
+        /// 낀 장비와 맞바꾸지 않는다(기획: 주운 장비는 가방으로, 그건 부른 쪽 몫이다).
         /// </summary>
         public ItemStack PutItem(ItemStack stack)
         {
-            if (!CanPlace(0, stack)) return stack;
-            ItemStack replaced = TakeSlot(0);
+            if (equipped != null || !CanPlace(0, stack)) return stack;
             PlaceInEmptySlot(0, stack);
-            return replaced;
+            return ItemStack.Empty;
         }
 
         /// <summary>보조 손 장비는 아직 던지는 등 손에서 놓는 것이 없다.</summary>

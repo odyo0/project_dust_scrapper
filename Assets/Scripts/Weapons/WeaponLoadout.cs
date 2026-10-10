@@ -12,7 +12,7 @@ namespace DustScrapper.Weapons
     /// 든 무기의 기본 스킬은 좌클릭, 특수 스킬은 Space다(플레이어는 SkillRouter를 거쳐 받는다).
     /// 아무 슬롯도 들지 않은 상태가 "빈손"이다. 빈손일 때 쓸 장비(주먹: 주먹질만, Space는 없음)를 따로 하나 두면 그것을 꺼내 든다.
     /// 빈손 장비는 슬롯에 들어가지 않아서 가방 화면에 보이지 않고 떨어뜨릴 수도 없다.
-    /// 판 도중에 주운 무기를 넣거나(PutWeapon) 뺄 수 있고, 가방 화면에서는 가방과 같은 칸 창구(IItemSlots)로 옮겨진다.
+    /// 판 도중에 주운 무기를 빈 슬롯에 넣거나(PutWeapon) 뺄 수 있고, 가방 화면에서는 가방과 같은 칸 창구(IItemSlots)로 옮겨진다.
     /// 두뇌(플레이어 입력이나 AI)는 이곳에 기본·특수 스킬 키·재장전·슬롯 바꾸기만 요청하고, 손에 든 무기가 무엇인지는 몰라도 된다.
     /// 주운 물건을 담는 가방(Inventory)과는 따로이고, 총이 재장전할 탄만 가방에서 꺼낸다.
     /// </summary>
@@ -140,8 +140,8 @@ namespace DustScrapper.Weapons
         }
 
         /// <summary>
-        /// 무기를 슬롯에 넣고 바로 꺼내 든다. 빈 슬롯이 있으면 거기에 넣는다.
-        /// 슬롯이 다 찼으면 손에 든 무기와 바꾸고, 빠진 무기를 돌려준다(바닥에 떨어뜨리는 건 부른 쪽 몫이다).
+        /// 무기를 빈 슬롯에 넣고 바로 꺼내 든다(바닥에서 주울 때). 넣었으면 빈 묶음, 빈 슬롯이 없거나 낄 수 없으면 그대로 돌려준다.
+        /// 슬롯이 다 찼을 때 든 무기와 맞바꾸지 않는다(기획: 주운 무기는 가방으로, 그건 부른 쪽 몫이다).
         /// </summary>
         public ItemStack PutWeapon(ItemStack stack)
         {
@@ -152,18 +152,12 @@ namespace DustScrapper.Weapons
             }
 
             int index = Array.IndexOf(weapons, null);
-            ItemStack replaced = ItemStack.Empty;
-            if (index < 0)
-            {
-                index = CurrentIndex;
-                replaced = RemoveWeapon(index);
-            }
             if (index < 0) return stack;
 
             if (!Install(index, data, stack.LoadedAmmo)) return stack;
             Equip(index);
             Changed?.Invoke();
-            return replaced;
+            return ItemStack.Empty;
         }
 
         /// <summary>그 슬롯의 무기를 물건 묶음으로 본다(총은 지금 탄창 탄 수를 함께). 빈 슬롯이면 빈 묶음.</summary>
