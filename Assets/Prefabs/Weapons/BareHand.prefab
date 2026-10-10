@@ -13,8 +13,10 @@ GameObject:
   - component: {fileID: 4424064744967192359}
   - component: {fileID: 399711653078460384}
   - component: {fileID: 4847946390598081641}
+  - component: {fileID: 7940712884978617574}
+  - component: {fileID: 5363363512395424926}
   m_Layer: 0
-  m_Name: Fist
+  m_Name: BareHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c3360ede804420caec521added431e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.MeleeWeapon
-  stats: {fileID: 0}
+  stats: {fileID: 11400000, guid: f8c501a502b0d46f987659842c0330be, type: 2}
 --- !u!114 &4424064744967192359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,7 +93,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.Weapon
   primary: {fileID: 4466716217094211534}
-  special: {fileID: 0}
+  special: {fileID: 7940712884978617574}
+--- !u!114 &7940712884978617574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872388037030131541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9fd5088975ea4045a82611d576e670f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Magic.SpellCast
+  spell: {fileID: 11400000, guid: ff42da92859ba46c192c73982ad9c39a, type: 2}
+--- !u!114 &5363363512395424926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872388037030131541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7303b2bb12f84259a13e2bf13195a73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Audio.SpellAudio
+  castStart: {fileID: 0}
+  release: {fileID: 11400000, guid: 47cc70b6eb5cd430ca8b990184f0cde1, type: 2}
 --- !u!1 &6935155103863052718
 GameObject:
   m_ObjectHideFlags: 0

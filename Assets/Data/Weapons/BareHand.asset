@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b93a0b7fdaa0a477b9e27f07a60f4e11, type: 3}
-  m_Name: SupportBareHand
+  m_Name: BareHand
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.WeaponData
   displayName: "\uBE48\uC190"
   maxStack: 1

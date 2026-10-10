@@ -33,6 +33,9 @@ namespace DustScrapper.Player
         /// <summary>사용/발사 키를 누르고 있는가. 한 프레임 안에 눌렀다 뗀 짧은 클릭도 누른 것으로 본다.</summary>
         public bool FireHeld { get; private set; }
 
+        /// <summary>무기 손 특수 스킬 키(Space)를 누르고 있는가. 짧게 톡 눌러도 놓치지 않는다.</summary>
+        public bool SpecialHeld { get; private set; }
+
         /// <summary>보조 손 기본 스킬 키(우클릭)를 누르고 있는가. 한 프레임 안에 눌렀다 뗀 짧은 클릭도 누른 것으로 본다.</summary>
         public bool SupportPrimaryHeld { get; private set; }
 
@@ -87,6 +90,7 @@ namespace DustScrapper.Player
             SprintHeld = false;
             SneakHeld = false;
             FireHeld = false;
+            SpecialHeld = false;
             SupportPrimaryHeld = false;
             SupportSpecialHeld = false;
             ReloadPressed = false;
@@ -114,6 +118,7 @@ namespace DustScrapper.Player
             {
                 LookAheadHeld = false;
                 FireHeld = false;
+                SpecialHeld = false;
                 SupportPrimaryHeld = false;
                 SupportSpecialHeld = false;
                 ReloadPressed = false;
@@ -125,6 +130,7 @@ namespace DustScrapper.Player
             AimScreenPosition = player.Aim.ReadValue<Vector2>();
             LookAheadHeld = player.LookAhead.IsPressed();
             FireHeld = player.Fire.IsPressed() || player.Fire.WasPressedThisFrame();
+            SpecialHeld = player.Special.IsPressed() || player.Special.WasPressedThisFrame();
             SupportPrimaryHeld = player.SupportPrimary.IsPressed() || player.SupportPrimary.WasPressedThisFrame();
             SupportSpecialHeld = player.SupportSpecial.IsPressed() || player.SupportSpecial.WasPressedThisFrame();
             ReloadPressed = player.Reload.WasPressedThisFrame();

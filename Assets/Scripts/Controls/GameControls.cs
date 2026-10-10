@@ -155,6 +155,16 @@ namespace DustScrapper.Controls
                     ""priority"": 0
                 },
                 {
+                    ""name"": ""Special"",
+                    ""type"": ""Button"",
+                    ""id"": ""30db607e-b07c-4974-b653-cfefa6c9be48"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
                     ""name"": ""SupportPrimary"",
                     ""type"": ""Button"",
                     ""id"": ""0cfddc20-944d-4f48-80e5-6ff3c8bd6ea7"",
@@ -358,6 +368,17 @@ namespace DustScrapper.Controls
                 },
                 {
                     ""name"": """",
+                    ""id"": ""7a54a078-1391-497d-9867-1265b13a628e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Special"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""66be683b-2ac7-49e5-ab3b-5d9f6ad66a92"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
@@ -485,6 +506,7 @@ namespace DustScrapper.Controls
             m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
             m_Player_Sneak = m_Player.FindAction("Sneak", throwIfNotFound: true);
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+            m_Player_Special = m_Player.FindAction("Special", throwIfNotFound: true);
             m_Player_SupportPrimary = m_Player.FindAction("SupportPrimary", throwIfNotFound: true);
             m_Player_SupportSpecial = m_Player.FindAction("SupportSpecial", throwIfNotFound: true);
             m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
@@ -580,6 +602,7 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Sprint;
         private readonly InputAction m_Player_Sneak;
         private readonly InputAction m_Player_Fire;
+        private readonly InputAction m_Player_Special;
         private readonly InputAction m_Player_SupportPrimary;
         private readonly InputAction m_Player_SupportSpecial;
         private readonly InputAction m_Player_Reload;
@@ -624,6 +647,10 @@ namespace DustScrapper.Controls
             /// Provides access to the underlying input action "Player/Fire".
             /// </summary>
             public InputAction @Fire => m_Wrapper.m_Player_Fire;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Special".
+            /// </summary>
+            public InputAction @Special => m_Wrapper.m_Player_Special;
             /// <summary>
             /// Provides access to the underlying input action "Player/SupportPrimary".
             /// </summary>
@@ -704,6 +731,9 @@ namespace DustScrapper.Controls
                 @Fire.started += instance.OnFire;
                 @Fire.performed += instance.OnFire;
                 @Fire.canceled += instance.OnFire;
+                @Special.started += instance.OnSpecial;
+                @Special.performed += instance.OnSpecial;
+                @Special.canceled += instance.OnSpecial;
                 @SupportPrimary.started += instance.OnSupportPrimary;
                 @SupportPrimary.performed += instance.OnSupportPrimary;
                 @SupportPrimary.canceled += instance.OnSupportPrimary;
@@ -760,6 +790,9 @@ namespace DustScrapper.Controls
                 @Fire.started -= instance.OnFire;
                 @Fire.performed -= instance.OnFire;
                 @Fire.canceled -= instance.OnFire;
+                @Special.started -= instance.OnSpecial;
+                @Special.performed -= instance.OnSpecial;
+                @Special.canceled -= instance.OnSpecial;
                 @SupportPrimary.started -= instance.OnSupportPrimary;
                 @SupportPrimary.performed -= instance.OnSupportPrimary;
                 @SupportPrimary.canceled -= instance.OnSupportPrimary;
@@ -882,6 +915,13 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnFire(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Special" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSpecial(InputAction.CallbackContext context);
             /// <summary>
             /// Method invoked when associated input action "SupportPrimary" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
