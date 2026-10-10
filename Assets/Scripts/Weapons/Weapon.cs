@@ -39,6 +39,16 @@ namespace DustScrapper.Weapons
         public bool AttackBlocked { get; set; }
 
         /// <summary>
+        /// 하던 동작(준비 동작, 재장전, 시전)을 끊는다. 비틀거림처럼 공격을 막는 디버프가 걸리는 순간 든 쪽이 부른다.
+        /// 집어넣지는 않으므로 손에는 그대로 들고 있다. 누르고 있던 키는 한 번 뗐다 눌러야 다시 나간다.
+        /// </summary>
+        public void Interrupt()
+        {
+            if (primary != null) primary.Cancel();
+            if (special != null) special.Cancel();
+        }
+
+        /// <summary>
         /// 장비 데이터의 프리팹으로 장비를 만들어 손(parent)에 붙이고, 집어넣은 상태로 돌려준다.
         /// 왼손·오른손이 같은 방법으로 만들게 한 곳에 둔다. 프리팹이 없으면 null.
         /// </summary>
@@ -112,9 +122,10 @@ namespace DustScrapper.Weapons
         {
             if (drawTimer > 0f) drawTimer -= Time.deltaTime;
             bool drawn = IsDrawn;
+            bool blocked = AttackBlocked || (Holder != null && Holder.AttacksSuppressed);
             float deltaTime = Time.deltaTime;
-            if (primary != null) primary.Step(drawn, AttackBlocked, deltaTime);
-            if (special != null) special.Step(drawn, AttackBlocked, deltaTime);
+            if (primary != null) primary.Step(drawn, blocked, deltaTime);
+            if (special != null) special.Step(drawn, blocked, deltaTime);
         }
     }
 }

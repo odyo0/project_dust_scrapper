@@ -23,13 +23,18 @@ namespace DustScrapper.Combat
         /// <summary>피해를 준 쪽(무기를 든 캐릭터). 없으면 null.</summary>
         public readonly GameObject Source;
 
-        public DamageInfo(float amount, Vector2 point, Vector2 direction, float knockback, GameObject source)
+        /// <summary>함께 거는 디버프(비틀거림 등). 없으면 null. 맞은 쪽의 StatusEffects가 받는다.</summary>
+        public readonly StatusEffectData Effect;
+
+        public DamageInfo(float amount, Vector2 point, Vector2 direction, float knockback, GameObject source,
+            StatusEffectData effect = null)
         {
             Amount = amount;
             Point = point;
             Direction = direction.sqrMagnitude > 0f ? direction.normalized : Vector2.zero;
             Knockback = knockback;
             Source = source;
+            Effect = effect;
         }
     }
 }

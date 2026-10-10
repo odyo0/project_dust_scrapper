@@ -27,14 +27,17 @@ namespace DustScrapper.Vision
         public float ForwardAngle => forwardAngle;
         public float AngleFeather => angleFeather;
 
-        /// <summary>바라보는 방향에서 angle(도)만큼 벗어난 쪽으로 보이는 거리.</summary>
-        public float RadiusAt(float angle)
+        /// <summary>
+        /// 바라보는 방향에서 angle(도)만큼 벗어난 쪽으로 보이는 거리.
+        /// forwardBonus는 부채꼴 쪽 거리에만 더한다(소총 조준처럼 잠깐 멀리 보기).
+        /// </summary>
+        public float RadiusAt(float angle, float forwardBonus = 0f)
         {
             float half = forwardAngle * 0.5f;
             float t = angleFeather > 0f
                 ? Mathf.Clamp01((half + angleFeather * 0.5f - angle) / angleFeather)
                 : (angle <= half ? 1f : 0f);
-            return Mathf.Lerp(nearRadius, Mathf.Max(nearRadius, forwardRadius), t);
+            return Mathf.Lerp(nearRadius, Mathf.Max(nearRadius, forwardRadius + forwardBonus), t);
         }
     }
 }

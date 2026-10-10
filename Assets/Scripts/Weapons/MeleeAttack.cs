@@ -153,7 +153,7 @@ namespace DustScrapper.Weapons
 
                 hitThisSwing.Add(health);
                 Vector2 direction = toPoint.sqrMagnitude > 0.0001f ? toPoint : aim;
-                var info = new DamageInfo(melee.Damage, point, direction, melee.Knockback, Holder.gameObject);
+                var info = new DamageInfo(melee.Damage, point, direction, melee.Knockback, Holder.gameObject, melee.HitEffect);
                 if (health.TakeDamage(info)) Hit?.Invoke(info);
             }
         }

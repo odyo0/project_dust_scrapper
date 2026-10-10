@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fce8f6971d0f04ed5a7a90867d341db8, type: 3}
+  m_Name: Kick
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.MeleeData
+  displayName: "\uBC1C\uCC28\uAE30"
+  maxStack: 1
+  value: 0
+  placeholderColor: {r: 1, g: 1, b: 1, a: 1}
+  prefab: {fileID: 0}
+  grip: 0
+  damage: 5
+  knockback: 8
+  drawTime: 0
+  noiseRadius: 2.5
+  reach: 1.1
+  arcAngle: 100
+  windupTime: 0.06
+  activeTime: 0.08
+  recoveryTime: 0.4
+  hitEffect: {fileID: 11400000, guid: 7ed74ca4421f74a01b840d8d92a6f163, type: 2}

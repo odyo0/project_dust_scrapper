@@ -43,10 +43,10 @@ namespace DustScrapper.Weapons
             pressedWhileDrawing = false;
         }
 
-        /// <summary>집어넣을 때. 하던 동작은 취소된다.</summary>
+        /// <summary>집어넣거나 끊길 때. 하던 동작은 취소된다. 누르고 있던 키는 한 번 뗐다 눌러야 다시 나간다.</summary>
         public void Cancel()
         {
-            ResetInput(false);
+            ResetInput(held);
             OnCancel();
         }
 

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4424064744967192359}
   - component: {fileID: 399711653078460384}
   - component: {fileID: 7608476052354782582}
+  - component: {fileID: 5827948620651887339}
   m_Layer: 0
   m_Name: Knife
   m_TagString: Untagged
@@ -92,7 +93,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.Weapon
   primary: {fileID: 4466716217094211534}
-  special: {fileID: 0}
+  special: {fileID: 5827948620651887339}
+--- !u!114 &5827948620651887339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2872388037030131541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67872b0dec2974aea8a18b0f1e3f325f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.ThrowSkill
+  thrownPrefab: {fileID: 2966782877653483519, guid: 69037bb120da64f808e320d106c44878, type: 3}
+  windupTime: 0.1
+  speed: 18
+  range: 8
+  damage: 40
+  knockback: 2
+  noiseRadius: 2
 --- !u!1 &4526521074094424847
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using System;
 using DustScrapper.Actors;
+using DustScrapper.Combat;
 using DustScrapper.Items;
 using DustScrapper.Magic;
 using UnityEngine;
@@ -21,6 +22,8 @@ namespace DustScrapper.Weapons
         [SerializeField] BodyAim aim;
         [Tooltip("마법이 쓸 MP. 비워 두면 같은 물체에서 찾는다.")]
         [SerializeField] Mana mana;
+        [Tooltip("디버프. 공격을 막는 디버프가 걸리면 쓰지 못한다. 비워 두면 같은 물체에서 찾는다.")]
+        [SerializeField] StatusEffects statusEffects;
 
         [Tooltip("보조 칸이 비었을 때 드는 빈손 장비 (우클릭 주먹질, F 기본 공격 마법).")]
         [SerializeField] WeaponData bareHand;
@@ -37,6 +40,14 @@ namespace DustScrapper.Weapons
         public Inventory AmmoSource => null;
 
         public Mana Mana => mana;
+        public bool AttacksSuppressed => statusEffects != null && !statusEffects.CanAttack;
+
+        /// <summary>보조 손 장비는 아직 놓을 수 있는 것이 없다.</summary>
+        public bool TryRelease(Weapon weapon, out ItemStack stack)
+        {
+            stack = ItemStack.Empty;
+            return false;
+        }
 
         /// <summary>보조 손에 든 장비가 바뀌었을 때.</summary>
         public event Action<Weapon> CurrentChanged;
@@ -45,6 +56,7 @@ namespace DustScrapper.Weapons
         {
             if (aim == null) aim = GetComponent<BodyAim>();
             if (mana == null) mana = GetComponent<Mana>();
+            if (statusEffects == null) statusEffects = GetComponent<StatusEffects>();
             if (bareHand != null) Hold(Weapon.Spawn(bareHand, hand, this));
         }
 
@@ -52,10 +64,12 @@ namespace DustScrapper.Weapons
         {
             // 죽었다 살아나는 등 꺼졌다 켜졌을 때 다시 꺼낸다.
             if (Current != null && !Current.gameObject.activeSelf) Current.Draw(false, false);
+            if (statusEffects != null) statusEffects.AttacksStopped += OnAttacksStopped;
         }
 
         void OnDisable()
         {
+            if (statusEffects != null) statusEffects.AttacksStopped -= OnAttacksStopped;
             primaryHeld = false;
             specialHeld = false;
             if (Current != null) Current.Holster();
@@ -73,6 +87,11 @@ namespace DustScrapper.Weapons
         {
             specialHeld = held;
             if (Current != null) Current.SetSpecial(held);
+        }
+
+        void OnAttacksStopped()
+        {
+            if (Current != null) Current.Interrupt();
         }
 
         void Hold(Weapon weapon)

@@ -32,8 +32,13 @@ namespace DustScrapper.Weapons
         public override bool IsBusy => IsReloading;
         public float ReloadProgress => IsReloading && gun.ReloadTime > 0f ? 1f - reloadTimer / gun.ReloadTime : 0f;
 
-        /// <summary>지금 탄이 조준선에서 벗어날 수 있는 최대 각도(도). 조준점 표시가 읽는다.</summary>
-        public float CurrentSpread { get; private set; }
+        float bloom;
+
+        /// <summary>지금 탄이 조준선에서 벗어날 수 있는 최대 각도(도). 쏠수록 벌어지는 퍼짐에 퍼짐 배율을 곱한 값. 조준점 표시가 읽는다.</summary>
+        public float CurrentSpread => bloom * SpreadMultiplier;
+
+        /// <summary>퍼짐 배율 (1 = 그대로). 소총 조준처럼 같은 장비의 다른 스킬이 집탄율을 바꿀 때 쓴다.</summary>
+        public float SpreadMultiplier { get; set; } = 1f;
 
         /// <summary>한 번 쏠 때마다. 값은 조준 방향(퍼짐 적용 전).</summary>
         public event Action<Vector2> Fired;
@@ -52,7 +57,7 @@ namespace DustScrapper.Weapons
             }
             if (gun.Ammo == null) Debug.LogWarning($"{gun.name}: 탄약(Ammo)이 비어 있어 재장전할 수 없다.", gun);
             AmmoInMagazine = gun.MagazineSize;
-            CurrentSpread = gun.BaseSpread;
+            bloom = gun.BaseSpread;
         }
 
         /// <summary>탄창의 탄 수를 정한다. 주운 총이 버려질 때의 탄창을 그대로 이어받을 때 쓴다.</summary>
@@ -81,7 +86,7 @@ namespace DustScrapper.Weapons
         {
             cooldown -= deltaTime;
             pressBuffer = pressed ? PressBufferTime : pressBuffer - deltaTime;
-            CurrentSpread = Mathf.MoveTowards(CurrentSpread, gun.BaseSpread, gun.SpreadRecovery * deltaTime);
+            bloom = Mathf.MoveTowards(bloom, gun.BaseSpread, gun.SpreadRecovery * deltaTime);
 
             if (IsReloading)
             {
@@ -134,7 +139,7 @@ namespace DustScrapper.Weapons
                     gun.Damage, gun.Knockback, Holder.gameObject);
             }
 
-            CurrentSpread = Mathf.Min(gun.MaxSpread, CurrentSpread + gun.SpreadPerShot);
+            bloom = Mathf.Min(gun.MaxSpread, bloom + gun.SpreadPerShot);
             EmitNoise(gun.NoiseRadius);
             Fired?.Invoke(aim);
         }

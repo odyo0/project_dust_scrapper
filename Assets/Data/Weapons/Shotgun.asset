@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d3abf5d123649b2960db9e5617e31d, type: 3}
+  m_Name: Shotgun
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.GunData
+  displayName: "\uC0F7\uAC74"
+  maxStack: 1
+  value: 50
+  placeholderColor: {r: 0.55, g: 0.35, b: 0.25, a: 1}
+  prefab: {fileID: 2250674448581308316, guid: 6e89eba0f02fd42b48de37784d19b6e8, type: 3}
+  grip: 1
+  damage: 9
+  knockback: 1.2
+  drawTime: 0.35
+  noiseRadius: 18
+  fireMode: 0
+  shotsPerSecond: 1.2
+  pelletsPerShot: 6
+  projectile: {fileID: 2966782877653483519, guid: af140bdd0b74747c78100d2ab3852500, type: 3}
+  projectileSpeed: 22
+  range: 7
+  ammo: {fileID: 11400000, guid: 6e13506b1650547dc8fd36bd1d18e2e0, type: 2}
+  magazineSize: 6
+  reloadTime: 2.5
+  baseSpread: 12
+  spreadPerShot: 0
+  maxSpread: 12
+  spreadRecovery: 20
+  recoilKick: 0.2

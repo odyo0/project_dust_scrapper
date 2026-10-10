@@ -26,6 +26,12 @@ namespace DustScrapper.Vision
         public VisionProfile Profile => profile;
         public LayerMask SightBlockers => sightBlockers;
 
+        /// <summary>
+        /// 바라보는 쪽 부채꼴 거리에 잠깐 더하는 값 (칸). 소총 조준처럼 누르는 동안만 멀리 볼 때 스킬이 넣고 뗀다.
+        /// 카메라(CameraFollow)도 이 값만큼 바라보는 쪽으로 밀려서, 늘어난 시야가 화면 안에 들어온다.
+        /// </summary>
+        public float AimRangeBonus { get; set; }
+
         /// <summary>시야 넓히는 장비 등으로 시야 모양이 바뀔 때 부른다.</summary>
         public void SetProfile(VisionProfile newProfile)
         {
@@ -48,7 +54,7 @@ namespace DustScrapper.Vision
         public float SightRadius(Vector2 direction)
         {
             if (profile == null) return 0f;
-            return profile.RadiusAt(Vector2.Angle(Facing, direction));
+            return profile.RadiusAt(Vector2.Angle(Facing, direction), AimRangeBonus);
         }
 
         /// <summary>그 지점이 지금 보이는가. 거리·방향과 벽을 모두 본다.</summary>

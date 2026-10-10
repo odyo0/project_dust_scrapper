@@ -1,5 +1,6 @@
 using System;
 using DustScrapper.Actors;
+using DustScrapper.Combat;
 using DustScrapper.Items;
 using DustScrapper.Magic;
 using UnityEngine;
@@ -34,6 +35,9 @@ namespace DustScrapper.Weapons
         [Tooltip("마법 장비(마법서 등)가 쓸 MP. 비워 두면 같은 물체에서 찾고, 없으면 마법을 못 쓴다.")]
         [SerializeField] Mana mana;
 
+        [Tooltip("디버프. 공격을 막는 디버프가 걸리면 무기를 쓰지 못한다. 비워 두면 같은 물체에서 찾는다.")]
+        [SerializeField] StatusEffects statusEffects;
+
         Weapon[] weapons;
         Weapon unarmedWeapon;
         bool primaryHeld;
@@ -49,6 +53,7 @@ namespace DustScrapper.Weapons
         public Vector2 AimDirection => aim.AimDirection;
         public Inventory AmmoSource => ammoSource;
         public Mana Mana => mana;
+        public bool AttacksSuppressed => statusEffects != null && !statusEffects.CanAttack;
 
         /// <summary>손에 든 무기가 바뀌었을 때. 값은 새 무기(빈손이면 빈손 장비, 그것도 없으면 null).</summary>
         public event Action<Weapon> CurrentChanged;
@@ -62,6 +67,7 @@ namespace DustScrapper.Weapons
         {
             if (aim == null) aim = GetComponent<BodyAim>();
             if (mana == null) mana = GetComponent<Mana>();
+            if (statusEffects == null) statusEffects = GetComponent<StatusEffects>();
 
             weapons = new Weapon[slots.Length];
             for (int i = 0; i < slots.Length; i++)
@@ -76,10 +82,12 @@ namespace DustScrapper.Weapons
         {
             // 죽었다 살아나는 등 꺼졌다 켜졌을 때 들고 있던 무기를 다시 꺼낸다.
             if (Current != null && !Current.gameObject.activeSelf) Current.Draw(false, false);
+            if (statusEffects != null) statusEffects.AttacksStopped += OnAttacksStopped;
         }
 
         void OnDisable()
         {
+            if (statusEffects != null) statusEffects.AttacksStopped -= OnAttacksStopped;
             primaryHeld = false;
             specialHeld = false;
             if (Current == null) return;
@@ -177,6 +185,20 @@ namespace DustScrapper.Weapons
             return stack;
         }
 
+        /// <summary>손에 든 무기를 놓는다(칼 던지기). 슬롯에서 빼고 빈손이 된다. 이 손의 무기가 아니면 false.</summary>
+        public bool TryRelease(Weapon weapon, out ItemStack stack)
+        {
+            stack = ItemStack.Empty;
+            int index = weapon != null ? Array.IndexOf(weapons, weapon) : -1;
+            if (index < 0) return false;
+
+            stack = RemoveWeapon(index);
+            // 남은 무기로 바꿔 들지 않고 빈손이 된다(기획: 던지면 손이 빈다).
+            Hold(-1);
+            Changed?.Invoke();
+            return true;
+        }
+
         /// <summary>빈 슬롯에 무기를 넣는다. 빈손이었으면 바로 든다.</summary>
         public void PlaceInEmptySlot(int index, ItemStack stack)
         {
@@ -225,6 +247,11 @@ namespace DustScrapper.Weapons
                 return;
             }
             Hold(-1);
+        }
+
+        void OnAttacksStopped()
+        {
+            if (Current != null) Current.Interrupt();
         }
 
         /// <summary>총이면 지금 탄창 탄 수, 아니면 0. 무기를 물건 묶음으로 바꿀 때 탄창을 함께 넘긴다.</summary>

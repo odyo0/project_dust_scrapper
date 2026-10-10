@@ -1,4 +1,5 @@
 using DustScrapper.Player;
+using DustScrapper.Vision;
 using UnityEngine;
 
 namespace DustScrapper.Cameras
@@ -28,11 +29,16 @@ namespace DustScrapper.Cameras
         [Tooltip("보이는 넓이를 잴 카메라. 비워 두면 자식에서 찾는다.")]
         [SerializeField] Camera viewCamera;
 
+        [Header("조준으로 멀리 보기")]
+        [Tooltip("플레이어 시야. 조준으로 시야가 늘어난 만큼(AimRangeBonus) 바라보는 쪽으로 화면을 민다. 비우면 밀지 않는다.")]
+        [SerializeField] PlayerVision vision;
+
         Vector3 followVelocity;
 
         void Awake()
         {
             if (viewCamera == null) viewCamera = GetComponentInChildren<Camera>();
+            if (vision == null && target != null) vision = target.GetComponent<PlayerVision>();
         }
 
         void Start()
@@ -45,7 +51,8 @@ namespace DustScrapper.Cameras
             if (target == null) return;
 
             bool lookingAhead = input != null && input.LookAheadHeld;
-            float time = lookingAhead ? lookAheadSmoothTime : smoothTime;
+            float aimBonus = vision != null ? vision.AimRangeBonus : 0f;
+            float time = lookingAhead || aimBonus > 0f ? lookAheadSmoothTime : smoothTime;
 
             Vector2 offset = Vector2.zero;
             if (input != null)
@@ -54,6 +61,8 @@ namespace DustScrapper.Cameras
                     ? Vector2.Scale(CursorOffsetPerAxis(input.AimScreenPosition), LookAheadReach())
                     : CursorOffsetFromCenter(input.AimScreenPosition) * aimPush;
             }
+            // 조준으로 늘어난 시야가 화면 밖으로 나가지 않게 바라보는 쪽으로 그만큼 민다.
+            if (aimBonus > 0f) offset += vision.Facing * aimBonus;
             Vector3 desired = new Vector3(target.position.x + offset.x, target.position.y + offset.y, transform.position.z);
 
             transform.position = Vector3.SmoothDamp(transform.position, desired, ref followVelocity, time);

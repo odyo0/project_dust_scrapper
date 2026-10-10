@@ -1,3 +1,4 @@
+using DustScrapper.Combat;
 using UnityEngine;
 
 namespace DustScrapper.Weapons
@@ -23,10 +24,15 @@ namespace DustScrapper.Weapons
         [Tooltip("휘두른 뒤 다음 공격까지")]
         [SerializeField, Min(0f)] float recoveryTime = 0.18f;
 
+        [Header("맞혔을 때")]
+        [Tooltip("맞은 대상에게 거는 디버프 (비워 두면 없음). 예: 샷건 발차기의 비틀거림")]
+        [SerializeField] StatusEffectData hitEffect;
+
         public float Reach => reach;
         public float ArcAngle => arcAngle;
         public float WindupTime => windupTime;
         public float ActiveTime => activeTime;
         public float RecoveryTime => recoveryTime;
+        public StatusEffectData HitEffect => hitEffect;
     }
 }

@@ -23,5 +23,14 @@ namespace DustScrapper.Weapons
 
         /// <summary>마법이 쓸 MP. 없으면 null(마법을 쓰지 못한다).</summary>
         Mana Mana { get; }
+
+        /// <summary>디버프(비틀거림 등) 때문에 지금 공격·스킬을 쓰지 못하는가.</summary>
+        bool AttacksSuppressed { get; }
+
+        /// <summary>
+        /// 이 장비를 손에서 놓는다(칼 던지기 등). 놓은 장비를 물건 묶음으로 돌려주고, 손은 빈손이 된다.
+        /// 이 손에서 놓을 수 없는 장비면 false.
+        /// </summary>
+        bool TryRelease(Weapon weapon, out ItemStack stack);
     }
 }

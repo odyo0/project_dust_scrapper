@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d3abf5d123649b2960db9e5617e31d, type: 3}
+  m_Name: Rifle
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.GunData
+  displayName: "\uC18C\uCD1D"
+  maxStack: 1
+  value: 60
+  placeholderColor: {r: 0.45, g: 0.55, b: 0.35, a: 1}
+  prefab: {fileID: 2250674448581308316, guid: 6119aec93a18e437ab7641338cb5c587, type: 3}
+  grip: 1
+  damage: 45
+  knockback: 3
+  drawTime: 0.4
+  noiseRadius: 20
+  fireMode: 0
+  shotsPerSecond: 1.5
+  pelletsPerShot: 1
+  projectile: {fileID: 2966782877653483519, guid: af140bdd0b74747c78100d2ab3852500, type: 3}
+  projectileSpeed: 40
+  range: 22
+  ammo: {fileID: 11400000, guid: 4df8e2c11974845c2b6178b62651dfda, type: 2}
+  magazineSize: 5
+  reloadTime: 2.2
+  baseSpread: 4
+  spreadPerShot: 3
+  maxSpread: 10
+  spreadRecovery: 6
+  recoilKick: 0.15
