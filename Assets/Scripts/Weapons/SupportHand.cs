@@ -8,7 +8,8 @@ namespace DustScrapper.Weapons
 {
     /// <summary>
     /// 보조 손(왼손잡이 기준 오른손). 보조 칸에 든 장비를 손에 들고 있다. 든 장비의 기본 스킬은 우클릭, 특수 스킬은 F다.
-    /// 보조 칸이 비었을 때는 빈손 장비(기본 스킬 주먹질 + 특수 스킬 기본 공격 마법, 무기 손의 빈손과 같은 장비)를 든다.
+    /// 보조 칸이 비었을 때는 빈손 장비(기본 스킬 주먹질 + 특수 스킬 기본 공격 마법)를 든다.
+    /// 무기 손의 빈손(주먹질만)과는 다른 장비다. 한 손으로는 늘 마법을 쏠 수 있게 마법은 보조 손 빈손에만 있다.
     /// 지금은 빈손만 있고, 글러브·스태프를 넣는 칸(가방 화면)은 그런 장비가 생길 때 붙인다.
     /// 장비를 만들고 꺼내는 방법은 무기 손(WeaponLoadout)과 같다(Weapon.Spawn).
     /// </summary>
@@ -21,7 +22,7 @@ namespace DustScrapper.Weapons
         [Tooltip("마법이 쓸 MP. 비워 두면 같은 물체에서 찾는다.")]
         [SerializeField] Mana mana;
 
-        [Tooltip("보조 칸이 비었을 때 드는 빈손 장비 (우클릭 주먹질, F 기본 공격 마법). 무기 손의 빈손과 같은 장비를 넣는다.")]
+        [Tooltip("보조 칸이 비었을 때 드는 빈손 장비 (우클릭 주먹질, F 기본 공격 마법).")]
         [SerializeField] WeaponData bareHand;
 
         bool primaryHeld;

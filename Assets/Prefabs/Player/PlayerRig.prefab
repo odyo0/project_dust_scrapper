@@ -2897,7 +2897,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cc8390fe592bd4a4aa12684ba5f8f410, type: 2}
   - {fileID: 0}
   - {fileID: 0}
-  unarmed: {fileID: 11400000, guid: 9dd47213e159741349e6e0f436123d45, type: 2}
+  unarmed: {fileID: 11400000, guid: f8c501a502b0d46f987659842c0330be, type: 2}
   ammoSource: {fileID: 8143237740379748116}
   mana: {fileID: 8965127341765564750}
 --- !u!114 &6818699586869997258
