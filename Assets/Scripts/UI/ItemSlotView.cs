@@ -41,6 +41,14 @@ namespace DustScrapper.UI
             }
         }
 
+        /// <summary>번호 자리에 칸 이름을 보인다(몸 장비 칸: 모자, 상의 …).</summary>
+        public void SetLabel(string text)
+        {
+            if (numberLabel == null) return;
+            numberLabel.gameObject.SetActive(!string.IsNullOrEmpty(text));
+            numberLabel.text = text;
+        }
+
         public void Show(ItemStack stack)
         {
             Stack = stack;

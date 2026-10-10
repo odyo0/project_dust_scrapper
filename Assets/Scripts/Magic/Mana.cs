@@ -20,8 +20,14 @@ namespace DustScrapper.Magic
         [SerializeField, Min(0f)] float regenDelay = 0.5f;
 
         float delayTimer;
+        float maxBonus;
+        float regenBonus;
 
-        public float Max => maxMana;
+        /// <summary>최대 MP = 기본값 + 장비 보너스.</summary>
+        public float Max => maxMana + maxBonus;
+
+        /// <summary>1초에 다시 차는 양 = 기본값 + 장비 보너스.</summary>
+        public float RegenPerSecond => regenPerSecond + regenBonus;
         public float Current { get; private set; }
 
         /// <summary>MP가 모자라 마법을 쓰지 못했을 때.</summary>
@@ -48,8 +54,19 @@ namespace DustScrapper.Magic
 
         public void RestoreFull()
         {
-            Current = maxMana;
+            Current = Max;
             delayTimer = 0f;
+        }
+
+        /// <summary>
+        /// 장비 보너스를 정한다(몸 장비가 바뀔 때 BodyEquipment가 부른다). 더하기 값이다.
+        /// 최대치가 올라도 지금 MP는 그대로다(장비를 바꿔 끼우는 것으로 MP를 채우지 못하게). 내려가면 넘치는 만큼 잘린다.
+        /// </summary>
+        public void SetBonuses(float maxManaBonus, float regenPerSecondBonus)
+        {
+            maxBonus = maxManaBonus;
+            regenBonus = regenPerSecondBonus;
+            Current = Mathf.Min(Current, Max);
         }
 
         void Update()
@@ -59,7 +76,7 @@ namespace DustScrapper.Magic
                 delayTimer -= Time.deltaTime;
                 return;
             }
-            Current = Mathf.Min(maxMana, Current + regenPerSecond * Time.deltaTime);
+            Current = Mathf.Min(Max, Current + RegenPerSecond * Time.deltaTime);
         }
     }
 }

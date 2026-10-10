@@ -72,7 +72,7 @@ namespace DustScrapper.UI
             if (!dropHandled && eventData.pointerCurrentRaycast.gameObject == null)
             {
                 IItemSlots source = dragging.Grid.Source;
-                dropper.Drop(source.TakeSlot(dragging.Index));
+                if (source.CanTake(dragging.Index)) dropper.Drop(source.TakeSlot(dragging.Index));
             }
             CancelDrag();
         }
@@ -82,19 +82,20 @@ namespace DustScrapper.UI
             if (dragging != null || slot.Stack.IsEmpty) return;
 
             IItemSlots from = slot.Grid.Source;
-            if (from == screen.Loot || from == screen.Weapons || from == screen.Support)
+            if (from == screen.Loot || from == screen.Weapons || from == screen.Support || from == screen.Body)
             {
                 ItemTransfer.QuickMove(from, slot.Index, screen.Bag);
                 return;
             }
             if (from != screen.Bag) return;
 
-            // 가방에서: 상자를 열었으면 상자로. 아니면 장비 칸으로(무기 칸 먼저, 자리가 없거나 맞지 않으면 보조 칸).
+            // 가방에서: 상자를 열었으면 상자로. 아니면 장비 칸으로(몸 장비는 몸 칸, 손 장비는 무기 칸 먼저, 자리가 없거나 맞지 않으면 보조 칸).
             if (screen.Loot != null)
             {
                 ItemTransfer.QuickMove(from, slot.Index, screen.Loot);
                 return;
             }
+            if (screen.Body != null && ItemTransfer.QuickMove(from, slot.Index, screen.Body)) return;
             if (screen.Weapons.CanPlace(0, slot.Stack) && ItemTransfer.QuickMove(from, slot.Index, screen.Weapons)) return;
             if (screen.Support != null && screen.Support.CanPlace(0, slot.Stack)) ItemTransfer.QuickMove(from, slot.Index, screen.Support);
         }

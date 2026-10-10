@@ -1,3 +1,4 @@
+using DustScrapper.Equipment;
 using DustScrapper.Interaction;
 using DustScrapper.Items;
 using DustScrapper.Player;
@@ -7,7 +8,7 @@ using UnityEngine;
 namespace DustScrapper.UI
 {
     /// <summary>
-    /// 가방 화면을 열고 닫는다. Tab으로 가방(무기 슬롯 + 보조 칸 + 가방)을 열고, 상자를 열면 상자 칸까지 함께 띄운다.
+    /// 가방 화면을 열고 닫는다. Tab으로 가방(무기 슬롯 + 보조 칸 + 몸 장비 + 가방)을 열고, 상자를 열면 상자 칸까지 함께 띄운다.
     /// Tab·Esc로 닫고, 상자에서 멀어지거나 플레이어가 쓰러지면 저절로 닫힌다. 게임은 멈추지 않는다.
     /// 열려 있는 동안에는 입력 층에 "창이 마우스를 쓴다"고 알려 조준·발사를 막고 이동만 받게 한다.
     /// </summary>
@@ -19,11 +20,13 @@ namespace DustScrapper.UI
         [SerializeField] Inventory bag;
         [SerializeField] WeaponLoadout weapons;
         [SerializeField] SupportHand support;
+        [SerializeField] BodyEquipment body;
 
         [Tooltip("열고 닫을 화면 묶음. 이 스크립트가 붙은 물체 자신이면 안 된다(꺼지면 다시 켤 수 없다).")]
         [SerializeField] GameObject root;
         [SerializeField] ItemGridView weaponGrid;
         [SerializeField] ItemGridView supportGrid;
+        [SerializeField] ItemGridView bodyGrid;
         [SerializeField] ItemGridView bagGrid;
         [SerializeField] ItemGridView lootGrid;
         [Tooltip("상자를 열었을 때만 보이는 상자 쪽 묶음")]
@@ -38,6 +41,7 @@ namespace DustScrapper.UI
         public IItemSlots Bag => bag;
         public IItemSlots Weapons => weapons;
         public IItemSlots Support => support;
+        public IItemSlots Body => body;
 
         /// <summary>지금 열어 둔 상자의 칸. 없으면 null.</summary>
         public IItemSlots Loot => loot;
@@ -51,6 +55,7 @@ namespace DustScrapper.UI
         {
             weaponGrid.Bind(weapons);
             if (supportGrid != null) supportGrid.Bind(support);
+            if (bodyGrid != null) bodyGrid.Bind(body);
             bagGrid.Bind(bag);
             Close();
         }

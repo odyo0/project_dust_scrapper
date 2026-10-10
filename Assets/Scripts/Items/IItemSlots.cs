@@ -15,6 +15,9 @@ namespace DustScrapper.Items
         /// <summary>그 칸에 이 물건이 놓일 수 있는가(칸이 비었는지와는 상관없이, 종류만 본다).</summary>
         bool CanPlace(int index, ItemStack stack);
 
+        /// <summary>그 칸의 물건을 지금 뺄 수 있는가. 대부분 늘 된다(기본). 가방(배낭)처럼 빼면 안 되는 때가 있는 칸만 따로 정한다.</summary>
+        bool CanTake(int index) => true;
+
         /// <summary>그 칸을 비우고 들어 있던 것을 돌려준다.</summary>
         ItemStack TakeSlot(int index);
 

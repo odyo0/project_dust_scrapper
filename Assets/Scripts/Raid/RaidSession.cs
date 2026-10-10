@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DustScrapper.Combat;
+using DustScrapper.Equipment;
 using DustScrapper.Interaction;
 using DustScrapper.Items;
 using DustScrapper.Weapons;
@@ -26,6 +27,7 @@ namespace DustScrapper.Raid
         Inventory bag;
         WeaponLoadout weapons;
         SupportHand support;
+        BodyEquipment body;
         PlayerInteractor interactor;
         float startTime;
         float pendingDeathTimer = -1f;
@@ -52,6 +54,7 @@ namespace DustScrapper.Raid
             bag = player.GetComponent<Inventory>();
             weapons = player.GetComponent<WeaponLoadout>();
             support = player.GetComponent<SupportHand>();
+            body = player.GetComponent<BodyEquipment>();
             interactor = player.GetComponent<PlayerInteractor>();
         }
 
@@ -109,6 +112,7 @@ namespace DustScrapper.Raid
             var items = new List<ItemStack>();
             AddAll(weapons, items);
             AddAll(support, items);
+            AddAll(body, items);
             AddAll(bag, items);
             return items;
         }

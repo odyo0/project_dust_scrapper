@@ -1,3 +1,4 @@
+using DustScrapper.Equipment;
 using UnityEngine;
 
 namespace DustScrapper.Items
@@ -17,7 +18,8 @@ namespace DustScrapper.Items
             if (from == to && i == j) return false;
 
             ItemStack a = from.GetSlot(i);
-            if (a.IsEmpty || !to.CanPlace(j, a)) return false;
+            if (a.IsEmpty || !to.CanPlace(j, a) || !from.CanTake(i)) return false;
+            if (j >= UsableSlotCount(from, i, to)) return false;
             ItemStack b = to.GetSlot(j);
 
             if (b.IsEmpty)
@@ -37,7 +39,7 @@ namespace DustScrapper.Items
                 return true;
             }
 
-            if (!from.CanPlace(i, b)) return false;
+            if (!from.CanPlace(i, b) || !to.CanTake(j)) return false;
             from.TakeSlot(i);
             to.TakeSlot(j);
             to.PlaceInEmptySlot(j, a);
@@ -54,14 +56,15 @@ namespace DustScrapper.Items
             if (from == to) return false;
 
             ItemStack a = from.GetSlot(i);
-            if (a.IsEmpty) return false;
+            if (a.IsEmpty || !from.CanTake(i)) return false;
 
             int max = a.Item.MaxStack;
             int left = a.Count;
+            int usable = UsableSlotCount(from, i, to);
 
             if (max > 1)
             {
-                for (int j = 0; j < to.SlotCount && left > 0; j++)
+                for (int j = 0; j < usable && left > 0; j++)
                 {
                     ItemStack b = to.GetSlot(j);
                     if (b.Item != a.Item || b.Count >= max) continue;
@@ -72,7 +75,7 @@ namespace DustScrapper.Items
                 }
             }
 
-            for (int j = 0; j < to.SlotCount && left > 0; j++)
+            for (int j = 0; j < usable && left > 0; j++)
             {
                 if (!to.GetSlot(j).IsEmpty || !to.CanPlace(j, a)) continue;
                 int put = Mathf.Min(left, max);
@@ -84,6 +87,16 @@ namespace DustScrapper.Items
             from.TakeSlot(i);
             if (left > 0) from.PlaceInEmptySlot(i, a.WithCount(left));
             return true;
+        }
+
+        /// <summary>
+        /// from의 i칸 물건을 to로 옮길 때 쓸 수 있는 to의 칸 수. 보통은 to의 칸 수 그대로다.
+        /// 벗는 가방(배낭)을 그 가방이 늘려 준 칸에 넣으면, 벗는 순간 그 칸이 사라지면서 가방도 함께 사라지므로 그 칸들은 뺀다.
+        /// </summary>
+        static int UsableSlotCount(IItemSlots from, int i, IItemSlots to)
+        {
+            if (from is BodyEquipment body && to == (IItemSlots)body.Bag) return to.SlotCount - body.BagSlotsGrantedBy(i);
+            return to.SlotCount;
         }
     }
 }

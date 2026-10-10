@@ -12,7 +12,7 @@ namespace DustScrapper.Items
     [DisallowMultipleComponent]
     public sealed class Inventory : MonoBehaviour, IItemSlots
     {
-        [Tooltip("칸 수")]
+        [Tooltip("기본 칸 수. 가방(배낭) 장비가 SetExtraSlots로 칸을 더 늘릴 수 있다.")]
         [SerializeField, Min(1)] int capacity = 12;
 
         [Tooltip("처음부터 들어 있는 물건 (상자 내용물 등)")]
@@ -22,6 +22,9 @@ namespace DustScrapper.Items
 
         public int Capacity => Slots.Length;
         public int SlotCount => Slots.Length;
+
+        /// <summary>장비 없이 처음부터 있는 칸 수.</summary>
+        public int BaseCapacity => capacity;
 
         public bool IsEmpty
         {
@@ -66,6 +69,33 @@ namespace DustScrapper.Items
         }
 
         public ItemStack GetSlot(int index) => Slots[index];
+
+        /// <summary>start번 칸부터 끝까지 모두 비었는가. 가방을 벗어 칸이 줄어들 때 사라질 칸이 비었는지 볼 때 쓴다.</summary>
+        public bool IsEmptyFrom(int start)
+        {
+            for (int i = Mathf.Max(0, start); i < Slots.Length; i++)
+            {
+                if (!Slots[i].IsEmpty) return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 기본 칸 수에 더할 칸 수를 정한다(가방 장비). 칸이 줄어들 때 사라질 칸에 물건이 있으면 줄이지 않는다
+        /// (부른 쪽이 먼저 비었는지 확인해야 한다. 물건이 사라지지 않게 하는 마지막 안전장치다).
+        /// </summary>
+        public void SetExtraSlots(int extra)
+        {
+            int count = capacity + Mathf.Max(0, extra);
+            if (count == Slots.Length) return;
+            if (count < Slots.Length && !IsEmptyFrom(count))
+            {
+                Debug.LogError($"{name}: 줄어들 칸에 물건이 있어 가방 칸을 줄이지 않았다.", this);
+                return;
+            }
+            Array.Resize(ref slots, count);
+            Changed?.Invoke();
+        }
 
         /// <summary>가방·상자 칸에는 어떤 물건이든 놓인다.</summary>
         public bool CanPlace(int index, ItemStack stack) => true;

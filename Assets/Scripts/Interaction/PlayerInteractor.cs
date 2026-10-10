@@ -1,4 +1,5 @@
 using System;
+using DustScrapper.Equipment;
 using DustScrapper.Items;
 using DustScrapper.Weapons;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace DustScrapper.Interaction
         [SerializeField] Inventory inventory;
         [SerializeField] WeaponLoadout loadout;
         [SerializeField] SupportHand supportHand;
+        [SerializeField] BodyEquipment body;
 
         [Tooltip("손이 닿는 거리 (칸)")]
         [SerializeField, Min(0.1f)] float reach = 1.2f;
@@ -31,6 +33,7 @@ namespace DustScrapper.Interaction
         public Inventory Inventory => inventory;
         public WeaponLoadout Loadout => loadout;
         public SupportHand SupportHand => supportHand;
+        public BodyEquipment Body => body;
 
         /// <summary>지금 고른 대상. 없으면 null.</summary>
         public Interactable Target { get; private set; }
@@ -54,6 +57,7 @@ namespace DustScrapper.Interaction
             if (inventory == null) inventory = GetComponent<Inventory>();
             if (loadout == null) loadout = GetComponent<WeaponLoadout>();
             if (supportHand == null) supportHand = GetComponent<SupportHand>();
+            if (body == null) body = GetComponent<BodyEquipment>();
         }
 
         void OnDisable()

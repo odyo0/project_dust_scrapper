@@ -5,8 +5,9 @@ using UnityEngine;
 namespace DustScrapper.UI
 {
     /// <summary>
-    /// 칸 묶음(가방, 상자, 무기 슬롯) 하나를 칸 그림들로 보여 준다. 연결된 칸 수만큼 칸 그림을 만들고,
-    /// 칸 내용이 바뀌면(Changed) 다시 그린다. 칸 배치는 칸 부모의 GridLayoutGroup이 맡는다.
+    /// 칸 묶음(가방, 상자, 무기 슬롯, 몸 장비) 하나를 칸 그림들로 보여 준다. 연결된 칸 수만큼 칸 그림을 만들고,
+    /// 칸 내용이 바뀌면(Changed) 다시 그린다. 칸 수가 바뀌어도(가방 장비로 가방 칸이 늘고 줄 때) 맞춰 다시 만든다.
+    /// 칸 묶음이 칸 이름을 가지면(ISlotLabels, 몸 장비) 번호 자리에 이름을 보인다. 칸 배치는 칸 부모의 GridLayoutGroup이 맡는다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class ItemGridView : MonoBehaviour
@@ -30,15 +31,6 @@ namespace DustScrapper.UI
             source = newSource;
             if (source != null) source.Changed += Refresh;
 
-            int count = source != null ? source.SlotCount : 0;
-            while (cells.Count < count)
-            {
-                ItemSlotView cell = Instantiate(slotPrefab, cellParent);
-                cell.Setup(this, cells.Count, dragController, showSlotNumbers);
-                cells.Add(cell);
-            }
-            for (int i = 0; i < cells.Count; i++) cells[i].gameObject.SetActive(i < count);
-
             Refresh();
         }
 
@@ -49,8 +41,22 @@ namespace DustScrapper.UI
 
         void Refresh()
         {
+            int count = source != null ? source.SlotCount : 0;
+            while (cells.Count < count)
+            {
+                ItemSlotView cell = Instantiate(slotPrefab, cellParent);
+                cell.Setup(this, cells.Count, dragController, showSlotNumbers);
+                cells.Add(cell);
+            }
+            for (int i = 0; i < cells.Count; i++) cells[i].gameObject.SetActive(i < count);
             if (source == null) return;
-            for (int i = 0; i < source.SlotCount; i++) cells[i].Show(source.GetSlot(i));
+
+            var labels = source as ISlotLabels;
+            for (int i = 0; i < count; i++)
+            {
+                if (labels != null) cells[i].SetLabel(labels.GetSlotLabel(i));
+                cells[i].Show(source.GetSlot(i));
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using DustScrapper.Equipment;
 using DustScrapper.Interaction;
 using DustScrapper.Weapons;
 using UnityEngine;
@@ -6,8 +7,9 @@ namespace DustScrapper.Items
 {
     /// <summary>
     /// 바닥에 놓인 물건 한 묶음. E를 누르고 있으면 줍는다.
-    /// 장비는 맞는 칸으로 간다: 무기 칸에 맞으면 무기 칸(다 찼으면 든 무기와 바꿈), 보조 칸에만 맞으면 보조 칸(차 있으면 낀 것과 바꿈),
-    /// 둘 다 맞으면(스태프) 무기 칸에 빈자리가 있을 때 무기 칸, 없으면 보조 칸. 바꿔서 빠진 장비는 이 자리에 내려놓는다. 나머지는 가방으로 간다.
+    /// 손 장비는 맞는 칸으로 간다: 무기 칸에 맞으면 무기 칸(다 찼으면 든 무기와 바꿈), 보조 칸에만 맞으면 보조 칸(차 있으면 낀 것과 바꿈),
+    /// 둘 다 맞으면(스태프) 무기 칸에 빈자리가 있을 때 무기 칸, 없으면 보조 칸. 바꿔서 빠진 장비는 가방으로 들어가고, 가방에 자리가 없을 때만 이 자리에 남는다.
+    /// 몸 장비는 그 부위 칸이 비어 있으면 바로 끼고, 차 있으면 가방으로 간다. 나머지는 가방으로 간다.
     /// 가방에 다 안 들어가면 남은 만큼 바닥에 남는다.
     /// </summary>
     public sealed class WorldItem : Interactable
@@ -58,6 +60,7 @@ namespace DustScrapper.Items
                 bool canSupport = data.FitsSupportSlot && interactor.SupportHand != null;
                 return canWeapon || canSupport ? null : "장비를 낄 수 없다";
             }
+            if (stack.Item is BodyGearData && interactor.Body != null && interactor.Body.HasEmptySlotFor(stack)) return null;
             return interactor.Inventory != null && interactor.Inventory.HasRoomFor(stack.Item) ? null : "가방이 가득 찼다";
         }
 
@@ -65,8 +68,15 @@ namespace DustScrapper.Items
         {
             if (stack.Item is WeaponData data)
             {
-                // 든 장비와 바꿨다면 빠진 장비가 이 자리에 남는다.
-                SetStack(ToWeaponSlot(data, interactor) ? interactor.Loadout.PutWeapon(stack) : interactor.SupportHand.PutItem(stack));
+                ItemStack replaced = ToWeaponSlot(data, interactor) ? interactor.Loadout.PutWeapon(stack) : interactor.SupportHand.PutItem(stack);
+                // 바꿔서 빠진 장비는 가방으로. 가방에 다 안 들어가면 남은 것이 이 자리에 남는다.
+                SetStack(replaced.IsEmpty || interactor.Inventory == null ? replaced : replaced.WithCount(interactor.Inventory.Add(replaced)));
+                return;
+            }
+
+            if (stack.Item is BodyGearData && interactor.Body != null && interactor.Body.TryEquip(stack))
+            {
+                SetStack(ItemStack.Empty);
                 return;
             }
 

@@ -1,3 +1,4 @@
+using DustScrapper.Equipment;
 using DustScrapper.Items;
 using DustScrapper.Weapons;
 using TMPro;
@@ -38,10 +39,30 @@ namespace DustScrapper.UI
             {
                 text = stack.Count > 1 ? $"{stack.Item.DisplayName} ×{stack.Count}" : stack.Item.DisplayName;
                 if (stack.Item is GunData gun) text += $"   탄창 {stack.LoadedAmmo}/{gun.MagazineSize}";
+                if (stack.Item is BodyGearData gear) text += GearBonusText(gear);
                 text += $"   가치 {stack.Item.Value * stack.Count}";
             }
 
             label.text = text;
+        }
+
+        /// <summary>몸 장비의 능력치 보너스를 "   최대 MP +30" 꼴로 늘어놓는다.</summary>
+        static string GearBonusText(BodyGearData gear)
+        {
+            if (gear.Modifiers == null) return string.Empty;
+            var text = new System.Text.StringBuilder();
+            foreach (StatModifier modifier in gear.Modifiers)
+            {
+                string name = modifier.Stat switch
+                {
+                    StatType.MaxMana => "최대 MP",
+                    StatType.ManaRegen => "MP 회복",
+                    StatType.BagSlots => "가방 칸",
+                    _ => modifier.Stat.ToString(),
+                };
+                text.Append("   ").Append(name).Append(' ').Append(modifier.Amount >= 0f ? "+" : string.Empty).Append(modifier.Amount.ToString("0.#"));
+            }
+            return text.ToString();
         }
     }
 }
