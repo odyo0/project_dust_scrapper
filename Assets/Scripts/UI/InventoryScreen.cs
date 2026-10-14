@@ -24,12 +24,17 @@ namespace DustScrapper.UI
         [SerializeField] WeaponLoadout weapons;
         [SerializeField] SupportHand support;
         [SerializeField] BodyEquipment body;
+        [SerializeField] QuickSlots quick;
+        [SerializeField] ItemUser itemUser;
+        [Tooltip("C로 여는 제작(몸에 지닌 Workbench)")]
+        [SerializeField] Station craftStation;
 
         [Tooltip("열고 닫을 화면 묶음. 이 스크립트가 붙은 물체 자신이면 안 된다(꺼지면 다시 켤 수 없다).")]
         [SerializeField] GameObject root;
         [SerializeField] ItemGridView weaponGrid;
         [SerializeField] ItemGridView supportGrid;
         [SerializeField] ItemGridView bodyGrid;
+        [SerializeField] ItemGridView quickGrid;
         [SerializeField] ItemGridView bagGrid;
         [SerializeField] ItemGridView lootGrid;
         [Tooltip("상자를 열었을 때만 보이는 상자 쪽 묶음")]
@@ -51,6 +56,8 @@ namespace DustScrapper.UI
         public IItemSlots Weapons => weapons;
         public IItemSlots Support => support;
         public IItemSlots Body => body;
+        public IItemSlots Quick => quick;
+        public ItemUser ItemUser => itemUser;
 
         /// <summary>지금 열어 둔 상자의 칸. 없으면 null.</summary>
         public IItemSlots Loot => loot;
@@ -71,6 +78,7 @@ namespace DustScrapper.UI
             weaponGrid.Bind(weapons);
             if (supportGrid != null) supportGrid.Bind(support);
             if (bodyGrid != null) bodyGrid.Bind(body);
+            if (quickGrid != null) quickGrid.Bind(quick);
             bagGrid.Bind(bag);
             Close();
         }
@@ -99,6 +107,11 @@ namespace DustScrapper.UI
             {
                 if (IsOpen) Close();
                 else Open(null, null, null);
+            }
+            else if (input.CraftPressed && craftStation != null)
+            {
+                if (IsOpen && station == craftStation) Close();
+                else OpenWithStation(craftStation);
             }
             else if (IsOpen && input.CancelPressed)
             {

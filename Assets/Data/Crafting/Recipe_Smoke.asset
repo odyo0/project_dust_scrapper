@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ee5993b8b9d741c3aadfe47f23cf900, type: 3}
+  m_Name: Recipe_Smoke
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Crafting.RecipeData
+  inputs:
+  - item: {fileID: 11400000, guid: 55dedc50c198743b9a3af2110567c102, type: 2}
+    count: 3
+  - item: {fileID: 11400000, guid: f094491959add4951baf6aaad0502233, type: 2}
+    count: 1
+  output: {fileID: 11400000, guid: c235eb31b890d4c70ac11c143317b975, type: 2}
+  outputCount: 1
+  unlock: {fileID: 11400000, guid: 3a5401ffca9124fc8a72d68005bed8da, type: 2}

@@ -7,7 +7,7 @@ using UnityEngine;
 namespace DustScrapper.Progress
 {
     /// <summary>
-    /// 플레이어가 몸에 지닌 칸들(무기 칸, 보조 칸, 몸 장비, 가방)을 한 덩어리로 읽고 쓴다.
+    /// 플레이어가 몸에 지닌 칸들(무기 칸, 보조 칸, 몸 장비, 가방, 소모품 단축 칸)을 한 덩어리로 읽고 쓴다.
     /// 기지(출발할 때 들고 갈 것), 원정(가져온 것·잃은 것), 저장이 모두 이 한 곳을 거쳐서, 칸이 늘어도 고칠 곳이 하나다.
     /// </summary>
     public sealed class PlayerLoadout
@@ -16,6 +16,7 @@ namespace DustScrapper.Progress
         readonly SupportHand support;
         readonly BodyEquipment body;
         readonly Inventory bag;
+        readonly QuickSlots quick;
 
         PlayerLoadout(GameObject player)
         {
@@ -23,6 +24,7 @@ namespace DustScrapper.Progress
             support = player.GetComponent<SupportHand>();
             body = player.GetComponent<BodyEquipment>();
             bag = player.GetComponent<Inventory>();
+            quick = player.GetComponent<QuickSlots>();
         }
 
         public static PlayerLoadout Of(GameObject player) => player != null ? new PlayerLoadout(player) : null;
@@ -55,6 +57,7 @@ namespace DustScrapper.Progress
             support = Save(support),
             body = Save(body),
             bag = Save(bag),
+            quick = Save(quick),
         };
 
         /// <summary>
@@ -68,11 +71,13 @@ namespace DustScrapper.Progress
             Clear(body);
             Clear(weapons);
             Clear(support);
+            Clear(quick);
 
             Load(body, data.body);
             Load(bag, data.bag);
             Load(weapons, data.weapons);
             Load(support, data.support);
+            Load(quick, data.quick);
         }
 
         IEnumerable<IItemSlots> AllSlots()
@@ -81,6 +86,7 @@ namespace DustScrapper.Progress
             if (support != null) yield return support;
             if (body != null) yield return body;
             if (bag != null) yield return bag;
+            if (quick != null) yield return quick;
         }
 
         static SavedStack[] Save(IItemSlots slots)

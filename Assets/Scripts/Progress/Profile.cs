@@ -21,6 +21,14 @@ namespace DustScrapper.Progress
         /// </summary>
         public static bool DepartedThisRun { get; private set; }
 
+        /// <summary>기지에서 쓰러졌다(글로우병 등). 원정에서 쓰러진 것과 같이 몸에 지닌 것을 잃고 글로우병은 0이 된다.</summary>
+        public static void DieAtBase()
+        {
+            Current.carried = LoadoutData.Empty;
+            Current.glowSickness = 0f;
+            Save();
+        }
+
         // 에디터에서 플레이를 다시 시작할 때(도메인을 다시 불러오지 않는 설정이어도) 전 플레이의 상태가 남지 않게 한다.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetForPlay()
@@ -39,6 +47,7 @@ namespace DustScrapper.Progress
         {
             if (!Current.inRaid || DepartedThisRun) return false;
             Current.carried = LoadoutData.Empty;
+            Current.glowSickness = 0f;
             Current.inRaid = false;
             Save();
             return true;
@@ -53,10 +62,11 @@ namespace DustScrapper.Progress
             Save();
         }
 
-        /// <summary>원정이 끝났다. 탈출했으면 가져온 것을 몸에 남기고, 쓰러졌으면 모두 잃는다.</summary>
-        public static void EndRaid(bool extracted, LoadoutData broughtBack)
+        /// <summary>원정이 끝났다. 탈출했으면 가져온 것과 글로우병을 그대로 남기고, 쓰러졌으면 모두 잃고 글로우병은 0으로 돌아온다.</summary>
+        public static void EndRaid(bool extracted, LoadoutData broughtBack, float glowSickness)
         {
             Current.carried = extracted ? broughtBack : LoadoutData.Empty;
+            Current.glowSickness = extracted ? glowSickness : 0f;
             Current.inRaid = false;
             DepartedThisRun = false;
             Save();

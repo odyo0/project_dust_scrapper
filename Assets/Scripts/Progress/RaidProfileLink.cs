@@ -15,6 +15,7 @@ namespace DustScrapper.Progress
         [SerializeField] RaidSession session;
 
         PlayerLoadout player;
+        Glow.GlowSickness sickness;
         bool linked;
 
         void Start()
@@ -30,6 +31,7 @@ namespace DustScrapper.Progress
             {
                 player = PlayerLoadout.Of(playerObject);
                 player.Apply(Profile.Current.carried);
+                if (playerObject.TryGetComponent(out sickness)) sickness.Load(Profile.Current.glowSickness);
                 session.Ended += OnEnded;
                 linked = true;
             }
@@ -42,6 +44,7 @@ namespace DustScrapper.Progress
             if (linked) session.Ended -= OnEnded;
         }
 
-        void OnEnded(RaidResult result) => Profile.EndRaid(result.Extracted, result.Extracted ? player.Capture() : LoadoutData.Empty);
+        void OnEnded(RaidResult result) =>
+            Profile.EndRaid(result.Extracted, result.Extracted ? player.Capture() : LoadoutData.Empty, sickness != null ? sickness.Value : 0f);
     }
 }

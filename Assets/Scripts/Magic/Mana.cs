@@ -56,6 +56,13 @@ namespace DustScrapper.Magic
             return true;
         }
 
+        /// <summary>MP를 그만큼 채운다(최대치까지). 글로우 가루를 마실 때 등.</summary>
+        public void Restore(float amount)
+        {
+            if (amount <= 0f) return;
+            Current = Mathf.Min(Max, Current + amount);
+        }
+
         public void RestoreFull()
         {
             Current = Max;

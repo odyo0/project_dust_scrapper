@@ -253,6 +253,46 @@ namespace DustScrapper.Controls
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""Craft"",
+                    ""type"": ""Button"",
+                    ""id"": ""ee07f100-b2bb-4b5a-81dc-6cdee8341606"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Quick1"",
+                    ""type"": ""Button"",
+                    ""id"": ""1652357d-28c9-481d-af1a-96e3635aebb7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Quick2"",
+                    ""type"": ""Button"",
+                    ""id"": ""0f2038cb-572d-48e8-a1e3-567351c2c351"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""Quick3"",
+                    ""type"": ""Button"",
+                    ""id"": ""6172b5fa-ccbd-4566-8aef-2fd7c3a815ce"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -475,6 +515,50 @@ namespace DustScrapper.Controls
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""672b5681-a6db-4aa1-9fea-5ad9eb62618d"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Craft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0caa0790-18b9-4986-a88f-6688e8e8bd88"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Quick1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4efe0030-bbfe-42d8-829d-c250388205cf"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Quick2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3cc242a5-7442-45e2-95a9-a6327ca8ac8b"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Quick3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -516,6 +600,10 @@ namespace DustScrapper.Controls
             m_Player_Slot1 = m_Player.FindAction("Slot1", throwIfNotFound: true);
             m_Player_Slot2 = m_Player.FindAction("Slot2", throwIfNotFound: true);
             m_Player_Slot3 = m_Player.FindAction("Slot3", throwIfNotFound: true);
+            m_Player_Craft = m_Player.FindAction("Craft", throwIfNotFound: true);
+            m_Player_Quick1 = m_Player.FindAction("Quick1", throwIfNotFound: true);
+            m_Player_Quick2 = m_Player.FindAction("Quick2", throwIfNotFound: true);
+            m_Player_Quick3 = m_Player.FindAction("Quick3", throwIfNotFound: true);
         }
 
         ~@GameControls()
@@ -612,6 +700,10 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Slot1;
         private readonly InputAction m_Player_Slot2;
         private readonly InputAction m_Player_Slot3;
+        private readonly InputAction m_Player_Craft;
+        private readonly InputAction m_Player_Quick1;
+        private readonly InputAction m_Player_Quick2;
+        private readonly InputAction m_Player_Quick3;
         /// <summary>
         /// Provides access to input actions defined in input action map "Player".
         /// </summary>
@@ -688,6 +780,22 @@ namespace DustScrapper.Controls
             /// </summary>
             public InputAction @Slot3 => m_Wrapper.m_Player_Slot3;
             /// <summary>
+            /// Provides access to the underlying input action "Player/Craft".
+            /// </summary>
+            public InputAction @Craft => m_Wrapper.m_Player_Craft;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Quick1".
+            /// </summary>
+            public InputAction @Quick1 => m_Wrapper.m_Player_Quick1;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Quick2".
+            /// </summary>
+            public InputAction @Quick2 => m_Wrapper.m_Player_Quick2;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Quick3".
+            /// </summary>
+            public InputAction @Quick3 => m_Wrapper.m_Player_Quick3;
+            /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
             public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -761,6 +869,18 @@ namespace DustScrapper.Controls
                 @Slot3.started += instance.OnSlot3;
                 @Slot3.performed += instance.OnSlot3;
                 @Slot3.canceled += instance.OnSlot3;
+                @Craft.started += instance.OnCraft;
+                @Craft.performed += instance.OnCraft;
+                @Craft.canceled += instance.OnCraft;
+                @Quick1.started += instance.OnQuick1;
+                @Quick1.performed += instance.OnQuick1;
+                @Quick1.canceled += instance.OnQuick1;
+                @Quick2.started += instance.OnQuick2;
+                @Quick2.performed += instance.OnQuick2;
+                @Quick2.canceled += instance.OnQuick2;
+                @Quick3.started += instance.OnQuick3;
+                @Quick3.performed += instance.OnQuick3;
+                @Quick3.canceled += instance.OnQuick3;
             }
 
             /// <summary>
@@ -820,6 +940,18 @@ namespace DustScrapper.Controls
                 @Slot3.started -= instance.OnSlot3;
                 @Slot3.performed -= instance.OnSlot3;
                 @Slot3.canceled -= instance.OnSlot3;
+                @Craft.started -= instance.OnCraft;
+                @Craft.performed -= instance.OnCraft;
+                @Craft.canceled -= instance.OnCraft;
+                @Quick1.started -= instance.OnQuick1;
+                @Quick1.performed -= instance.OnQuick1;
+                @Quick1.canceled -= instance.OnQuick1;
+                @Quick2.started -= instance.OnQuick2;
+                @Quick2.performed -= instance.OnQuick2;
+                @Quick2.canceled -= instance.OnQuick2;
+                @Quick3.started -= instance.OnQuick3;
+                @Quick3.performed -= instance.OnQuick3;
+                @Quick3.canceled -= instance.OnQuick3;
             }
 
             /// <summary>
@@ -985,6 +1117,34 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnSlot3(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Craft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnCraft(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Quick1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnQuick1(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Quick2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnQuick2(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Quick3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnQuick3(InputAction.CallbackContext context);
         }
     }
 }

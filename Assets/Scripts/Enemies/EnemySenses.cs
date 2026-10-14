@@ -99,6 +99,7 @@ namespace DustScrapper.Enemies
                           Vector2.Angle(bodyAim.AimDirection, toTarget) <= sightAngle * 0.5f;
             if (!inCone) return false;
 
+            if (Glow.SmokeCloud.Blocks(origin, target.position)) return false;
             return Physics2D.Linecast(origin, target.position, sightBlockers).collider == null;
         }
 

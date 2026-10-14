@@ -54,6 +54,12 @@ namespace DustScrapper.Player
         /// <summary>이번 프레임에 취소 키(Esc)를 눌렀는가. 창이 열려 있어도 읽는다.</summary>
         public bool CancelPressed { get; private set; }
 
+        /// <summary>이번 프레임에 제작 키(C)를 눌렀는가. 창이 열려 있어도 읽는다.</summary>
+        public bool CraftPressed { get; private set; }
+
+        /// <summary>이번 프레임에 누른 소모품 단축 칸 번호(0부터, 키 4·5·6). 누르지 않았으면 -1.</summary>
+        public int QuickPressed { get; private set; } = -1;
+
         readonly HashSet<object> openMenus = new();
 
         /// <summary>마우스를 쓰는 창이 하나라도 열려 있는가. 열려 있는 동안 조준점은 마지막 자리에 멈춰 있다.</summary>
@@ -97,7 +103,9 @@ namespace DustScrapper.Player
             InteractHeld = false;
             InventoryPressed = false;
             CancelPressed = false;
+            CraftPressed = false;
             SlotPressed = -1;
+            QuickPressed = -1;
         }
 
         void OnDestroy()
@@ -113,6 +121,7 @@ namespace DustScrapper.Player
             SneakHeld = player.Sneak.IsPressed();
             InventoryPressed = player.Inventory.WasPressedThisFrame();
             CancelPressed = player.Cancel.WasPressedThisFrame();
+            CraftPressed = player.Craft.WasPressedThisFrame();
 
             if (MenuOpen)
             {
@@ -124,6 +133,7 @@ namespace DustScrapper.Player
                 ReloadPressed = false;
                 InteractHeld = false;
                 SlotPressed = -1;
+                QuickPressed = -1;
                 return;
             }
 
@@ -136,6 +146,7 @@ namespace DustScrapper.Player
             ReloadPressed = player.Reload.WasPressedThisFrame();
             InteractHeld = player.Interact.IsPressed();
             SlotPressed = ReadSlotPressed(player);
+            QuickPressed = player.Quick1.WasPressedThisFrame() ? 0 : player.Quick2.WasPressedThisFrame() ? 1 : player.Quick3.WasPressedThisFrame() ? 2 : -1;
         }
 
         static int ReadSlotPressed(GameControls.PlayerActions player)

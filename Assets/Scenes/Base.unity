@@ -169,6 +169,7 @@ MonoBehaviour:
   holdTime: 0.2
   displayName: "\uBCF4\uAD00\uD568"
   searchTime: 0
+  table: {fileID: 0}
 --- !u!114 &30102945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,6 +284,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dbfa75c0faba44e4f839ad7a27419ae5, type: 2}
   - {fileID: 11400000, guid: 771d10c04239f4ab9bb582968fabeb88, type: 2}
   - {fileID: 11400000, guid: e7a377a356cb84e40bf466e67136c14d, type: 2}
+  - {fileID: 11400000, guid: 3a5401ffca9124fc8a72d68005bed8da, type: 2}
 --- !u!61 &78623254
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -984,6 +986,7 @@ MonoBehaviour:
   storage: {fileID: 30102945}
   storageUpgrade: {fileID: 11400000, guid: 771d10c04239f4ab9bb582968fabeb88, type: 2}
   storageSlotsPerLevel: 15
+  deathReloadDelay: 2
 --- !u!4 &773440373
 Transform:
   m_ObjectHideFlags: 0

@@ -16,9 +16,13 @@ namespace DustScrapper.Actors
 
         public Vector2 AimDirection { get; private set; } = Vector2.right;
 
+        /// <summary>마지막으로 바라본 월드 좌표의 점(마우스 커서 자리). 던지는 물건이 떨어질 곳을 정할 때 쓴다.</summary>
+        public Vector2 AimPoint { get; private set; }
+
         /// <summary>월드 좌표의 한 점을 바라보게 한다. 너무 가까우면 직전 방향을 유지한다.</summary>
         public void AimAt(Vector2 worldPoint)
         {
+            AimPoint = worldPoint;
             Vector2 toPoint = worldPoint - (Vector2)transform.position;
             if (toPoint.sqrMagnitude < MinAimDistance * MinAimDistance) return;
 

@@ -19,6 +19,9 @@ namespace DustScrapper.Progress
         /// <summary>지은 기지 시설·업그레이드와 그 단계. 바꿀 때는 BaseUpgrades를 거친다.</summary>
         public List<UpgradeLevel> upgrades = new();
 
+        /// <summary>글로우병(%). 기지로 돌아와도 남고, 죽으면 0이 된다(기획).</summary>
+        public float glowSickness;
+
         public SavedStack[] storage = Array.Empty<SavedStack>();
         public LoadoutData carried = new();
 

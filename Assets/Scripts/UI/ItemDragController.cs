@@ -61,6 +61,10 @@ namespace DustScrapper.UI
         {
             if (dragging == null) return;
             dropHandled = true;
+            // 글로우 가루처럼 장비를 충전하는 소모품을 마법진 장비 위에 놓으면 옮기지 않고 그 장비에 쓴다(급한 충전).
+            if (screen.ItemUser != null && dragging.Stack.Item is ConsumableData consumable && consumable.CanChargeGear &&
+                screen.ItemUser.ChargeGear(dragging.Grid.Source, dragging.Index, target.Grid.Source, target.Index))
+                return;
             ItemTransfer.Move(dragging.Grid.Source, dragging.Index, target.Grid.Source, target.Index);
         }
 
@@ -89,7 +93,13 @@ namespace DustScrapper.UI
                 ItemTransfer.QuickMove(from, slot.Index, stationTarget);
                 return;
             }
-            if (from == screen.Loot || from == screen.Weapons || from == screen.Support || from == screen.Body)
+            // 상자를 열지 않았을 때 소모품을 우클릭하면 쓴다(기획: 가방에서 우클릭으로 사용).
+            if (screen.Loot == null && slot.Stack.Item is ConsumableData && screen.ItemUser != null)
+            {
+                screen.ItemUser.Use(from, slot.Index);
+                return;
+            }
+            if (from == screen.Loot || from == screen.Weapons || from == screen.Support || from == screen.Body || from == screen.Quick)
             {
                 ItemTransfer.QuickMove(from, slot.Index, screen.Bag);
                 return;

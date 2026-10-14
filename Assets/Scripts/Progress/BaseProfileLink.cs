@@ -1,3 +1,5 @@
+using DustScrapper.Combat;
+using DustScrapper.Glow;
 using DustScrapper.Items;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,7 +22,12 @@ namespace DustScrapper.Progress
         [SerializeField] BaseUpgradeData storageUpgrade;
         [SerializeField, Min(0)] int storageSlotsPerLevel = 15;
 
+        [Tooltip("기지에서 쓰러졌을 때(글로우병 등) 기지를 다시 열기까지 기다리는 시간 (초)")]
+        [SerializeField, Min(0f)] float deathReloadDelay = 2f;
+
         PlayerLoadout player;
+        GlowSickness sickness;
+        Health health;
         bool dirty;
 
         void Start()
@@ -40,6 +47,12 @@ namespace DustScrapper.Progress
             player.Apply(Profile.Current.carried);
             // 장비 보너스가 붙은 뒤에 MP를 가득 채운다(장비를 끼는 것만으로는 MP가 차지 않으므로).
             if (playerObject.TryGetComponent(out Magic.Mana mana)) mana.RestoreFull();
+            if (playerObject.TryGetComponent(out sickness))
+            {
+                sickness.Load(Profile.Current.glowSickness);
+                sickness.Changed += MarkDirty;
+            }
+            if (playerObject.TryGetComponent(out health)) health.Died += OnPlayerDied;
             ApplyStorageSize();
             LoadStorage(Profile.Current.storage);
 
@@ -56,7 +69,20 @@ namespace DustScrapper.Progress
             if (storage != null) storage.Changed -= MarkDirty;
             Wallet.Changed -= MarkDirty;
             BaseUpgrades.Changed -= OnUpgraded;
+            if (sickness != null) sickness.Changed -= MarkDirty;
+            if (health != null) health.Died -= OnPlayerDied;
         }
+
+        /// <summary>기지에서 쓰러지면 원정에서 쓰러진 것과 같이 처리하고, 잠시 뒤 기지를 처음부터 다시 연다.</summary>
+        void OnPlayerDied(DamageInfo info)
+        {
+            dirty = false;
+            enabled = false;
+            Profile.DieAtBase();
+            Invoke(nameof(ReloadBase), deathReloadDelay);
+        }
+
+        void ReloadBase() => SceneManager.LoadScene(gameObject.scene.name);
 
         void OnUpgraded()
         {
@@ -91,6 +117,7 @@ namespace DustScrapper.Progress
         void WriteProfile()
         {
             Profile.Current.carried = player.Capture();
+            if (sickness != null) Profile.Current.glowSickness = sickness.Value;
             if (storage == null) return;
             var saved = new SavedStack[storage.SlotCount];
             for (int i = 0; i < saved.Length; i++) saved[i] = SavedStack.From(storage.GetSlot(i));
