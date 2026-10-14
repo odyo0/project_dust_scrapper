@@ -145,6 +145,19 @@ namespace DustScrapper.Items
             return false;
         }
 
+        /// <summary>이 물건을 몇 개까지 더 넣을 수 있는가(겹칠 자리 + 빈 칸).</summary>
+        public int SpaceFor(ItemData item)
+        {
+            if (item == null) return 0;
+            int space = 0;
+            foreach (var stack in Slots)
+            {
+                if (stack.IsEmpty) space += item.MaxStack;
+                else if (stack.Item == item) space += Mathf.Max(0, item.MaxStack - stack.Count);
+            }
+            return space;
+        }
+
         /// <summary>넣을 수 있는 만큼 넣고, 자리가 없어 남은 개수를 돌려준다.</summary>
         public int Add(ItemStack stack)
         {

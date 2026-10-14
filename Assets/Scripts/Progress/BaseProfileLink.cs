@@ -6,7 +6,7 @@ namespace DustScrapper.Progress
 {
     /// <summary>
     /// 기지 씬과 저장 내용(Profile)을 잇는다. 기지가 열리면 몸에 지닌 것과 보관함을 저장대로 채우고,
-    /// 칸이 바뀔 때마다 저장하고, 출발할 때 몸에 지닌 것을 들고 원정 씬을 연다.
+    /// 칸이나 돈이 바뀔 때마다 저장하고, 출발할 때 몸에 지닌 것을 들고 원정 씬을 연다.
     /// 칸이 바뀐 그 프레임 끝에 한 번만 저장해서, 여러 칸을 한꺼번에 옮겨도 파일을 한 번만 쓴다.
     /// 보관함은 이 씬의 Inventory 하나다(보관함 확장이 생기면 그 칸 수를 여기서 정한다).
     /// </summary>
@@ -37,6 +37,7 @@ namespace DustScrapper.Progress
 
             player.Changed += MarkDirty;
             if (storage != null) storage.Changed += MarkDirty;
+            Wallet.Changed += MarkDirty;
             dirty = false;
         }
 
@@ -44,6 +45,7 @@ namespace DustScrapper.Progress
         {
             if (player != null) player.Changed -= MarkDirty;
             if (storage != null) storage.Changed -= MarkDirty;
+            Wallet.Changed -= MarkDirty;
         }
 
         void LateUpdate()

@@ -8,7 +8,7 @@ namespace DustScrapper.UI
     /// <summary>
     /// 가방 화면에서 마우스로 물건을 다룬다.
     /// 끌어서 다른 칸에 놓으면 옮기기·겹치기·바꾸기, 창 밖(빈 화면)에 놓으면 발밑에 버리기,
-    /// 우클릭은 빠른 옮기기(상자 ↔ 가방, 무기 슬롯 → 가방, 상자가 없을 때 가방의 무기 → 무기 슬롯).
+    /// 우클릭은 빠른 옮기기(상자 ↔ 가방, 무기 슬롯 → 가방, 상자가 없을 때 가방의 무기 → 무기 슬롯). 상인과 거래 중이면 우클릭은 팔기다.
     /// 옮기는 규칙 자체는 ItemTransfer에 있고, 여기서는 "어디서 어디로"만 정한다.
     /// </summary>
     [DisallowMultipleComponent]
@@ -82,6 +82,11 @@ namespace DustScrapper.UI
             if (dragging != null || slot.Stack.IsEmpty) return;
 
             IItemSlots from = slot.Grid.Source;
+            if (screen.Trader != null && from != screen.Trader.Counter)
+            {
+                ItemTransfer.QuickMove(from, slot.Index, screen.Trader.Counter);
+                return;
+            }
             if (from == screen.Loot || from == screen.Weapons || from == screen.Support || from == screen.Body)
             {
                 ItemTransfer.QuickMove(from, slot.Index, screen.Bag);

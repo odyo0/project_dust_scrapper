@@ -19,6 +19,9 @@ namespace DustScrapper.Items
         Inventory contents;
         bool searched;
 
+        /// <summary>상자 이름(보관함 등). 가방 화면의 상자 쪽 제목으로 쓴다.</summary>
+        public string DisplayName => displayName;
+
         public override float HoldTime => searched ? base.HoldTime : searchTime;
         public override string ActionName => searched ? "열기" : "뒤지기";
         public override string TargetName => searched && contents.IsEmpty ? $"{displayName} (빈 상자)" : displayName;
