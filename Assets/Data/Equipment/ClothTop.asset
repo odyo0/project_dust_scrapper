@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ca4da08b5b5a461a86700cf074c8c8e, type: 3}
   m_Name: ClothTop
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Equipment.BodyGearData
+  saveId: ClothTop
   displayName: "\uCC9C \uC0C1\uC758"
   maxStack: 1
   value: 10

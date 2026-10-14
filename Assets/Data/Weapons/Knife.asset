@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce8f6971d0f04ed5a7a90867d341db8, type: 3}
   m_Name: Knife
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.MeleeData
+  saveId: Knife
   displayName: "\uB2E8\uAC80"
   maxStack: 1
-  value: 10
+  value: 0
   placeholderColor: {r: 0.85, g: 0.86, b: 0.9, a: 1}
   prefab: {fileID: 7608476052354782582, guid: 8fc753390172b4de68b8bf696ff1866e, type: 3}
   grip: 0
+  slotRule: 0
+  conflictsWithTwoHanded: 0
+  element: {fileID: 0}
   damage: 20
   knockback: 3
   drawTime: 0.15

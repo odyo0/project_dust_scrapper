@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using DustScrapper.Combat;
-using DustScrapper.Equipment;
 using DustScrapper.Interaction;
-using DustScrapper.Items;
-using DustScrapper.Weapons;
+using DustScrapper.Progress;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +11,7 @@ namespace DustScrapper.Raid
     /// <summary>
     /// 한 판의 시작과 끝을 맡는다. 씬이 열리면 판이 시작되고, 탈출 지점이 Extracted를 알리거나
     /// 플레이어가 쓰러지면(DisableOnDeath) 판이 끝난다. 끝나면 들고 있던 물건으로 결과(RaidResult)를 만들어
-    /// Ended로 알리고 게임 시간을 멈춘다. 다시 시작은 씬을 처음부터 다시 불러온다(적·상자·플레이어 모두 처음 상태).
+    /// Ended로 알리고 게임 시간을 멈춘다. 결과를 본 뒤 기지로 돌아간다(가져온 것을 저장에 넘기는 일은 RaidProfileLink가 한다).
     /// 플레이어는 Player 태그로, 탈출 지점은 씬에서 찾아서, 맵마다 연결할 것이 없다.
     /// </summary>
     [DisallowMultipleComponent]
@@ -22,12 +20,12 @@ namespace DustScrapper.Raid
         [Tooltip("쓰러진 뒤 결과를 띄우기까지 기다리는 시간 (초). 쓰러지는 순간을 볼 수 있게.")]
         [SerializeField, Min(0f)] float deathResultDelay = 1.5f;
 
+        [Tooltip("판이 끝나고 돌아갈 기지 씬 이름 (빌드 설정에 들어 있어야 한다)")]
+        [SerializeField] string baseScene = "Base";
+
         ExtractionPoint[] extractionPoints;
         DisableOnDeath playerDowned;
-        Inventory bag;
-        WeaponLoadout weapons;
-        SupportHand support;
-        BodyEquipment body;
+        PlayerLoadout carried;
         PlayerInteractor interactor;
         float startTime;
         float pendingDeathTimer = -1f;
@@ -51,10 +49,7 @@ namespace DustScrapper.Raid
                 return;
             }
             playerDowned = player.GetComponent<DisableOnDeath>();
-            bag = player.GetComponent<Inventory>();
-            weapons = player.GetComponent<WeaponLoadout>();
-            support = player.GetComponent<SupportHand>();
-            body = player.GetComponent<BodyEquipment>();
+            carried = PlayerLoadout.Of(player);
             interactor = player.GetComponent<PlayerInteractor>();
         }
 
@@ -79,11 +74,11 @@ namespace DustScrapper.Raid
             if (pendingDeathTimer < 0f) End(false);
         }
 
-        /// <summary>같은 맵으로 새 판을 시작한다.</summary>
-        public void Restart()
+        /// <summary>기지로 돌아간다.</summary>
+        public void ReturnToBase()
         {
             Time.timeScale = 1f;
-            SceneManager.LoadScene(gameObject.scene.buildIndex);
+            SceneManager.LoadScene(baseScene);
         }
 
         void OnExtracted()
@@ -99,32 +94,12 @@ namespace DustScrapper.Raid
         void End(bool extracted)
         {
             pendingDeathTimer = -1f;
-            Result = new RaidResult(extracted, Time.time - startTime, CollectCarriedItems());
+            Result = new RaidResult(extracted, Time.time - startTime, carried.CollectItems());
 
             // 결과를 보는 동안 판은 멈추고, 플레이어는 더 줍거나 가방을 열 수 없다(가방 화면도 닫힌다).
             Time.timeScale = 0f;
             if (interactor != null) interactor.enabled = false;
             Ended?.Invoke(Result);
-        }
-
-        List<ItemStack> CollectCarriedItems()
-        {
-            var items = new List<ItemStack>();
-            AddAll(weapons, items);
-            AddAll(support, items);
-            AddAll(body, items);
-            AddAll(bag, items);
-            return items;
-        }
-
-        static void AddAll(IItemSlots slots, List<ItemStack> into)
-        {
-            if (slots == null) return;
-            for (int i = 0; i < slots.SlotCount; i++)
-            {
-                ItemStack stack = slots.GetSlot(i);
-                if (!stack.IsEmpty) into.Add(stack);
-            }
         }
     }
 }

@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d3abf5d123649b2960db9e5617e31d, type: 3}
   m_Name: Shotgun
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.GunData
+  saveId: Shotgun
   displayName: "\uC0F7\uAC74"
   maxStack: 1
   value: 50
   placeholderColor: {r: 0.55, g: 0.35, b: 0.25, a: 1}
   prefab: {fileID: 2250674448581308316, guid: 6e89eba0f02fd42b48de37784d19b6e8, type: 3}
   grip: 1
+  slotRule: 0
+  conflictsWithTwoHanded: 0
+  element: {fileID: 0}
   damage: 9
   knockback: 1.2
   drawTime: 0.35

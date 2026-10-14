@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ca4da08b5b5a461a86700cf074c8c8e, type: 3}
   m_Name: SmallBackpack
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Equipment.BodyGearData
+  saveId: SmallBackpack
   displayName: "\uC791\uC740 \uBC30\uB0AD"
   maxStack: 1
   value: 20

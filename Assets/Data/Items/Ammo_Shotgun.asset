@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c048c7df22e4f6bb5918330b09683b, type: 3}
   m_Name: Ammo_Shotgun
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Items.AmmoData
+  saveId: Ammo_Shotgun
   displayName: "\uC0F7\uAC74\uD0C4"
   maxStack: 24
   value: 1

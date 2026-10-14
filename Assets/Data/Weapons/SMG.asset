@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d3abf5d123649b2960db9e5617e31d, type: 3}
   m_Name: SMG
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.GunData
+  saveId: SMG
   displayName: "\uAE30\uAD00\uB2E8\uCD1D"
   maxStack: 1
   value: 120
   placeholderColor: {r: 0.42, g: 0.47, b: 0.58, a: 1}
   prefab: {fileID: 4884507869379066791, guid: 8530bd915d3f1444ca9f56e36b072c2e, type: 3}
   grip: 1
+  slotRule: 0
+  conflictsWithTwoHanded: 0
+  element: {fileID: 0}
   damage: 12
   knockback: 0.6
   drawTime: 0.3

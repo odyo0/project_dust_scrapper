@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0865ef0a8452845f38ca64993781e1b5, type: 3}
   m_Name: Loot_ManaShard
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Items.ItemData
+  saveId: Loot_ManaShard
   displayName: "\uB9C8\uBC95\uC11D \uC870\uAC01"
   maxStack: 5
   value: 30

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 namespace DustScrapper.UI
 {
     /// <summary>
-    /// 판이 끝나면 결과를 보여 준다: 탈출 성공/쓰러짐, 판 시간, 가져온 것(또는 잃은 것) 목록과 가치 합계, 다시 시작 버튼.
+    /// 판이 끝나면 결과를 보여 준다: 탈출 성공/쓰러짐, 판 시간, 가져온 것(또는 잃은 것) 목록과 가치 합계, 기지로 돌아가는 버튼.
     /// 보이는 동안 입력 층에 창이 열렸다고 알려 커서를 보인다.
     /// </summary>
     [DisallowMultipleComponent]
@@ -24,7 +24,7 @@ namespace DustScrapper.UI
         [SerializeField] TMP_Text listHeaderLabel;
         [SerializeField] TMP_Text listLabel;
         [SerializeField] TMP_Text totalLabel;
-        [SerializeField] Button restartButton;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("restartButton")] Button returnButton;
 
         [SerializeField] Color extractedColor = new(0.6f, 0.95f, 0.6f);
         [SerializeField] Color diedColor = new(1f, 0.35f, 0.3f);
@@ -35,7 +35,7 @@ namespace DustScrapper.UI
         {
             GameObject player = GameObject.FindWithTag("Player");
             if (player != null) input = player.GetComponent<PlayerInputReader>();
-            restartButton.onClick.AddListener(session.Restart);
+            returnButton.onClick.AddListener(session.ReturnToBase);
             root.SetActive(false);
         }
 
@@ -65,7 +65,7 @@ namespace DustScrapper.UI
             root.SetActive(true);
             if (input != null) input.SetMenuOpen(this, true);
             // 키보드(Enter·Space)로도 누를 수 있게 버튼을 골라 둔다.
-            if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(restartButton.gameObject);
+            if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(returnButton.gameObject);
         }
     }
 }

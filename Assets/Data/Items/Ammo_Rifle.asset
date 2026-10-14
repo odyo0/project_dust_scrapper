@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c048c7df22e4f6bb5918330b09683b, type: 3}
   m_Name: Ammo_Rifle
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Items.AmmoData
+  saveId: Ammo_Rifle
   displayName: "\uC18C\uCD1D\uD0C4"
   maxStack: 30
   value: 1

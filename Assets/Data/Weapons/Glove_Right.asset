@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93a0b7fdaa0a477b9e27f07a60f4e11, type: 3}
   m_Name: Glove_Right
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.WeaponData
+  saveId: Glove_Right
   displayName: "\uC624\uB978\uC190 \uAE00\uB7EC\uBE0C"
   maxStack: 1
   value: 35

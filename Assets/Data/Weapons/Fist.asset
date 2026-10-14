@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce8f6971d0f04ed5a7a90867d341db8, type: 3}
   m_Name: Fist
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.MeleeData
+  saveId: Fist
   displayName: "\uC8FC\uBA39"
   maxStack: 1
   value: 0
   placeholderColor: {r: 1, g: 1, b: 1, a: 1}
   prefab: {fileID: 4847946390598081641, guid: 25330a9cf07164f8c8d89fac6e143194, type: 3}
   grip: 0
+  slotRule: 0
+  conflictsWithTwoHanded: 0
+  element: {fileID: 0}
   damage: 10
   knockback: 2.5
   drawTime: 0.05
@@ -27,3 +31,4 @@ MonoBehaviour:
   windupTime: 0.03
   activeTime: 0.06
   recoveryTime: 0.22
+  hitEffect: {fileID: 0}

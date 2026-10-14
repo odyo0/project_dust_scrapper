@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce8f6971d0f04ed5a7a90867d341db8, type: 3}
   m_Name: Claw
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.MeleeData
+  saveId: Claw
   displayName: Claw
   maxStack: 1
   value: 0
   placeholderColor: {r: 1, g: 1, b: 1, a: 1}
   prefab: {fileID: 7946516936456497775, guid: ff3c5447427d441598185a81b59f606e, type: 3}
   grip: 0
+  slotRule: 0
+  conflictsWithTwoHanded: 0
+  element: {fileID: 0}
   damage: 15
   knockback: 3
   drawTime: 0
@@ -27,3 +31,4 @@ MonoBehaviour:
   windupTime: 0.35
   activeTime: 0.1
   recoveryTime: 0.5
+  hitEffect: {fileID: 0}

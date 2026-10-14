@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d3abf5d123649b2960db9e5617e31d, type: 3}
   m_Name: TurretGun
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.GunData
+  saveId: TurretGun
   displayName: "\uD3EC\uD0D1 \uCD1D"
   maxStack: 1
   value: 0
   placeholderColor: {r: 1, g: 1, b: 1, a: 1}
   prefab: {fileID: 5935643673782445848, guid: 69363a71619554250a5013596528d3c6, type: 3}
   grip: 1
+  slotRule: 0
+  conflictsWithTwoHanded: 0
+  element: {fileID: 0}
   damage: 10
   knockback: 1.2
   drawTime: 0

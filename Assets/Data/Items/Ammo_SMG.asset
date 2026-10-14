@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c048c7df22e4f6bb5918330b09683b, type: 3}
   m_Name: Ammo_SMG
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Items.AmmoData
+  saveId: Ammo_SMG
   displayName: "\uAE30\uAD00\uB2E8\uCD1D\uD0C4"
   maxStack: 90
   value: 1

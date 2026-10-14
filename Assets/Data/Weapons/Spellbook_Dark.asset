@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b93a0b7fdaa0a477b9e27f07a60f4e11, type: 3}
   m_Name: Spellbook_Dark
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.WeaponData
+  saveId: Spellbook_Dark
   displayName: "\uC5B4\uB460 \uB9C8\uBC95\uC11C"
   maxStack: 1
   value: 40

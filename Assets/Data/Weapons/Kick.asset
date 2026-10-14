@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fce8f6971d0f04ed5a7a90867d341db8, type: 3}
   m_Name: Kick
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Weapons.MeleeData
+  saveId: Kick
   displayName: "\uBC1C\uCC28\uAE30"
   maxStack: 1
   value: 0
   placeholderColor: {r: 1, g: 1, b: 1, a: 1}
   prefab: {fileID: 0}
   grip: 0
+  slotRule: 0
+  conflictsWithTwoHanded: 0
+  element: {fileID: 0}
   damage: 5
   knockback: 8
   drawTime: 0
