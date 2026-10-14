@@ -10,6 +10,8 @@ namespace DustScrapper.Equipment
     /// 장비가 바뀔 때마다 낀 장비의 능력치 보너스를 모두 더해 쓰는 쪽에 알린다: 최대 MP·회복 속도 → Mana, 가방 칸 → Inventory.
     /// 칸 창구(IItemSlots)를 따라서 가방 화면·옮기기 규칙·판 결과가 가방·무기 칸과 같은 방식으로 붙는다.
     /// 가방(배낭)은 늘려 준 칸이 비어 있어야 벗을 수 있다(늘어난 칸의 물건을 어떻게 할지는 기획 빈칸이라 잠정으로 막아 둔다).
+    /// 마법진 내구도: MP를 쓰면(Mana.Spent) 쓴 양을 MP 장비들이 자기가 주는 MP 몫만큼 나눠서 닳는다(기획).
+    /// 다 닳은 장비는 칸에 그대로 있지만 보너스를 주지 않는다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class BodyEquipment : MonoBehaviour, IItemSlots, ISlotLabels
@@ -26,6 +28,9 @@ namespace DustScrapper.Equipment
         [Tooltip("가방 칸 보너스를 받을 가방. 비워 두면 같은 물체에서 찾는다.")]
         [SerializeField] Inventory bag;
 
+        [Tooltip("닳는 몫을 나눌 때 MP 회복 보너스를 최대 MP 몇 초어치로 칠지. 회복만 올려 주는 장비(망토)도 몫을 갖게 한다.")]
+        [SerializeField, Min(0f)] float regenShareSeconds = 10f;
+
         ItemStack[] slots;
 
         public int SlotCount => slotKinds.Length;
@@ -41,6 +46,16 @@ namespace DustScrapper.Equipment
             if (bag == null) bag = GetComponent<Inventory>();
             slots = new ItemStack[slotKinds.Length];
             ApplyStats();
+        }
+
+        void OnEnable()
+        {
+            if (mana != null) mana.Spent += WearManaGear;
+        }
+
+        void OnDisable()
+        {
+            if (mana != null) mana.Spent -= WearManaGear;
         }
 
         public ItemStack GetSlot(int index) => slots[index];
@@ -113,7 +128,37 @@ namespace DustScrapper.Equipment
             _ => string.Empty,
         };
 
-        /// <summary>낀 장비의 보너스를 능력치마다 더해서 쓰는 쪽에 알린다.</summary>
+        /// <summary>
+        /// 쓴 MP를 MP 장비(내구도가 있고 아직 안 닳은 것)들이 자기 몫만큼 나눠서 닳는다.
+        /// 몫 = 최대 MP 보너스 + 회복 보너스 × regenShareSeconds. 많이 주는 장비가 그만큼 많이 닳는다.
+        /// </summary>
+        void WearManaGear(float spent)
+        {
+            float total = 0f;
+            for (int i = 0; i < slots.Length; i++) total += ManaShare(slots[i]);
+            if (total <= 0f) return;
+
+            bool brokeAny = false;
+            for (int i = 0; i < slots.Length; i++)
+            {
+                float share = ManaShare(slots[i]);
+                if (share <= 0f) continue;
+                var gear = (BodyGearData)slots[i].Item;
+                slots[i] = slots[i].WithWear(Mathf.Min(gear.MaxDurability, slots[i].Wear + spent * share / total));
+                if (gear.IsBroken(slots[i])) brokeAny = true;
+            }
+
+            if (brokeAny) ApplyStats();
+            Changed?.Invoke();
+        }
+
+        float ManaShare(ItemStack stack)
+        {
+            if (!(stack.Item is BodyGearData gear) || !gear.HasDurability || gear.IsBroken(stack)) return 0f;
+            return Mathf.Max(0f, gear.Sum(StatType.MaxMana)) + Mathf.Max(0f, gear.Sum(StatType.ManaRegen)) * regenShareSeconds;
+        }
+
+        /// <summary>낀 장비의 보너스를 능력치마다 더해서 쓰는 쪽에 알린다. 다 닳은 장비는 빼고 더한다.</summary>
         void ApplyStats()
         {
             if (mana != null) mana.SetBonuses(Sum(StatType.MaxMana), Sum(StatType.ManaRegen));
@@ -125,7 +170,7 @@ namespace DustScrapper.Equipment
             float total = 0f;
             foreach (ItemStack stack in slots)
             {
-                if (stack.Item is BodyGearData gear) total += gear.Sum(stat);
+                if (stack.Item is BodyGearData gear && !gear.IsBroken(stack)) total += gear.Sum(stat);
             }
             return total;
         }

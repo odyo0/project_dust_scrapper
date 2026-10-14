@@ -24,7 +24,8 @@ namespace DustScrapper.Progress
             Time.timeScale = 1f;
             if (Profile.ResolveAbandonedRaid()) Debug.Log("원정 중에 게임이 꺼졌던 저장이라 쓰러진 것으로 처리했다.");
 
-            player = PlayerLoadout.Of(GameObject.FindWithTag("Player"));
+            GameObject playerObject = GameObject.FindWithTag("Player");
+            player = PlayerLoadout.Of(playerObject);
             if (player == null)
             {
                 Debug.LogError($"{name}: Player 태그가 붙은 플레이어가 없어 기지를 불러올 수 없다.", this);
@@ -33,6 +34,8 @@ namespace DustScrapper.Progress
             }
 
             player.Apply(Profile.Current.carried);
+            // 장비 보너스가 붙은 뒤에 MP를 가득 채운다(장비를 끼는 것만으로는 MP가 차지 않으므로).
+            if (playerObject.TryGetComponent(out Magic.Mana mana)) mana.RestoreFull();
             LoadStorage(Profile.Current.storage);
 
             player.Changed += MarkDirty;

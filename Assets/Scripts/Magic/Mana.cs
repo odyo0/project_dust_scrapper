@@ -33,6 +33,9 @@ namespace DustScrapper.Magic
         /// <summary>MP가 모자라 마법을 쓰지 못했을 때.</summary>
         public event Action SpendFailed;
 
+        /// <summary>MP를 썼을 때. 값은 쓴 양. 마법진 장비가 이만큼 닳는다(BodyEquipment가 듣는다).</summary>
+        public event Action<float> Spent;
+
         void Awake()
         {
             Current = maxMana;
@@ -49,6 +52,7 @@ namespace DustScrapper.Magic
 
             Current -= amount;
             delayTimer = regenDelay;
+            if (amount > 0f) Spent?.Invoke(amount);
             return true;
         }
 

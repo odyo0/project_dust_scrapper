@@ -34,7 +34,7 @@ namespace DustScrapper.UI
 
             // 글자는 보여 줄 물건이 바뀔 때만 새로 만든다.
             Trade.Trader trader = screen != null ? screen.Trader : null;
-            if (stack.Item == shown.Item && stack.Count == shown.Count && stack.LoadedAmmo == shown.LoadedAmmo && trader == shownTrader) return;
+            if (stack.SameAs(shown) && trader == shownTrader) return;
             shown = stack;
             shownTrader = trader;
 
@@ -43,7 +43,11 @@ namespace DustScrapper.UI
             {
                 text = stack.Count > 1 ? $"{stack.Item.DisplayName} ×{stack.Count}" : stack.Item.DisplayName;
                 if (stack.Item is GunData gun) text += $"   탄창 {stack.LoadedAmmo}/{gun.MagazineSize}";
-                if (stack.Item is BodyGearData gear) text += GearBonusText(gear);
+                if (stack.Item is BodyGearData gear)
+                {
+                    text += GearBonusText(gear);
+                    if (gear.HasDurability) text += gear.IsBroken(stack) ? "   다 닳음" : $"   내구도 {gear.DurabilityOf(stack):0}/{gear.MaxDurability:0}";
+                }
                 if (trader == null) text += $"   가치 {stack.Item.Value * stack.Count}";
                 else
                 {

@@ -6116,15 +6116,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.data[0].item
       value: 
       objectReference: {fileID: 11400000, guid: e9f963891616e422a84c276b3158ca88, type: 2}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
+      propertyPath: startingItems.Array.data[1].item
+      value: 
+      objectReference: {fileID: 11400000, guid: d500de71600fd4deebdc59f240f5e8aa, type: 2}
+    - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.data[0].count
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
+      propertyPath: startingItems.Array.data[1].count
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7346,6 +7354,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1668800972632348362, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: orthographic size
+      value: 7.34375
+      objectReference: {fileID: 0}
     - target: {fileID: 2111653286644993611, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
       propertyPath: m_LocalPosition.x
       value: -14.5
@@ -8607,7 +8619,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.data[0].item
@@ -8618,12 +8630,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: e9f963891616e422a84c276b3158ca88, type: 2}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
+      propertyPath: startingItems.Array.data[2].item
+      value: 
+      objectReference: {fileID: 11400000, guid: d500de71600fd4deebdc59f240f5e8aa, type: 2}
+    - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.data[0].count
       value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.data[1].count
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
+      propertyPath: startingItems.Array.data[2].count
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16186,7 +16206,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.data[0].item
@@ -16197,12 +16217,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 55dedc50c198743b9a3af2110567c102, type: 2}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
+      propertyPath: startingItems.Array.data[2].item
+      value: 
+      objectReference: {fileID: 11400000, guid: d500de71600fd4deebdc59f240f5e8aa, type: 2}
+    - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.data[0].count
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
       propertyPath: startingItems.Array.data[1].count
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5051305060656397156, guid: 115256f8adf2e4d35beaaee79a308c31, type: 3}
+      propertyPath: startingItems.Array.data[2].count
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

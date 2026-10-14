@@ -209,7 +209,7 @@ namespace DustScrapper.Items
             {
                 if (!Slots[i].IsEmpty) continue;
                 int put = Mathf.Min(left, item.MaxStack);
-                Slots[i] = new ItemStack(item, put, stack.LoadedAmmo);
+                Slots[i] = stack.WithCount(put);
                 left -= put;
             }
 

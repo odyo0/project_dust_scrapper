@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DustScrapper.Interaction;
 using DustScrapper.Items;
 using DustScrapper.Progress;
 using DustScrapper.Trade;
@@ -14,7 +15,7 @@ namespace DustScrapper.UI
     /// 가방 화면(InventoryScreen)이 상인과 거래할 때 Bind로 상인을 넘기고 켠다.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class TradePanel : MonoBehaviour
+    public sealed class TradePanel : StationPanel
     {
         [SerializeField] TMP_Text titleLabel;
         [Tooltip("파는 물건 한 줄의 견본. 꺼 둔 채로 두면 이것을 복제해 줄을 만든다. 자식에 글자(TMP_Text)가 하나 있어야 한다.")]
@@ -46,9 +47,13 @@ namespace DustScrapper.UI
             if (messageTimer <= 0f) messageLabel.text = string.Empty;
         }
 
-        /// <summary>보여 줄 상인을 바꾼다. null이면 비운다. 산 물건은 bag에 먼저 넣는다.</summary>
-        public void Bind(Trader newTrader, Inventory buyerBag)
+        public override bool Shows(Station station) => station is Trader;
+
+        /// <summary>보여 줄 상인을 바꾼다. null이면 비운다. 산 물건은 플레이어 가방에 먼저 넣는다.</summary>
+        public override void Bind(Station station, PlayerInteractor player)
         {
+            var newTrader = station as Trader;
+            Inventory buyerBag = player != null ? player.Inventory : null;
             if (trader != null) trader.Counter.Sold -= OnSold;
             trader = newTrader;
             bag = buyerBag;

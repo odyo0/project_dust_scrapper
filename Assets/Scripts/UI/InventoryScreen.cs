@@ -11,8 +11,8 @@ namespace DustScrapper.UI
 {
     /// <summary>
     /// 가방 화면을 열고 닫는다. Tab으로 가방(무기 슬롯 + 보조 칸 + 몸 장비 + 가방)을 열고, 상자를 열면 상자 칸까지 함께 띄운다.
-    /// 상인과 거래하면 상인 창(TradePanel)을 띄우고, 상인에 보관함이 연결돼 있으면 보관함 칸도 함께 띄운다.
-    /// Tab·Esc로 닫고, 연 상자·상인에서 멀어지거나 플레이어가 쓰러지면 저절로 닫힌다. 게임은 멈추지 않는다.
+    /// 기지 시설(상인·충전대 등)을 열면 그 시설을 보여 줄 수 있는 창(StationPanel)을 띄우고, 시설에 보관함이 연결돼 있으면 보관함 칸도 함께 띄운다.
+    /// Tab·Esc로 닫고, 연 상자·시설에서 멀어지거나 플레이어가 쓰러지면 저절로 닫힌다. 게임은 멈추지 않는다.
     /// 열려 있는 동안에는 입력 층에 "창이 마우스를 쓴다"고 알려 조준·발사를 막고 이동만 받게 한다.
     /// </summary>
     [DisallowMultipleComponent]
@@ -36,14 +36,14 @@ namespace DustScrapper.UI
         [SerializeField] GameObject lootPanel;
         [Tooltip("상자 쪽 제목. 연 상자의 이름(보관함 등)을 쓴다.")]
         [SerializeField] TMP_Text lootTitle;
-        [Tooltip("상인과 거래할 때만 보이는 상인 창")]
-        [SerializeField] TradePanel tradePanel;
+        [Tooltip("시설 창들(상인 창, 충전 창 …). 연 시설을 보여 줄 수 있는 창 하나만 켠다.")]
+        [SerializeField] StationPanel[] stationPanels;
 
-        [Tooltip("연 상자·상인에서 이 거리(칸)보다 멀어지면 화면을 닫는다")]
+        [Tooltip("연 상자·시설에서 이 거리(칸)보다 멀어지면 화면을 닫는다")]
         [SerializeField, Min(0f)] float lootCloseDistance = 1.8f;
 
         Inventory loot;
-        Trader trader;
+        Station station;
         Transform anchor;
 
         public bool IsOpen => root.activeSelf;
@@ -55,8 +55,11 @@ namespace DustScrapper.UI
         /// <summary>지금 열어 둔 상자의 칸. 없으면 null.</summary>
         public IItemSlots Loot => loot;
 
-        /// <summary>지금 거래 중인 상인. 없으면 null.</summary>
-        public Trader Trader => trader;
+        /// <summary>지금 열어 둔 시설. 없으면 null.</summary>
+        public Station Station => station;
+
+        /// <summary>지금 거래 중인 상인. 상인이 아니면 null.</summary>
+        public Trader Trader => station as Trader;
 
         void Awake()
         {
@@ -75,13 +78,13 @@ namespace DustScrapper.UI
         void OnEnable()
         {
             interactor.LootOpened += OpenWithLoot;
-            interactor.TradeOpened += OpenWithTrader;
+            interactor.StationOpened += OpenWithStation;
         }
 
         void OnDisable()
         {
             interactor.LootOpened -= OpenWithLoot;
-            interactor.TradeOpened -= OpenWithTrader;
+            interactor.StationOpened -= OpenWithStation;
         }
 
         void Update()
@@ -108,12 +111,12 @@ namespace DustScrapper.UI
 
         void OpenWithLoot(Inventory container) => Open(container, null, container.transform);
 
-        void OpenWithTrader(Trader t) => Open(t.Storage, t, t.transform);
+        void OpenWithStation(Station s) => Open(s.Storage, s, s.transform);
 
-        void Open(Inventory container, Trader withTrader, Transform openedFrom)
+        void Open(Inventory container, Station withStation, Transform openedFrom)
         {
             loot = container;
-            trader = withTrader;
+            station = withStation;
             anchor = openedFrom;
             lootPanel.SetActive(container != null);
             lootGrid.Bind(container);
@@ -122,11 +125,7 @@ namespace DustScrapper.UI
                 var named = container.GetComponent<LootContainer>();
                 lootTitle.text = named != null ? named.DisplayName : "상자";
             }
-            if (tradePanel != null)
-            {
-                tradePanel.Bind(withTrader, bag);
-                tradePanel.gameObject.SetActive(withTrader != null);
-            }
+            BindStationPanels(withStation);
             root.SetActive(true);
             input.SetMenuOpen(this, true);
         }
@@ -135,11 +134,22 @@ namespace DustScrapper.UI
         {
             root.SetActive(false);
             loot = null;
-            trader = null;
+            station = null;
             anchor = null;
             lootGrid.Bind(null);
-            if (tradePanel != null) tradePanel.Bind(null, null);
+            BindStationPanels(null);
             input.SetMenuOpen(this, false);
+        }
+
+        void BindStationPanels(Station shown)
+        {
+            if (stationPanels == null) return;
+            foreach (var panel in stationPanels)
+            {
+                bool show = shown != null && panel.Shows(shown);
+                panel.Bind(show ? shown : null, interactor);
+                panel.gameObject.SetActive(show);
+            }
         }
     }
 }

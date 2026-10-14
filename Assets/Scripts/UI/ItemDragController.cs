@@ -82,9 +82,11 @@ namespace DustScrapper.UI
             if (dragging != null || slot.Stack.IsEmpty) return;
 
             IItemSlots from = slot.Grid.Source;
-            if (screen.Trader != null && from != screen.Trader.Counter)
+            // 시설 창이 우클릭으로 받을 칸을 가지면(상인의 판매 칸) 어느 칸에서든 그리로 보낸다.
+            IItemSlots stationTarget = screen.Station != null ? screen.Station.QuickMoveTarget : null;
+            if (stationTarget != null && from != stationTarget)
             {
-                ItemTransfer.QuickMove(from, slot.Index, screen.Trader.Counter);
+                ItemTransfer.QuickMove(from, slot.Index, stationTarget);
                 return;
             }
             if (from == screen.Loot || from == screen.Weapons || from == screen.Support || from == screen.Body)

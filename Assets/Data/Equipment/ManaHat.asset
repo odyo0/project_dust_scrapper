@@ -21,3 +21,5 @@ MonoBehaviour:
   modifiers:
   - stat: 0
     amount: 30
+  maxDurability: 300
+  fullChargeCost: 3
