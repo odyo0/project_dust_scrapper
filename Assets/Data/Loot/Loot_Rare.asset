@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e0e9ccb48184bed8f1169f0e4b7559, type: 3}
+  m_Name: Loot_Rare
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Items.LootTable
+  minRolls: 2
+  maxRolls: 4
+  entries:
+  - item: {fileID: 11400000, guid: 32224cbd432e94d028998f0c937ac4b7, type: 2}
+    weight: 25
+    minCount: 2
+    maxCount: 5
+  - item: {fileID: 11400000, guid: d500de71600fd4deebdc59f240f5e8aa, type: 2}
+    weight: 15
+    minCount: 1
+    maxCount: 2
+  - item: {fileID: 11400000, guid: e9f963891616e422a84c276b3158ca88, type: 2}
+    weight: 20
+    minCount: 1
+    maxCount: 3
+  - item: {fileID: 11400000, guid: a4148a288c86d48de959ae9dea7d9ded, type: 2}
+    weight: 12
+    minCount: 20
+    maxCount: 45
+  - item: {fileID: 11400000, guid: 6e13506b1650547dc8fd36bd1d18e2e0, type: 2}
+    weight: 8
+    minCount: 6
+    maxCount: 12
+  - item: {fileID: 11400000, guid: 4df8e2c11974845c2b6178b62651dfda, type: 2}
+    weight: 8
+    minCount: 4
+    maxCount: 10
+  - item: {fileID: 11400000, guid: 9d762a6cdfd33454c86807b62af1bb0d, type: 2}
+    weight: 8
+    minCount: 1
+    maxCount: 1
+  - item: {fileID: 11400000, guid: d68109dd37560423dacdb47e560cb525, type: 2}
+    weight: 6
+    minCount: 1
+    maxCount: 1
+  - item: {fileID: 11400000, guid: feebf26046193417b94b53a208fb296b, type: 2}
+    weight: 5
+    minCount: 1
+    maxCount: 1
+  - item: {fileID: 11400000, guid: aec8bf416f07d4be685b33cf4cf58754, type: 2}
+    weight: 6
+    minCount: 1
+    maxCount: 1
+  - item: {fileID: 11400000, guid: 38e5f21cb895641d5afa422234fd0428, type: 2}
+    weight: 4
+    minCount: 1
+    maxCount: 1
+  - item: {fileID: 11400000, guid: 905a37947013b45628ca320ffee9afd2, type: 2}
+    weight: 4
+    minCount: 1
+    maxCount: 1
+  - item: {fileID: 11400000, guid: 060496a0687014392a271e565eb08f62, type: 2}
+    weight: 5
+    minCount: 1
+    maxCount: 1
