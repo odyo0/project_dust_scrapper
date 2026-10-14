@@ -8,13 +8,17 @@ namespace DustScrapper.Progress
     /// 기지 씬과 저장 내용(Profile)을 잇는다. 기지가 열리면 몸에 지닌 것과 보관함을 저장대로 채우고,
     /// 칸이나 돈이 바뀔 때마다 저장하고, 출발할 때 몸에 지닌 것을 들고 원정 씬을 연다.
     /// 칸이 바뀐 그 프레임 끝에 한 번만 저장해서, 여러 칸을 한꺼번에 옮겨도 파일을 한 번만 쓴다.
-    /// 보관함은 이 씬의 Inventory 하나다(보관함 확장이 생기면 그 칸 수를 여기서 정한다).
+    /// 보관함은 이 씬의 Inventory 하나이고, 보관함 확장 업그레이드 단계만큼 칸을 늘린다(저장된 물건을 채우기 전에).
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class BaseProfileLink : MonoBehaviour
     {
         [Tooltip("기지 보관함. 내용물은 저장 파일에서 채운다(씬에 넣어 둔 물건은 지운다).")]
         [SerializeField] Inventory storage;
+
+        [Tooltip("보관함 확장 업그레이드. 단계마다 storageSlotsPerLevel칸씩 늘어난다.")]
+        [SerializeField] BaseUpgradeData storageUpgrade;
+        [SerializeField, Min(0)] int storageSlotsPerLevel = 15;
 
         PlayerLoadout player;
         bool dirty;
@@ -36,11 +40,13 @@ namespace DustScrapper.Progress
             player.Apply(Profile.Current.carried);
             // 장비 보너스가 붙은 뒤에 MP를 가득 채운다(장비를 끼는 것만으로는 MP가 차지 않으므로).
             if (playerObject.TryGetComponent(out Magic.Mana mana)) mana.RestoreFull();
+            ApplyStorageSize();
             LoadStorage(Profile.Current.storage);
 
             player.Changed += MarkDirty;
             if (storage != null) storage.Changed += MarkDirty;
             Wallet.Changed += MarkDirty;
+            BaseUpgrades.Changed += OnUpgraded;
             dirty = false;
         }
 
@@ -49,6 +55,19 @@ namespace DustScrapper.Progress
             if (player != null) player.Changed -= MarkDirty;
             if (storage != null) storage.Changed -= MarkDirty;
             Wallet.Changed -= MarkDirty;
+            BaseUpgrades.Changed -= OnUpgraded;
+        }
+
+        void OnUpgraded()
+        {
+            ApplyStorageSize();
+            MarkDirty();
+        }
+
+        void ApplyStorageSize()
+        {
+            if (storage != null && storageUpgrade != null)
+                storage.SetExtraSlots(BaseUpgrades.LevelOf(storageUpgrade) * storageSlotsPerLevel);
         }
 
         void LateUpdate()
