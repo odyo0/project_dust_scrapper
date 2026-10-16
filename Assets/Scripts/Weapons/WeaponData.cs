@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace DustScrapper.Weapons
 {
-    /// <summary>어느 칸에 끼울 수 있는가. 무기 칸 = 무기 손(좌클릭·Space), 보조 칸 = 보조 손(우클릭·F).</summary>
+    /// <summary>어느 칸에 끼울 수 있는가. 무기 칸 = 무기 손(좌클릭·Q), 보조 칸 = 보조 손(우클릭·E).</summary>
     public enum HandSlotRule
     {
         /// <summary>무기 칸에만 (총, 칼, 마법서, 왼손 글러브 등)</summary>

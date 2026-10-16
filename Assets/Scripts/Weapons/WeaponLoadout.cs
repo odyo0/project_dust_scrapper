@@ -9,8 +9,8 @@ namespace DustScrapper.Weapons
 {
     /// <summary>
     /// 무기 손(왼손잡이 기준 왼손)의 무기 슬롯. 슬롯마다 무기를 만들어 손에 붙여 두고, 하나만 꺼내 둔다.
-    /// 든 무기의 기본 스킬은 좌클릭, 특수 스킬은 Space다(플레이어는 SkillRouter를 거쳐 받는다).
-    /// 아무 슬롯도 들지 않은 상태가 "빈손"이다. 빈손일 때 쓸 장비(주먹: 주먹질만, Space는 없음)를 따로 하나 두면 그것을 꺼내 든다.
+    /// 든 무기의 기본 스킬은 좌클릭, 특수 스킬은 Q다(플레이어는 SkillRouter를 거쳐 받는다).
+    /// 아무 슬롯도 들지 않은 상태가 "빈손"이다. 빈손일 때 쓸 장비(주먹: 주먹질만, Q는 없음)를 따로 하나 두면 그것을 꺼내 든다.
     /// 빈손 장비는 슬롯에 들어가지 않아서 가방 화면에 보이지 않고 떨어뜨릴 수도 없다.
     /// 판 도중에 주운 무기를 빈 슬롯에 넣거나(PutWeapon) 뺄 수 있고, 가방 화면에서는 가방과 같은 칸 창구(IItemSlots)로 옮겨진다.
     /// 두뇌(플레이어 입력이나 AI)는 이곳에 기본·특수 스킬 키·재장전·슬롯 바꾸기만 요청하고, 손에 든 무기가 무엇인지는 몰라도 된다.
@@ -26,7 +26,7 @@ namespace DustScrapper.Weapons
         [Tooltip("시작할 때 슬롯마다 들 무기. 칸 수가 곧 슬롯 수다(숫자키는 1~3까지). 빈 칸은 비워 둔다. 시작 무기는 탄창이 가득 찬 채로 나온다.")]
         [SerializeField] WeaponData[] slots = new WeaponData[3];
 
-        [Tooltip("빈손일 때 드는 장비(좌클릭 주먹질, Space 없음). 슬롯에 들어가지 않는다. 비워 두면 빈손일 때 아무것도 들지 않는다(공격 못 함).")]
+        [Tooltip("빈손일 때 드는 장비(좌클릭 주먹질, Q 없음). 슬롯에 들어가지 않는다. 비워 두면 빈손일 때 아무것도 들지 않는다(공격 못 함).")]
         [SerializeField] WeaponData unarmed;
 
         [Tooltip("총이 재장전할 때 탄을 꺼낼 곳(가방). 비워 두면 탄창에 든 탄만 쓴다.")]
@@ -127,7 +127,7 @@ namespace DustScrapper.Weapons
             if (Current != null) Current.SetPrimary(held);
         }
 
-        /// <summary>특수 스킬 키(플레이어는 Space)를 누르고 있는가.</summary>
+        /// <summary>특수 스킬 키(플레이어는 Q)를 누르고 있는가.</summary>
         public void SetSpecial(bool held)
         {
             specialHeld = held;

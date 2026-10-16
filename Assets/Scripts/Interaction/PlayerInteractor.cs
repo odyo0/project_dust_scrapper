@@ -7,7 +7,7 @@ using UnityEngine;
 namespace DustScrapper.Interaction
 {
     /// <summary>
-    /// 손이 닿는 상호작용 대상 중 가장 가까운 하나를 고르고, E를 누르고 있는 시간을 잰다.
+    /// 손이 닿는 상호작용 대상 중 가장 가까운 하나를 고르고, F를 누르고 있는 시간을 잰다.
     /// 다 누르면 대상에게 맡기고, 대상은 이것을 통해 플레이어의 가방·무기 슬롯에 접근한다.
     /// 입력은 두뇌(PlayerBrain)가 SetHeld로 알려 준다. 고른 대상과 진행도는 화면 표시(InteractionPrompt)가 읽는다.
     /// 상자를 열면 LootOpened로, 기지 시설(상인·충전대 등)을 열면 StationOpened로 알리고, 가방 화면이 그것을 듣고 창을 띄운다.

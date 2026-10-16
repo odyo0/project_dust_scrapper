@@ -88,7 +88,7 @@ namespace DustScrapper.Weapons
             if (Current != null) Current.SetPrimary(held);
         }
 
-        /// <summary>특수 스킬 키(플레이어는 F)를 누르고 있는가.</summary>
+        /// <summary>특수 스킬 키(플레이어는 E)를 누르고 있는가.</summary>
         public void SetSpecial(bool held)
         {
             specialHeld = held;

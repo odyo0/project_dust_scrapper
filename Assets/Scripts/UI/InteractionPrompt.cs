@@ -6,7 +6,7 @@ using UnityEngine;
 namespace DustScrapper.UI
 {
     /// <summary>
-    /// 손이 닿는 대상 위에 "무엇을 / E 무엇하기"를 띄우고, E를 누르고 있는 진행도를 막대로 보여 준다.
+    /// 손이 닿는 대상 위에 "무엇을 / F 무엇하기"를 띄우고, F를 누르고 있는 진행도를 막대로 보여 준다.
     /// 지금 할 수 없으면(가방이 가득 참 등) 키 안내 대신 그 이유를 경고색으로 띄운다.
     /// 가방 화면처럼 마우스를 쓰는 창이 열려 있으면(E가 막혀 있으므로) 띄우지 않는다.
     /// </summary>
@@ -60,7 +60,7 @@ namespace DustScrapper.UI
             {
                 // 글자는 내용이 바뀔 때만 새로 만든다.
                 targetLabel.text = targetName;
-                actionLabel.text = reason ?? $"E  {target.ActionName}";
+                actionLabel.text = reason ?? $"F  {target.ActionName}";
                 actionLabel.color = reason != null ? blockedColor : actionColor;
                 shownTarget = target;
                 shownName = targetName;

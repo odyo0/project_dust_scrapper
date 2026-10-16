@@ -7,7 +7,7 @@ namespace DustScrapper.Crafting
 {
     /// <summary>
     /// 몸에 지니고 다니는 제작(C키). 기지 시설과 같은 틀(Station)을 써서 가방 화면이 제작 창(CraftPanel)과 함께 열린다.
-    /// E로 고르는 대상이 아니라서(IsAvailable = false) 손 닿는 물체 목록에 끼지 않는다.
+    /// F로 고르는 대상이 아니라서(IsAvailable = false) 손 닿는 물체 목록에 끼지 않는다.
     /// 재료는 가방에서 꺼내고 결과물은 가방에 넣는다. 지금은 바로 만들어진다(제작 시간·소음은 기획 빈칸).
     /// </summary>
     public sealed class Workbench : Station

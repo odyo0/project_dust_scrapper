@@ -4,7 +4,7 @@ using UnityEngine;
 namespace DustScrapper.Interaction
 {
     /// <summary>
-    /// E를 누르고 있으면 무언가가 일어나는 것들의 공통 틀(바닥 물건 줍기, 상자 뒤지기, 나중에 탈출구·문 등).
+    /// F를 누르고 있으면 무언가가 일어나는 것들의 공통 틀(바닥 물건 줍기, 상자 뒤지기, 나중에 탈출구·문 등).
     /// 누르고 있는 시간을 재고 대상을 고르는 일은 PlayerInteractor가 하고, 여기서는 "무엇을 하는지"만 정한다.
     /// 켜져 있는 것들을 목록으로 모아 두어서, 충돌체나 전용 레이어 없이도 가까운 것을 찾을 수 있다.
     /// </summary>
@@ -12,13 +12,13 @@ namespace DustScrapper.Interaction
     {
         static readonly List<Interactable> active = new();
 
-        [Tooltip("E를 누르고 있어야 하는 시간 (초)")]
+        [Tooltip("F를 누르고 있어야 하는 시간 (초)")]
         [SerializeField, Min(0f)] float holdTime = 0.3f;
 
         /// <summary>지금 켜져 있는 모든 상호작용 대상.</summary>
         public static IReadOnlyList<Interactable> Active => active;
 
-        /// <summary>E를 누르고 있어야 하는 시간. 처음 뒤질 때만 오래 걸리는 상자처럼 상황에 따라 바뀔 수 있다.</summary>
+        /// <summary>F를 누르고 있어야 하는 시간. 처음 뒤질 때만 오래 걸리는 상자처럼 상황에 따라 바뀔 수 있다.</summary>
         public virtual float HoldTime => holdTime;
         public Vector2 Position => transform.position;
 

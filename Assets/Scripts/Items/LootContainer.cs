@@ -14,7 +14,7 @@ namespace DustScrapper.Items
     {
         [SerializeField] string displayName = "상자";
 
-        [Tooltip("처음 뒤질 때 E를 누르고 있어야 하는 시간 (초). 한 번 뒤진 뒤에는 holdTime을 쓴다.")]
+        [Tooltip("처음 뒤질 때 F를 누르고 있어야 하는 시간 (초). 한 번 뒤진 뒤에는 holdTime을 쓴다.")]
         [SerializeField, Min(0f)] float searchTime = 1.5f;
 
         [Tooltip("판마다 내용물을 뽑을 표. 비워 두면 Inventory의 처음 물건 그대로(보관함 등).")]

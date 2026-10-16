@@ -4,7 +4,7 @@ namespace DustScrapper.Weapons
 {
     /// <summary>
     /// 키마다 어느 손의 어느 스킬이 나갈지 정하는 한 곳. 두뇌는 누른 키만 넘기고, 손 사이의 규칙은 모두 여기서 정한다.
-    /// - 좌클릭·Space·R → 무기 손(WeaponLoadout), 우클릭·F → 보조 손(SupportHand).
+    /// - 좌클릭·Q·R → 무기 손(WeaponLoadout), 우클릭·E → 보조 손(SupportHand).
     /// - 무기 손에 두손 무기를 들면, "두손 무기와 같이 못 씀" 장비(스태프)를 낀 보조 손은 빈손을 든다.
     /// - 각 손 장비에 반대 손에 지금 든 장비의 속성을 알려 준다(양방향). 이펙트를 어떻게 바꿀지는 장비의 마법 스킬이 정한다.
     /// - 한 손이 마법을 시전하는 동안 반대 손은 공격하지 못한다(재장전처럼 하던 일은 계속한다). (기획 잠정 규칙)
@@ -26,7 +26,7 @@ namespace DustScrapper.Weapons
 
         void OnDisable() => ReleaseAll();
 
-        /// <summary>무기 손의 기본 스킬(좌클릭)·특수 스킬(Space) 키.</summary>
+        /// <summary>무기 손의 기본 스킬(좌클릭)·특수 스킬(Q) 키.</summary>
         public void SetWeaponHand(bool primaryHeld, bool specialHeld)
         {
             if (weaponHand == null) return;
@@ -34,7 +34,7 @@ namespace DustScrapper.Weapons
             weaponHand.SetSpecial(specialHeld);
         }
 
-        /// <summary>보조 손의 기본 스킬(우클릭)·특수 스킬(F) 키.</summary>
+        /// <summary>보조 손의 기본 스킬(우클릭)·특수 스킬(E) 키.</summary>
         public void SetSupportHand(bool primaryHeld, bool specialHeld)
         {
             if (supportHand == null) return;

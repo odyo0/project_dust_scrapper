@@ -6,7 +6,7 @@ using UnityEngine;
 namespace DustScrapper.Glow
 {
     /// <summary>
-    /// 원정 맵의 글로우 광맥. E를 오래 누르고 있으면 원석이 나와 가방에 들어간다. 캘 때마다 소리가 나서 적이 들을 수 있다.
+    /// 원정 맵의 글로우 광맥. F를 오래 누르고 있으면 원석이 나와 가방에 들어간다. 캘 때마다 소리가 나서 적이 들을 수 있다.
     /// 몇 번 캐면 다 떨어져 더는 고를 수 없다(흐려짐). 나오는 개수·횟수·소리는 데이터로 바꾼다.
     /// </summary>
     public sealed class GlowVein : Interactable

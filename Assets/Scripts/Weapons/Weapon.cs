@@ -6,7 +6,7 @@ namespace DustScrapper.Weapons
     /// <summary>
     /// 손에 든 장비 하나(총, 칼, 마법서, 글러브, 스태프, 빈손 등). 꺼내기·집어넣기와 꺼내는 시간을 맡고,
     /// 실제 동작은 기본 스킬·특수 스킬 칸에 끼운 스킬(Skill)이 한다.
-    /// 왼손이면 기본 = 좌클릭·특수 = Space, 오른손이면 기본 = 우클릭·특수 = F. 어느 키인지는 든 쪽이 정하고 장비는 모른다.
+    /// 왼손이면 기본 = 좌클릭·특수 = Q, 오른손이면 기본 = 우클릭·특수 = E. 어느 키인지는 든 쪽이 정하고 장비는 모른다.
     /// 그래서 두뇌나 적 AI는 손에 든 게 총인지 칼인지 마법인지 몰라도 된다.
     /// </summary>
     [DisallowMultipleComponent]
@@ -14,7 +14,7 @@ namespace DustScrapper.Weapons
     {
         [Tooltip("기본 스킬 (좌클릭/우클릭). 같은 프리팹에 붙은 스킬 부품.")]
         [SerializeField] Skill primary;
-        [Tooltip("특수 스킬 (Space/F). 없으면 비워 둔다.")]
+        [Tooltip("특수 스킬 (Q/E). 없으면 비워 둔다.")]
         [SerializeField] Skill special;
 
         float drawTimer;
