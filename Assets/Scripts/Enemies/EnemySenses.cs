@@ -2,6 +2,7 @@ using System;
 using DustScrapper.Actors;
 using DustScrapper.Combat;
 using DustScrapper.Noise;
+using DustScrapper.Zones;
 using UnityEngine;
 
 namespace DustScrapper.Enemies
@@ -10,7 +11,7 @@ namespace DustScrapper.Enemies
     /// 적의 눈과 귀. 대상(플레이어)이 보이는지, 어떤 소리가 들렸는지만 판단해서 알려 주고,
     /// 그래서 무엇을 할지는 두뇌(EnemyBrain)가 정한다.
     /// 눈: 바라보는 방향의 부채꼴 + 아주 가까우면 등 뒤도 알아챔. 벽 뒤는 못 본다.
-    /// 귀: NoiseBus에 퍼진 소리 중, 소리의 들리는 거리 안에 있으면 듣는다.
+    /// 귀: NoiseBus에 퍼진 소리 중, 소리의 들리는 거리 안에 있으면 듣는다. 구역(MapZone) 경계를 넘는 소리는 거리가 줄어든다.
     /// </summary>
     [DefaultExecutionOrder(-55)]
     [DisallowMultipleComponent]
@@ -106,7 +107,8 @@ namespace DustScrapper.Enemies
         void OnNoise(NoiseEvent noise)
         {
             if (noise.Source == gameObject) return;
-            float radius = noise.Radius * hearingScale;
+            // 구역 벽을 넘는 소리는 덜 들린다. 구역 안 싸움이 밖이나 다른 구역까지 번지지 않게.
+            float radius = noise.Radius * hearingScale * MapZone.NoiseFactor(noise.Position, transform.position);
             if (((Vector2)transform.position - noise.Position).sqrMagnitude > radius * radius) return;
             NoiseHeard?.Invoke(noise);
         }

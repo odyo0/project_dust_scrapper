@@ -2078,7 +2078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Progress.ExpeditionGate
   holdTime: 0.5
   baseLink: {fileID: 773440372}
-  raidScene: Raid
+  raidScene: Outskirts
   displayName: "\uC6D0\uC815 \uCD9C\uBC1C"
 --- !u!61 &1446890148
 BoxCollider2D:

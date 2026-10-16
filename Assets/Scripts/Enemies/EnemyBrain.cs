@@ -1,5 +1,6 @@
 using System;
 using DustScrapper.Actors;
+using DustScrapper.Combat;
 using DustScrapper.Navigation;
 using DustScrapper.Noise;
 using DustScrapper.Weapons;
@@ -21,6 +22,28 @@ namespace DustScrapper.Enemies
         Roam,
         /// <summary>기점으로 돌아간다.</summary>
         Return,
+        /// <summary>위협에게서 멀어지는 쪽으로 달아난다.</summary>
+        Flee,
+    }
+
+    /// <summary>먼저 덤비는가. 같은 두뇌라도 이 설정에 따라 구역 안의 적과 구역 밖의 몹이 갈린다.</summary>
+    public enum Temperament
+    {
+        /// <summary>보이면 쫓아와 공격하고, 소리가 나면 확인하러 온다. 구역 안의 적.</summary>
+        Aggressive,
+        /// <summary>먼저 덤비지 않는다. 맞으면 그때부터 쫓아와 공격하고, 놓치면 다시 얌전해진다.</summary>
+        Retaliates,
+        /// <summary>먼저 덤비지 않는다. 맞거나 대상이 가까이 오면 달아난다.</summary>
+        Skittish,
+    }
+
+    /// <summary>아무 일도 없을 때 무엇을 하는가.</summary>
+    public enum CalmBehavior
+    {
+        /// <summary>제자리에서 정해진 쪽을 보고 서 있다.</summary>
+        StandStill,
+        /// <summary>기점 주변을 돌아다닌다.</summary>
+        Wander,
     }
 
     /// <summary>대상을 놓친 뒤 무엇을 하는가. 같은 두뇌라도 이 설정에 따라 적의 유형이 갈린다.</summary>
@@ -40,6 +63,8 @@ namespace DustScrapper.Enemies
     /// 공격은 WeaponLoadout에. 플레이어 두뇌와 같은 자리에 끼우는 AI다.
     /// 대상을 처음 발견하면 외침(소음)을 낸다. 같은 팀이 들으면 팀이 본 위치로 달려오고, 다른 팀은 보통 소리처럼 걸어서 확인하러 온다
     /// (다른 팀까지 달려오면 팀이 줄줄이 불려 와 맵 전체가 몰려온다).
+    /// 성격(Temperament)이 공격적이 아니면 보거나 들어도 덤비지 않는다: 맞으면 반격하거나(Retaliates), 달아난다(Skittish).
+    /// 구역 밖의 덜 위협적인 몹을 따로 두뇌를 짜지 않고 같은 두뇌의 설정으로 만든다.
     /// </summary>
     [DefaultExecutionOrder(-50)]
     [DisallowMultipleComponent]
@@ -50,6 +75,13 @@ namespace DustScrapper.Enemies
         [SerializeField] WeaponLoadout loadout;
         [SerializeField] EnemySenses senses;
         [SerializeField] PathFollower pathFollower;
+        [SerializeField] Health health;
+
+        [Header("성격 (적 유형)")]
+        [Tooltip("먼저 덤비는가. 구역 안의 적은 Aggressive, 구역 밖의 몹은 Retaliates나 Skittish.")]
+        [SerializeField] Temperament temperament = Temperament.Aggressive;
+        [Tooltip("아무 일도 없을 때 서 있는가, 기점 주변을 돌아다니는가")]
+        [SerializeField] CalmBehavior calmBehavior = CalmBehavior.StandStill;
 
         [Header("움직임 (이동 세기 0~1, 최고 속도에 곱한다)")]
         [Tooltip("소리를 확인하러 갈 때(다른 팀의 외침 포함), 돌아다닐 때, 돌아갈 때")]
@@ -82,6 +114,14 @@ namespace DustScrapper.Enemies
         [Tooltip("돌아다니다 한 곳에 멈춰 서 있는 시간 (초, 최소~최대)")]
         [SerializeField] Vector2 roamPause = new(1f, 2.5f);
 
+        [Header("달아나기 (Skittish)")]
+        [Tooltip("대상이 보이고 이 거리(칸) 안이면 달아난다")]
+        [SerializeField, Min(0f)] float fleeTriggerRadius = 3f;
+        [Tooltip("한 번 달아날 때 멀어지려는 거리 (칸)")]
+        [SerializeField, Min(1f)] float fleeDistance = 8f;
+        [Tooltip("달아나다 이 시간(초)이 지나면 길이 막혔어도 멈춘다")]
+        [SerializeField, Min(0.5f)] float fleeTimeout = 4f;
+
         [Header("동료 부르기")]
         [Tooltip("끄면 발견해도 외치지 않는다. 조용히 다가오는 적. 이미 경계 중인 팀원과는 여전히 위치를 공유하지만, 쉬고 있는 팀원을 깨우지는 않는다.")]
         [SerializeField] bool shoutsWhenSpotting = true;
@@ -104,8 +144,14 @@ namespace DustScrapper.Enemies
         float handledSightingTime;
         float stateTimer;
         float alarmTimer;
+        bool provoked;
 
         public EnemyState State { get; private set; }
+
+        public Temperament Temperament => temperament;
+
+        /// <summary>지금 대상에게 덤비는가: 원래 공격적이거나, 얌전한 몹이 맞아서 화가 난 동안.</summary>
+        public bool IsHostile => temperament == Temperament.Aggressive || provoked;
 
         /// <summary>경계 중인가: 쫓거나, 놓쳐서 수색하거나, 놓친 곳 주변을 한동안 돌아다니는 중.</summary>
         public bool IsAlerted => State == EnemyState.Chase ||
@@ -122,6 +168,7 @@ namespace DustScrapper.Enemies
             if (loadout == null) loadout = GetComponent<WeaponLoadout>();
             if (senses == null) senses = GetComponent<EnemySenses>();
             if (pathFollower == null) pathFollower = GetComponent<PathFollower>();
+            if (health == null) health = GetComponent<Health>();
 
             // 팀 물체 아래에 없으면 혼자 한 팀이 된다.
             team = GetComponentInParent<EnemyTeam>();
@@ -134,17 +181,20 @@ namespace DustScrapper.Enemies
         void OnEnable()
         {
             senses.NoiseHeard += OnNoiseHeard;
-            // 처음 시작할 때, 죽었다 되살아날 때 모두 처음 자리를 보고 서 있는 상태에서 시작한다.
+            if (health != null) health.Damaged += OnDamaged;
+            // 처음 시작할 때, 죽었다 되살아날 때 모두 처음 자리에서 얌전한 상태로 시작한다.
             anchor = home;
             settled = false;
+            provoked = false;
             facing = idleLookDirection.normalized;
             alarmTimer = 0f;
-            EnterState(EnemyState.Idle);
+            EnterCalm();
         }
 
         void OnDisable()
         {
             senses.NoiseHeard -= OnNoiseHeard;
+            if (health != null) health.Damaged -= OnDamaged;
             motor.MoveIntent = Vector2.zero;
             loadout.SetPrimary(false);
             pathFollower.Stop();
@@ -157,12 +207,18 @@ namespace DustScrapper.Enemies
             alarmTimer -= Time.deltaTime;
             stateTimer += Time.deltaTime;
 
-            if (senses.CanSeeTarget)
+            if (senses.CanSeeTarget && IsHostile)
             {
                 team.ReportSighting(senses.Target.position);
                 if (State != EnemyState.Chase) StartChase();
             }
-            else if (IsAlerted && State != EnemyState.Chase && HasNewTeamSighting())
+            else if (senses.CanSeeTarget)
+            {
+                // 얌전한 몹은 보기만 한다. 겁 많은 몹은 너무 가까이 오면 달아난다.
+                if (temperament == Temperament.Skittish && State != EnemyState.Flee && IsWithin(senses.Target.position, fleeTriggerRadius))
+                    StartFlee(senses.Target.position);
+            }
+            else if (IsHostile && IsAlerted && State != EnemyState.Chase && HasNewTeamSighting())
             {
                 // 놓치고 수색하던 중에 같은 팀이 새로 발견했다 → 그곳으로 간다.
                 EnterState(EnemyState.Chase);
@@ -176,6 +232,7 @@ namespace DustScrapper.Enemies
                 case EnemyState.Search: UpdateSearch(); break;
                 case EnemyState.Roam: UpdateRoam(); break;
                 case EnemyState.Return: UpdateReturn(); break;
+                case EnemyState.Flee: UpdateFlee(); break;
             }
         }
 
@@ -287,10 +344,44 @@ namespace DustScrapper.Enemies
             MoveTo(anchor, walkIntent);
             if (!pathFollower.HasArrived && !pathFollower.IsUnreachable) return;
 
-            // 놓친 곳에 눌러앉은 적은 그 기점에서 다시 돌아다니고, 나머지는 제자리에 선다.
+            // 놓친 곳에 눌러앉은 적은 그 기점에서 다시 돌아다니고, 나머지는 평소대로(서 있거나 돌아다니거나).
             if (settled) StartRoam(false);
+            else EnterCalm();
+        }
+
+        void UpdateFlee()
+        {
+            Vector2 direction = pathFollower.DesiredDirection;
+            motor.MoveIntent = direction * runIntent;
+            TurnTowards(direction);
+            if (!pathFollower.HasArrived && !pathFollower.IsUnreachable && stateTimer < fleeTimeout) return;
+
+            // 달아난 곳에서 진정한다. 원래 자리로 돌아가면 위협 쪽으로 다시 걸어가게 되므로 여기를 새 기점으로 삼는다.
+            anchor = transform.position;
+            EnterCalm();
+        }
+
+        /// <summary>아무 일도 없는 평소 상태로: 기점에 서 있거나 기점 주변을 돌아다닌다.</summary>
+        void EnterCalm()
+        {
+            if (calmBehavior == CalmBehavior.Wander) StartRoam(false);
             else EnterState(EnemyState.Idle);
         }
+
+        void StartFlee(Vector2 threat)
+        {
+            Vector2 position = transform.position;
+            Vector2 away = position - threat;
+            if (away.sqrMagnitude < 0.0001f) away = UnityEngine.Random.insideUnitCircle;
+            Vector2 goal = position + away.normalized * fleeDistance;
+
+            NavGrid grid = NavGrid.Active;
+            if (grid != null && grid.TryGetRandomWalkablePoint(goal, 2f, out Vector2 walkable)) goal = walkable;
+            pointOfInterest = goal;
+            EnterState(EnemyState.Flee);
+        }
+
+        bool IsWithin(Vector2 point, float radius) => ((Vector2)transform.position - point).sqrMagnitude <= radius * radius;
 
         void StartChase()
         {
@@ -318,9 +409,27 @@ namespace DustScrapper.Enemies
 
         bool HasNewTeamSighting() => team.HasSighting && team.LastSightingTime > handledSightingTime;
 
+        void OnDamaged(DamageInfo info)
+        {
+            if (temperament == Temperament.Aggressive || health.IsDead) return;
+            Vector2 attacker = info.Source != null ? (Vector2)info.Source.transform.position : info.Point - info.Direction * fleeDistance;
+
+            if (temperament == Temperament.Skittish)
+            {
+                StartFlee(attacker);
+                return;
+            }
+
+            // 맞은 쪽을 알고 화가 난다. 보이지 않는 곳에서 맞았어도 때린 곳으로 쫓아간다.
+            provoked = true;
+            team.ReportSighting(attacker);
+            if (State != EnemyState.Chase) StartChase();
+        }
+
         void OnNoiseHeard(NoiseEvent noise)
         {
-            if (State == EnemyState.Chase) return;
+            // 얌전한 몹은 소리를 확인하러 오지 않는다.
+            if (!IsHostile || State == EnemyState.Chase || State == EnemyState.Flee) return;
 
             // 같은 팀의 외침: 팀이 본 위치를 받아 그곳으로 달려간다.
             if (noise.IsAlarm && team.Contains(noise.Source) && team.HasSighting)
@@ -344,6 +453,8 @@ namespace DustScrapper.Enemies
             // "놓쳐서 수색 중"인지는 BeginSearch가 정한다. 경계와 상관없는 상태로 가면 지운다.
             if (next == EnemyState.Idle || next == EnemyState.Investigate || next == EnemyState.Return) lostTarget = false;
             if (next != EnemyState.Roam) roamIsTimed = false;
+            // 얌전한 몹이 쫓다 놓치고 평소 상태로 돌아가면 화가 풀린다.
+            if (next == EnemyState.Idle || next == EnemyState.Return || (next == EnemyState.Roam && !roamIsTimed)) provoked = false;
 
             switch (next)
             {
@@ -351,6 +462,7 @@ namespace DustScrapper.Enemies
                     pathFollower.Stop();
                     break;
                 case EnemyState.Investigate:
+                case EnemyState.Flee:
                     pathFollower.SetDestination(pointOfInterest);
                     break;
                 case EnemyState.Search:
