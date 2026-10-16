@@ -409,7 +409,7 @@ namespace DustScrapper.Controls
                 {
                     ""name"": """",
                     ""id"": ""7a54a078-1391-497d-9867-1265b13a628e"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -431,7 +431,7 @@ namespace DustScrapper.Controls
                 {
                     ""name"": """",
                     ""id"": ""004d9d22-cc8a-4b76-b9c9-3e03b61bf339"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",

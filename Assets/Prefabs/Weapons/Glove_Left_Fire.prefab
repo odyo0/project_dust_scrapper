@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 405520198632288865}
   - component: {fileID: 7227353441373606844}
   m_Layer: 0
-  m_Name: Glove_Right_Fire
+  m_Name: Glove_Left_Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

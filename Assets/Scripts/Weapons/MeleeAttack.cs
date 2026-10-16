@@ -17,7 +17,7 @@ namespace DustScrapper.Weapons
     /// 근접 공격 스킬(베기, 주먹질, 할퀴기, 펀치). 누르면 준비 → 휘두름 → 회복 순서로 한 번 휘두른다.
     /// 휘두름 단계 동안 캐릭터 앞쪽 부채꼴 안의 대상을 맞히고, 한 번 휘두를 때 같은 대상은 한 번만 맞는다.
     /// 벽 너머의 대상은 맞지 않는다. 휘두르는 모습은 MeleeSwingVisual이 단계를 읽어 그린다.
-    /// 수치는 보통 장비 데이터(MeleeData)를 쓰고, 장비와 다른 수치가 필요하면(오른손 빈손의 펀치 등) stats에 따로 넣는다.
+    /// 수치는 보통 장비 데이터(MeleeData)를 쓰고, 장비와 다른 수치가 필요하면(보조 손 빈손의 펀치 등) stats에 따로 넣는다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class MeleeAttack : Skill

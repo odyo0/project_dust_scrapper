@@ -8,7 +8,7 @@ using UnityEngine;
 namespace DustScrapper.Weapons
 {
     /// <summary>
-    /// 보조 손(왼손잡이 기준 오른손)과 보조 칸 1칸. 보조 칸에 낀 장비(오른손 글러브, 스태프 등)를 손에 들고,
+    /// 보조 손(오른손잡이 기준 왼손)과 보조 칸 1칸. 보조 칸에 낀 장비(왼손 글러브, 스태프 등)를 손에 들고,
     /// 든 장비의 기본 스킬은 우클릭, 특수 스킬은 F다.
     /// 보조 칸이 비었거나, 낀 장비를 지금 쓸 수 없으면(스태프 + 두손 무기, SkillRouter가 정함) 빈손 장비(우클릭 주먹질, F 기본 공격 마법)를 든다.
     /// 무기 손의 빈손(주먹질만)과는 다른 장비다. 한 손으로는 늘 마법을 쏠 수 있게 마법은 보조 손 빈손에만 있다.
@@ -88,7 +88,7 @@ namespace DustScrapper.Weapons
             if (Current != null) Current.SetPrimary(held);
         }
 
-        /// <summary>특수 스킬 키(플레이어는 E)를 누르고 있는가.</summary>
+        /// <summary>특수 스킬 키(플레이어는 Q)를 누르고 있는가.</summary>
         public void SetSpecial(bool held)
         {
             specialHeld = held;
@@ -126,7 +126,7 @@ namespace DustScrapper.Weapons
 
         public ItemStack GetSlot(int index) => index == 0 && equipped != null ? new ItemStack(equipped.Data, 1) : ItemStack.Empty;
 
-        /// <summary>보조 칸에는 보조 칸에 맞는 장비만 놓인다(오른손 글러브, 스태프 등).</summary>
+        /// <summary>보조 칸에는 보조 칸에 맞는 장비만 놓인다(왼손 글러브, 스태프 등).</summary>
         public bool CanPlace(int index, ItemStack stack) => index == 0 && stack.Item is WeaponData data && data.FitsSupportSlot;
 
         public ItemStack TakeSlot(int index)

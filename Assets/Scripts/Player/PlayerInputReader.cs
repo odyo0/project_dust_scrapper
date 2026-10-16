@@ -33,13 +33,13 @@ namespace DustScrapper.Player
         /// <summary>사용/발사 키를 누르고 있는가. 한 프레임 안에 눌렀다 뗀 짧은 클릭도 누른 것으로 본다.</summary>
         public bool FireHeld { get; private set; }
 
-        /// <summary>무기 손 특수 스킬 키(Q)를 누르고 있는가. 짧게 톡 눌러도 놓치지 않는다.</summary>
+        /// <summary>무기 손 특수 스킬 키(E)를 누르고 있는가. 짧게 톡 눌러도 놓치지 않는다.</summary>
         public bool SpecialHeld { get; private set; }
 
         /// <summary>보조 손 기본 스킬 키(우클릭)를 누르고 있는가. 한 프레임 안에 눌렀다 뗀 짧은 클릭도 누른 것으로 본다.</summary>
         public bool SupportPrimaryHeld { get; private set; }
 
-        /// <summary>보조 손 특수 스킬 키(E)를 누르고 있는가. 짧게 톡 눌러도 놓치지 않는다.</summary>
+        /// <summary>보조 손 특수 스킬 키(Q)를 누르고 있는가. 짧게 톡 눌러도 놓치지 않는다.</summary>
         public bool SupportSpecialHeld { get; private set; }
 
         /// <summary>이번 프레임에 재장전 키를 눌렀는가.</summary>

@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 6866235004917879923}
   - component: {fileID: 1874637235046245333}
   m_Layer: 0
-  m_Name: Glove_Right
+  m_Name: Glove_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
