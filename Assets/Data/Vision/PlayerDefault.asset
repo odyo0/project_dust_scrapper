@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb6484cc733194fe5a56fb12e660211c, type: 3}
   m_Name: PlayerDefault
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Vision.VisionProfile
-  nearRadius: 2.5
-  forwardRadius: 8
-  forwardAngle: 80
+  nearRadius: 30
+  forwardRadius: 30
+  forwardAngle: 360
   angleFeather: 10
