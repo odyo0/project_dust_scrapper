@@ -393,6 +393,9 @@ MonoBehaviour:
   sightBlockers:
     serializedVersion: 2
     m_Bits: 256
+  glass:
+    serializedVersion: 2
+    m_Bits: 512
   hearingScale: 1
 --- !u!114 &6545251076152055598
 MonoBehaviour:
@@ -427,6 +430,9 @@ MonoBehaviour:
   loadout: {fileID: 8040607009097106122}
   senses: {fileID: 8918289798620973885}
   pathFollower: {fileID: 6545251076152055598}
+  health: {fileID: 0}
+  temperament: 0
+  calmBehavior: 0
   walkIntent: 0.45
   runIntent: 1
   attackMoveIntent: 0.15
@@ -439,6 +445,9 @@ MonoBehaviour:
   roamRadius: 4
   roamDuration: 15
   roamPause: {x: 1, y: 2.5}
+  fleeTriggerRadius: 3
+  fleeDistance: 8
+  fleeTimeout: 4
   shoutsWhenSpotting: 1
   alarmRadius: 7
   alarmCooldown: 5

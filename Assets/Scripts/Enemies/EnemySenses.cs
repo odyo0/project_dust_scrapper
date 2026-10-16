@@ -10,7 +10,7 @@ namespace DustScrapper.Enemies
     /// <summary>
     /// 적의 눈과 귀. 대상(플레이어)이 보이는지, 어떤 소리가 들렸는지만 판단해서 알려 주고,
     /// 그래서 무엇을 할지는 두뇌(EnemyBrain)가 정한다.
-    /// 눈: 바라보는 방향의 부채꼴 + 아주 가까우면 등 뒤도 알아챔. 벽 뒤는 못 본다.
+    /// 눈: 바라보는 방향의 부채꼴 + 아주 가까우면 등 뒤도 알아챔. 벽 뒤는 못 본다. 유리 너머는 경계 중일 때만 본다.
     /// 귀: NoiseBus에 퍼진 소리 중, 소리의 들리는 거리 안에 있으면 듣는다. 구역(MapZone) 경계를 넘는 소리는 거리가 줄어든다.
     /// </summary>
     [DefaultExecutionOrder(-55)]
@@ -33,6 +33,8 @@ namespace DustScrapper.Enemies
         [SerializeField, Min(0f)] float trackingRadius = 4f;
         [Tooltip("시야를 가리는 레이어(벽). 다른 적이나 플레이어 몸은 시야를 가리지 않는다.")]
         [SerializeField] LayerMask sightBlockers;
+        [Tooltip("유리 레이어(유리창, 살짝 연 문). 경계 중이 아니면 이 너머의 대상을 알아채지 못한다.")]
+        [SerializeField] LayerMask glass;
 
         [Header("듣기")]
         [Tooltip("소리가 들리는 거리에 곱하는 값. 귀가 밝은 적은 1보다 크게.")]
@@ -54,6 +56,12 @@ namespace DustScrapper.Enemies
         /// 바로 옆으로 돌아 들어가도 놓치지 않게 두뇌가 켠다. 멀리서 모퉁이를 돌면 놓칠 수 있다.
         /// </summary>
         public bool IsTracking { get; set; }
+
+        /// <summary>
+        /// 켜 두면 유리 너머도 본다. 두뇌가 경계 중일 때 켠다. 꺼져 있으면 유리 너머의 대상을 못 알아챈다:
+        /// 플레이어가 유리창으로 안을 미리 살필 수 있어야 하는데, 적이 그대로 플레이어를 보면 살피는 의미가 없어서다.
+        /// </summary>
+        public bool SeesThroughGlass { get; set; }
 
         /// <summary>들리는 소리가 났을 때.</summary>
         public event Action<NoiseEvent> NoiseHeard;
@@ -78,6 +86,7 @@ namespace DustScrapper.Enemies
             NoiseBus.Emitted -= OnNoise;
             CanSeeTarget = false;
             IsTracking = false;
+            SeesThroughGlass = false;
         }
 
         void Update()
@@ -101,6 +110,7 @@ namespace DustScrapper.Enemies
             if (!inCone) return false;
 
             if (Glow.SmokeCloud.Blocks(origin, target.position)) return false;
+            if (!SeesThroughGlass && Physics2D.Linecast(origin, target.position, glass).collider != null) return false;
             return Physics2D.Linecast(origin, target.position, sightBlockers).collider == null;
         }
 

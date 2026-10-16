@@ -8656,7 +8656,7 @@ MonoBehaviour:
   reach: 1.2
   blockers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 768
 --- !u!114 &5521113546997148180
 MonoBehaviour:
   m_ObjectHideFlags: 0

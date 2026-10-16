@@ -18,8 +18,16 @@ namespace DustScrapper.Zones
         [Tooltip("구역 영역의 크기 (칸). 이 물체의 위치가 영역의 가운데다.")]
         [SerializeField] Vector2 size = new(16f, 12f);
 
-        [Tooltip("구역 경계를 넘나드는 소리가 들리는 거리에 곱하는 값. 0이면 안팎으로 전혀 새지 않고, 1이면 경계가 없는 것과 같다.")]
+        [Tooltip("바깥문이 모두 닫혀 있고 유리창이 멀쩡할 때, 구역 경계를 넘나드는 소리가 들리는 거리에 곱하는 값. 0이면 안팎으로 전혀 새지 않고, 1이면 경계가 없는 것과 같다.")]
         [SerializeField, Range(0f, 1f)] float noiseLeak = 0.3f;
+
+        [Tooltip("바깥문이 하나라도 열려 있거나 유리창이 깨졌을 때 쓰는 값")]
+        [SerializeField, Range(0f, 1f)] float openNoiseLeak = 0.6f;
+
+        [Tooltip("이 구역의 바깥문·유리창 (IZoneOpening). 안쪽 방 사이의 문은 넣지 않는다.")]
+        [SerializeField] List<Component> openings = new();
+
+        readonly List<IZoneOpening> openingList = new();
 
         public static IReadOnlyList<MapZone> All => all;
 
@@ -28,6 +36,31 @@ namespace DustScrapper.Zones
         public Rect Bounds => new((Vector2)transform.position - size * 0.5f, size);
 
         public bool Contains(Vector2 point) => Bounds.Contains(point);
+
+        /// <summary>바깥문이 하나라도 열려 있거나 유리창이 깨졌는가.</summary>
+        public bool IsBreached
+        {
+            get
+            {
+                for (int i = 0; i < openingList.Count; i++)
+                {
+                    if (openingList[i].IsOpen) return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>지금 구역 경계를 넘는 소리에 곱하는 값.</summary>
+        public float CurrentNoiseLeak => IsBreached ? openNoiseLeak : noiseLeak;
+
+        void Awake()
+        {
+            foreach (var component in openings)
+            {
+                if (component is IZoneOpening opening) openingList.Add(opening);
+                else if (component != null) Debug.LogWarning($"{name}: {component.name}은(는) 바깥문·유리창(IZoneOpening)이 아니다.", this);
+            }
+        }
 
         void OnEnable() => all.Add(this);
         void OnDisable() => all.Remove(this);
@@ -44,7 +77,7 @@ namespace DustScrapper.Zones
 
         /// <summary>
         /// from에서 난 소리가 to에 닿을 때 들리는 거리에 곱할 값.
-        /// 같은 구역 안이거나 둘 다 밖이면 1. 구역 경계를 넘을 때마다 그 구역의 noiseLeak을 곱한다
+        /// 같은 구역 안이거나 둘 다 밖이면 1. 구역 경계를 넘을 때마다 그 구역의 CurrentNoiseLeak을 곱한다
         /// (구역 안 → 밖, 밖 → 구역 안, 구역 → 다른 구역은 두 번).
         /// </summary>
         public static float NoiseFactor(Vector2 from, Vector2 to)
@@ -54,8 +87,8 @@ namespace DustScrapper.Zones
             if (source == listener) return 1f;
 
             float factor = 1f;
-            if (source != null) factor *= source.noiseLeak;
-            if (listener != null) factor *= listener.noiseLeak;
+            if (source != null) factor *= source.CurrentNoiseLeak;
+            if (listener != null) factor *= listener.CurrentNoiseLeak;
             return factor;
         }
 

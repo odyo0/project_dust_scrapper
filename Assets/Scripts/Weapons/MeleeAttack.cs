@@ -29,6 +29,7 @@ namespace DustScrapper.Weapons
         static readonly ContactFilter2D SolidOnly = new() { useTriggers = false };
 
         readonly HashSet<Health> hitThisSwing = new();
+        readonly HashSet<IBashable> bashedThisSwing = new();
 
         [Tooltip("이 공격의 수치. 비워 두면 장비 데이터(MeleeData)를 쓴다.")]
         [SerializeField] MeleeData stats;
@@ -98,6 +99,7 @@ namespace DustScrapper.Weapons
             pressBuffer = 0f;
             SwingCount++;
             hitThisSwing.Clear();
+            bashedThisSwing.Clear();
             EmitNoise(melee.NoiseRadius);
             EnterPhase(MeleePhase.Windup);
         }
@@ -142,13 +144,24 @@ namespace DustScrapper.Weapons
                 Collider2D collider = Overlaps[i];
                 if (collider.transform.IsChildOf(ownerRoot)) continue;
 
-                Health health = collider.GetComponentInParent<Health>();
-                if (health == null || health.IsDead || hitThisSwing.Contains(health)) continue;
-
                 // 대상의 중심이 아니라 가장 가까운 지점으로 각도를 재서, 큰 대상의 가장자리도 벨 수 있게 한다.
                 Vector2 point = collider.ClosestPoint(origin);
                 Vector2 toPoint = point - origin;
                 if (toPoint.sqrMagnitude > 0.0001f && Vector2.Angle(aim, toPoint) > halfArc) continue;
+
+                // 걷어차기는 문처럼 체력이 없는 것도 반응하게 한다.
+                if (melee.Bashes)
+                {
+                    IBashable bashable = collider.GetComponentInParent<IBashable>();
+                    if (bashable != null)
+                    {
+                        if (bashedThisSwing.Add(bashable)) bashable.Bash(origin, aim, Holder.gameObject);
+                        continue;
+                    }
+                }
+
+                Health health = collider.GetComponentInParent<Health>();
+                if (health == null || health.IsDead || hitThisSwing.Contains(health)) continue;
                 if (!LineOfSight.IsClear(origin, point, ownerRoot, health.transform)) continue;
 
                 hitThisSwing.Add(health);

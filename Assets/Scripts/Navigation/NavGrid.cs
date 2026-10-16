@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DustScrapper.Navigation
@@ -6,6 +7,7 @@ namespace DustScrapper.Navigation
     /// 길찾기용 칸 지도. 시작할 때 맵 영역을 작은 칸으로 나누고, 벽(장애물 레이어)에 닿는 칸을 "못 감"으로 표시한다.
     /// 벽에서 clearance만큼 떨어진 칸만 "갈 수 있음"이라 캐릭터가 벽 모서리에 걸리지 않는다.
     /// 맵마다 하나 둔다. 적은 Active로 찾아 쓴다(적은 프리팹이라 씬 물체를 직접 연결할 수 없어서).
+    /// 문(NavPassable)은 벽 레이어에 있어도 갈 수 있는 칸으로 본다. 유리창이 깨지는 등 벽이 바뀌면 RebuildArea로 그 근처만 다시 만든다.
     /// </summary>
     [DefaultExecutionOrder(-200)]
     [DisallowMultipleComponent]
@@ -23,8 +25,11 @@ namespace DustScrapper.Navigation
         [Tooltip("벽에서 이만큼(칸) 떨어져야 다닐 수 있다. 다니는 캐릭터의 반지름보다 조금 크게 둔다.")]
         [SerializeField, Min(0f)] float clearance = 0.4f;
 
+        static readonly List<Collider2D> ProbeHits = new();
+
         bool[] walkable;
         Vector2 origin;
+        ContactFilter2D obstacleFilter;
 
         /// <summary>지금 맵의 칸 지도. 없으면 null(적은 벽을 무시하고 곧장 간다).</summary>
         public static NavGrid Active { get; private set; }
@@ -54,16 +59,42 @@ namespace DustScrapper.Navigation
             Height = Mathf.Max(1, Mathf.CeilToInt(size.y / cellSize));
             origin = (Vector2)transform.position - new Vector2(Width, Height) * (cellSize * 0.5f);
             walkable = new bool[Width * Height];
+            obstacleFilter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = obstacleMask };
+            UpdateCells(0, 0, Width - 1, Height - 1);
+        }
 
+        /// <summary>area와 겹치는 칸만 다시 검사한다. 유리창이 깨져 지나갈 수 있게 되는 등 작은 변화에 쓴다.</summary>
+        public void RebuildArea(Bounds area)
+        {
+            if (walkable == null) return;
+            float margin = clearance + cellSize;
+            Vector2Int min = WorldToCell((Vector2)area.min - Vector2.one * margin);
+            Vector2Int max = WorldToCell((Vector2)area.max + Vector2.one * margin);
+            UpdateCells(Mathf.Max(0, min.x), Mathf.Max(0, min.y), Mathf.Min(Width - 1, max.x), Mathf.Min(Height - 1, max.y));
+        }
+
+        void UpdateCells(int minX, int minY, int maxX, int maxY)
+        {
             Vector2 probe = Vector2.one * (cellSize + clearance * 2f);
-            for (int y = 0; y < Height; y++)
+            for (int y = minY; y <= maxY; y++)
             {
-                for (int x = 0; x < Width; x++)
+                for (int x = minX; x <= maxX; x++)
                 {
-                    Vector2 center = CellToWorld(new Vector2Int(x, y));
-                    walkable[Index(x, y)] = Physics2D.OverlapBox(center, probe, 0f, obstacleMask) == null;
+                    walkable[Index(x, y)] = IsCellClear(CellToWorld(new Vector2Int(x, y)), probe);
                 }
             }
+        }
+
+        bool IsCellClear(Vector2 center, Vector2 probe)
+        {
+            // 대부분의 칸은 아무것도 없어서 빠른 검사 하나로 끝난다. 무언가 있으면 문만 있는지 확인한다.
+            if (Physics2D.OverlapBox(center, probe, 0f, obstacleMask) == null) return true;
+            int count = Physics2D.OverlapBox(center, probe, 0f, obstacleFilter, ProbeHits);
+            for (int i = 0; i < count; i++)
+            {
+                if (ProbeHits[i].GetComponentInParent<NavPassable>() == null) return false;
+            }
+            return true;
         }
 
         public Vector2Int WorldToCell(Vector2 world)

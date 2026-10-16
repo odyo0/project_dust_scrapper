@@ -32,3 +32,4 @@ MonoBehaviour:
   activeTime: 0.08
   recoveryTime: 0.4
   hitEffect: {fileID: 11400000, guid: 7ed74ca4421f74a01b840d8d92a6f163, type: 2}
+  bashes: 1

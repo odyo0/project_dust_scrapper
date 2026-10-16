@@ -475,6 +475,7 @@ namespace DustScrapper.Enemies
                     break;
             }
             team.SetAlerted(this, IsAlerted);
+            senses.SeesThroughGlass = IsAlerted;
         }
 
         void MoveTo(Vector2 point, float intent)
