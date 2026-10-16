@@ -1099,6 +1099,7 @@ Transform:
   m_Children:
   - {fileID: 7551275}
   - {fileID: 1191728795}
+  - {fileID: 629649964}
   m_Father: {fileID: 1469393554}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &113105051
@@ -1115,9 +1116,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
   holdTime: 0.15
   displayName: "\uC0C1\uC810 \uC815\uBB38"
-  hinge: {fileID: 1191728795}
+  hinges:
+  - {fileID: 1191728795}
+  - {fileID: 629649964}
   blocker: {fileID: 7551276}
-  ajarAngle: 20
   openAngle: 95
   swingSpeed: 540
   noiseRadius: 3
@@ -1464,9 +1466,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
   holdTime: 0.15
   displayName: "\uC0AC\uBB34\uC2E4 \uBB38"
-  hinge: {fileID: 540152849}
+  hinges:
+  - {fileID: 540152849}
   blocker: {fileID: 1072099638}
-  ajarAngle: 20
   openAngle: 95
   swingSpeed: 540
   noiseRadius: 3
@@ -2074,9 +2076,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
   holdTime: 0.15
   displayName: "\uBB34\uAE30\uACE0 \uBB38"
-  hinge: {fileID: 161530603}
+  hinges:
+  - {fileID: 161530603}
   blocker: {fileID: 1612704394}
-  ajarAngle: 20
   openAngle: 95
   swingSpeed: 540
   noiseRadius: 3
@@ -3013,8 +3015,8 @@ Transform:
   m_GameObject: {fileID: 265079871}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 0.24, z: 1}
+  m_LocalPosition: {x: 0.75, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 0.24, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1619741438}
@@ -5895,6 +5897,38 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &629649963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 629649964}
+  m_Layer: 0
+  m_Name: Hinge2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &629649964
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629649963}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: -0.00000004371139}
+  m_LocalPosition: {x: 1.5, y: -0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 965229314}
+  m_Father: {fileID: 113105050}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &648516463
 GameObject:
   m_ObjectHideFlags: 0
@@ -6374,9 +6408,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
   holdTime: 0.15
   displayName: "\uC0C1\uC810 \uB4B7\uBB38"
-  hinge: {fileID: 1044374490}
+  hinges:
+  - {fileID: 1044374490}
   blocker: {fileID: 1915327826}
-  ajarAngle: 20
   openAngle: 95
   swingSpeed: 540
   noiseRadius: 3
@@ -7038,6 +7072,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 896851143275898505, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 2583691263
+      objectReference: {fileID: 0}
+    - target: {fileID: 896851143275898505, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 1668800972632348362, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
       propertyPath: orthographic size
       value: 6.6979165
@@ -7094,6 +7136,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5915710301499917088, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 6367219643452889479, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
       propertyPath: m_LocalPosition.x
       value: -34
@@ -7101,6 +7147,34 @@ PrefabInstance:
     - target: {fileID: 6367219643452889479, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
       propertyPath: m_LocalPosition.y
       value: -24
+      objectReference: {fileID: 0}
+    - target: {fileID: 6628729277751975191, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 2583691263
+      objectReference: {fileID: 0}
+    - target: {fileID: 6628729277751975191, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 7122127318933746462, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 2583691263
+      objectReference: {fileID: 0}
+    - target: {fileID: 7122127318933746462, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 7959262744268347914, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 8905735366520177306, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129307223602442260, guid: 02bc0ffd254c048c98f4633783df9488, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8815,6 +8889,97 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &965229313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 965229314}
+  - component: {fileID: 965229315}
+  m_Layer: 0
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &965229314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965229313}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.75, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 0.24, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 629649964}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &965229315
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965229313}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -4
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: a35519842dda64c869f549aab7f3a6e5, type: 3}
+  m_Color: {r: 0.5, g: 0.36, b: 0.22, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1001 &991004524
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8911,8 +9076,8 @@ Transform:
   m_GameObject: {fileID: 1019027217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 0.24, z: 1}
+  m_LocalPosition: {x: 0.75, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 0.24, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1191728795}
@@ -9708,9 +9873,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
   holdTime: 0.15
   displayName: "\uCC3D\uACE0 \uBB38"
-  hinge: {fileID: 1812500089}
+  hinges:
+  - {fileID: 1812500089}
   blocker: {fileID: 398490230}
-  ajarAngle: 20
   openAngle: 95
   swingSpeed: 540
   noiseRadius: 3
@@ -10764,6 +10929,97 @@ SpriteRenderer:
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: a35519842dda64c869f549aab7f3a6e5, type: 3}
   m_Color: {r: 0.42, g: 0.4, b: 0.38, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
+--- !u!1 &1183182867
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1183182868}
+  - component: {fileID: 1183182869}
+  m_Layer: 0
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1183182868
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183182867}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.75, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 0.24, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2116708553}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1183182869
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183182867}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: -4
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 21300000, guid: a35519842dda64c869f549aab7f3a6e5, type: 3}
+  m_Color: {r: 0.5, g: 0.36, b: 0.22, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -16282,9 +16538,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
   holdTime: 0.15
   displayName: "\uACBD\uCC30\uC11C \uC606\uBB38"
-  hinge: {fileID: 1228978073}
+  hinges:
+  - {fileID: 1228978073}
   blocker: {fileID: 847708952}
-  ajarAngle: 20
   openAngle: 95
   swingSpeed: 540
   noiseRadius: 3
@@ -16769,9 +17025,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
   holdTime: 0.15
   displayName: "\uBB34\uAE30\uACE0 \uBB38"
-  hinge: {fileID: 648516464}
+  hinges:
+  - {fileID: 648516464}
   blocker: {fileID: 342861627}
-  ajarAngle: 20
   openAngle: 95
   swingSpeed: 540
   noiseRadius: 3
@@ -18604,6 +18860,7 @@ Transform:
   m_Children:
   - {fileID: 743453654}
   - {fileID: 1619741438}
+  - {fileID: 2116708553}
   m_Father: {fileID: 704660108}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2032314601
@@ -18620,9 +18877,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
   holdTime: 0.15
   displayName: "\uACBD\uCC30\uC11C \uC815\uBB38"
-  hinge: {fileID: 1619741438}
+  hinges:
+  - {fileID: 1619741438}
+  - {fileID: 2116708553}
   blocker: {fileID: 743453655}
-  ajarAngle: 20
   openAngle: 95
   swingSpeed: 540
   noiseRadius: 3
@@ -19640,6 +19898,38 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &2116708552
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2116708553}
+  m_Layer: 0
+  m_Name: Hinge2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2116708553
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116708552}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: -0.00000004371139}
+  m_LocalPosition: {x: 1.5, y: -0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1183182868}
+  m_Father: {fileID: 2032314600}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2124732604
 GameObject:
   m_ObjectHideFlags: 0
