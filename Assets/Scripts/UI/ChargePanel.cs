@@ -65,8 +65,8 @@ namespace DustScrapper.UI
             foreach (var slots in watched) slots.Changed -= MarkDirty;
             watched.Clear();
             if (s == null) return;
-            if (player != null && player.Body != null) watched.Add(player.Body);
-            if (player != null && player.Inventory != null) watched.Add(player.Inventory);
+            if (player != null && player.Gear != null && player.Gear.Body != null) watched.Add(player.Gear.Body);
+            if (player != null && player.Gear != null && player.Gear.Bag != null) watched.Add(player.Gear.Bag);
             if (s.Storage != null) watched.Add(s.Storage);
             foreach (var slots in watched) slots.Changed += MarkDirty;
         }
@@ -80,7 +80,7 @@ namespace DustScrapper.UI
             rows.Clear();
 
             titleLabel.text = station.TargetName;
-            Inventory bag = player != null ? player.Inventory : null;
+            Inventory bag = player != null && player.Gear != null ? player.Gear.Bag : null;
             int material = station.MaterialCount(bag);
             materialLabel.text = $"{station.ChargeMaterial.DisplayName} {material}";
 
@@ -108,7 +108,7 @@ namespace DustScrapper.UI
         void Charge(ChargeStation.GearSlot slot)
         {
             string name = slot.Stack.Item.DisplayName;
-            string failed = station.TryCharge(slot, player != null ? player.Inventory : null);
+            string failed = station.TryCharge(slot, player != null && player.Gear != null ? player.Gear.Bag : null);
             ShowMessage(failed ?? $"{name} 충전했다");
         }
 

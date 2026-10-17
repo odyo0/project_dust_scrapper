@@ -16,7 +16,7 @@ namespace DustScrapper.Weapons
     /// 장비를 만들고 꺼내는 방법은 무기 손(WeaponLoadout)과 같다(Weapon.Spawn).
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class SupportHand : MonoBehaviour, IWeaponHolder, IItemSlots
+    public sealed class SupportHand : MonoBehaviour, IWeaponHolder, IEquipSlots
     {
         [Tooltip("장비를 붙일 보조 손 위치. 상체 아래에 두어 조준을 따라 돌게 한다. 손잡이는 이 위치와 무기 손 위치를 맞바꿔 정한다.")]
         [SerializeField] Transform hand;
@@ -116,6 +116,12 @@ namespace DustScrapper.Weapons
             PlaceInEmptySlot(0, stack);
             return ItemStack.Empty;
         }
+
+        /// <summary>보조 칸이 비어 있고 보조 칸에 맞는 장비인가(바닥에서 주울 때).</summary>
+        public bool CanAutoEquip(ItemStack stack) => !stack.IsEmpty && equipped == null && CanPlace(0, stack);
+
+        /// <summary>빈 보조 칸에 끼운다(PutItem).</summary>
+        public ItemStack AutoEquip(ItemStack stack) => PutItem(stack);
 
         /// <summary>보조 손 장비는 아직 던지는 등 손에서 놓는 것이 없다.</summary>
         public bool TryRelease(Weapon weapon, out ItemStack stack)

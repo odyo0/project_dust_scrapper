@@ -53,7 +53,7 @@ namespace DustScrapper.UI
         public override void Bind(Station station, PlayerInteractor player)
         {
             var newTrader = station as Trader;
-            Inventory buyerBag = player != null ? player.Inventory : null;
+            Inventory buyerBag = player != null && player.Gear != null ? player.Gear.Bag : null;
             if (trader != null) trader.Counter.Sold -= OnSold;
             trader = newTrader;
             bag = buyerBag;

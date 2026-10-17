@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using DustScrapper.Combat;
 using DustScrapper.Interaction;
-using DustScrapper.Progress;
+using DustScrapper.Items;
+using DustScrapper.Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,7 +26,7 @@ namespace DustScrapper.Raid
 
         ExtractionPoint[] extractionPoints;
         DisableOnDeath playerDowned;
-        PlayerLoadout carried;
+        PlayerGear carried;
         PlayerInteractor interactor;
         float startTime;
         float pendingDeathTimer = -1f;
@@ -49,7 +50,7 @@ namespace DustScrapper.Raid
                 return;
             }
             playerDowned = player.GetComponent<DisableOnDeath>();
-            carried = PlayerLoadout.Of(player);
+            carried = player.GetComponent<PlayerGear>();
             interactor = player.GetComponent<PlayerInteractor>();
         }
 
@@ -94,7 +95,7 @@ namespace DustScrapper.Raid
         void End(bool extracted)
         {
             pendingDeathTimer = -1f;
-            Result = new RaidResult(extracted, Time.time - startTime, carried.CollectItems());
+            Result = new RaidResult(extracted, Time.time - startTime, carried != null ? carried.CollectItems() : new List<ItemStack>());
 
             // 결과를 보는 동안 판은 멈추고, 플레이어는 더 줍거나 가방을 열 수 없다(가방 화면도 닫힌다).
             Time.timeScale = 0f;

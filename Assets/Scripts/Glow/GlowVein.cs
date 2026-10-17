@@ -29,13 +29,18 @@ namespace DustScrapper.Glow
 
         void Awake() => digsLeft = digs;
 
-        public override string BlockedReason(PlayerInteractor interactor) =>
-            interactor.Inventory != null && interactor.Inventory.HasRoomFor(ore) ? null : "가방이 가득 찼다";
+        public override string BlockedReason(PlayerInteractor interactor)
+        {
+            Inventory bag = interactor.Gear != null ? interactor.Gear.Bag : null;
+            return bag != null && bag.HasRoomFor(ore) ? null : "가방이 가득 찼다";
+        }
 
         public override void Interact(PlayerInteractor interactor)
         {
+            Inventory bag = interactor.Gear != null ? interactor.Gear.Bag : null;
+            if (bag == null) return;
             int amount = Random.Range(minPerDig, maxPerDig + 1);
-            int left = interactor.Inventory.Add(new ItemStack(ore, amount));
+            int left = bag.Add(new ItemStack(ore, amount));
             if (left > 0) Debug.Log($"{name}: 가방이 차서 원석 {left}개를 못 담았다.");
 
             NoiseBus.Emit(new NoiseEvent(transform.position, noiseRadius, interactor.gameObject));

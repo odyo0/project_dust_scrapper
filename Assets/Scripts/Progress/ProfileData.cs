@@ -10,8 +10,8 @@ namespace DustScrapper.Progress
     [Serializable]
     public sealed class ProfileData
     {
-        /// <summary>저장 형식이 바뀌면 올린다. 옛 파일을 고쳐 읽을 때 쓴다.</summary>
-        public int version = 1;
+        /// <summary>저장 형식이 바뀌면 올린다. 옛 파일을 고쳐 읽을 때 쓴다. (2: 지닌 칸을 이름표 목록으로, 2026-10-17)</summary>
+        public int version = 2;
 
         /// <summary>돈(계좌). 원정에 들고 가지 않아서 쓰러져도 잃지 않는다. 바꿀 때는 Wallet을 거친다.</summary>
         public int money;

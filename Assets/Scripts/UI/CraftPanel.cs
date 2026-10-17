@@ -42,7 +42,7 @@ namespace DustScrapper.UI
         {
             Watch(null);
             bench = s as Workbench;
-            bag = bench != null && player != null ? player.Inventory : null;
+            bag = bench != null && player != null && player.Gear != null ? player.Gear.Bag : null;
             Watch(bag);
             ShowMessage(string.Empty);
             if (bench != null) Rebuild();

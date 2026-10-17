@@ -1469,11 +1469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DustScrapper::DustScrapper.UI.InventoryScreen
   input: {fileID: 6955516852487233608}
   interactor: {fileID: 3159405446461485855}
-  bag: {fileID: 8143237740379748116}
-  weapons: {fileID: 4715879237671730780}
-  support: {fileID: 1054850131724343842}
-  body: {fileID: 3884634077196169047}
-  quick: {fileID: 7641850285813904658}
+  gear: {fileID: 7149488261097901289}
   itemUser: {fileID: 2150708589762195870}
   craftStation: {fileID: 1978478012564607348}
   root: {fileID: 5520809096835013503}
@@ -8306,6 +8302,7 @@ GameObject:
   - component: {fileID: 7641850285813904658}
   - component: {fileID: 1978478012564607348}
   - component: {fileID: 2173659138882034314}
+  - component: {fileID: 7149488261097901289}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -8649,10 +8646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68865384c7cf44c8088aa4c780e04595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Interaction.PlayerInteractor
-  inventory: {fileID: 8143237740379748116}
-  loadout: {fileID: 4715879237671730780}
-  supportHand: {fileID: 1054850131724343842}
-  body: {fileID: 3884634077196169047}
+  gear: {fileID: 7149488261097901289}
   reach: 1.2
   blockers:
     serializedVersion: 2
@@ -8845,6 +8839,23 @@ MonoBehaviour:
   minScale: 0.8
   maxScale: 2.2
   pulseSpeed: 4
+--- !u!114 &7149488261097901289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6046059241362902689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6f83227d876d41fbabccdf584f2472a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Player.PlayerGear
+  bag: {fileID: 8143237740379748116}
+  weapons: {fileID: 4715879237671730780}
+  support: {fileID: 1054850131724343842}
+  body: {fileID: 3884634077196169047}
+  quick: {fileID: 7641850285813904658}
 --- !u!1 &6060339057344606049
 GameObject:
   m_ObjectHideFlags: 0

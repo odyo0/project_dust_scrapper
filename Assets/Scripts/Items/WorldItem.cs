@@ -1,6 +1,5 @@
-using DustScrapper.Equipment;
 using DustScrapper.Interaction;
-using DustScrapper.Weapons;
+using DustScrapper.Player;
 using UnityEngine;
 
 namespace DustScrapper.Items
@@ -8,8 +7,8 @@ namespace DustScrapper.Items
     /// <summary>
     /// 바닥에 놓인 물건 한 묶음. F를 누르고 있으면 줍는다.
     /// 장비는 맞는 빈 칸이 있으면 바로 끼고(무기는 무기 칸에 넣고 바로 든다), 맞는 칸이 다 차 있으면 가방으로 간다.
-    /// 들고 있거나 낀 장비와 맞바꾸지 않는다(기획). 스태프처럼 두 칸에 다 맞으면 무기 칸 빈자리 → 보조 칸 빈자리 → 가방 순서.
-    /// 몸 장비도 같다(그 부위 칸이 비어 있으면 착용, 차 있으면 가방). 나머지 물건은 가방으로 간다.
+    /// 들고 있거나 낀 장비와 맞바꾸지 않는다(기획). 어느 칸에 먼저 끼는지는 PlayerGear.EquipOrder가 정한다
+    /// (무기 칸 → 보조 칸 → 몸 장비). 끼울 칸이 없거나 장비가 아닌 물건은 가방으로 간다.
     /// 가방에 다 안 들어가면 남은 만큼 바닥에 남는다.
     /// </summary>
     public sealed class WorldItem : Interactable
@@ -54,42 +53,26 @@ namespace DustScrapper.Items
 
         public override string BlockedReason(PlayerInteractor interactor)
         {
-            if (FindEmptyHandSlot(interactor) != HandTarget.None) return null;
-            if (stack.Item is BodyGearData && interactor.Body != null && interactor.Body.HasEmptySlotFor(stack)) return null;
-            return interactor.Inventory != null && interactor.Inventory.HasRoomFor(stack.Item) ? null : "가방이 가득 찼다";
+            PlayerGear gear = interactor.Gear;
+            if (gear == null) return "가방이 가득 찼다";
+            if (gear.FindEquipSlot(stack) != null) return null;
+            return gear.Bag != null && gear.Bag.HasRoomFor(stack.Item) ? null : "가방이 가득 찼다";
         }
 
         public override void Interact(PlayerInteractor interactor)
         {
-            switch (FindEmptyHandSlot(interactor))
-            {
-                case HandTarget.WeaponSlot:
-                    SetStack(interactor.Loadout.PutWeapon(stack));
-                    return;
-                case HandTarget.SupportSlot:
-                    SetStack(interactor.SupportHand.PutItem(stack));
-                    return;
-            }
+            PlayerGear gear = interactor.Gear;
+            if (gear == null) return;
 
-            if (stack.Item is BodyGearData && interactor.Body != null && interactor.Body.TryEquip(stack))
+            IEquipSlots slot = gear.FindEquipSlot(stack);
+            if (slot != null)
             {
-                SetStack(ItemStack.Empty);
+                SetStack(slot.AutoEquip(stack));
                 return;
             }
 
-            int left = interactor.Inventory.Add(stack);
+            int left = gear.Bag != null ? gear.Bag.Add(stack) : stack.Count;
             SetStack(stack.WithCount(left));
-        }
-
-        enum HandTarget { None, WeaponSlot, SupportSlot }
-
-        /// <summary>손 장비를 넣을 빈 칸. 무기 칸 빈자리 → 보조 칸 빈자리 순서. 손 장비가 아니거나 맞는 빈 칸이 없으면 None(가방으로).</summary>
-        HandTarget FindEmptyHandSlot(PlayerInteractor interactor)
-        {
-            if (!(stack.Item is WeaponData data)) return HandTarget.None;
-            if (data.FitsWeaponSlot && interactor.Loadout != null && interactor.Loadout.HasEmptySlot) return HandTarget.WeaponSlot;
-            if (data.FitsSupportSlot && interactor.SupportHand != null && interactor.SupportHand.EquippedData == null) return HandTarget.SupportSlot;
-            return HandTarget.None;
         }
 
         void RefreshLook()

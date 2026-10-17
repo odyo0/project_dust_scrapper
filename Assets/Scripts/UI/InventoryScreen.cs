@@ -1,9 +1,7 @@
-using DustScrapper.Equipment;
 using DustScrapper.Interaction;
 using DustScrapper.Items;
 using DustScrapper.Player;
 using DustScrapper.Trade;
-using DustScrapper.Weapons;
 using TMPro;
 using UnityEngine;
 
@@ -20,11 +18,8 @@ namespace DustScrapper.UI
     {
         [SerializeField] PlayerInputReader input;
         [SerializeField] PlayerInteractor interactor;
-        [SerializeField] Inventory bag;
-        [SerializeField] WeaponLoadout weapons;
-        [SerializeField] SupportHand support;
-        [SerializeField] BodyEquipment body;
-        [SerializeField] QuickSlots quick;
+        [Tooltip("플레이어가 지닌 칸 전부. 칸 그림마다 여기서 칸을 받아 붙인다.")]
+        [SerializeField] PlayerGear gear;
         [SerializeField] ItemUser itemUser;
         [Tooltip("C로 여는 제작(몸에 지닌 Workbench)")]
         [SerializeField] Station craftStation;
@@ -52,11 +47,9 @@ namespace DustScrapper.UI
         Transform anchor;
 
         public bool IsOpen => root.activeSelf;
-        public IItemSlots Bag => bag;
-        public IItemSlots Weapons => weapons;
-        public IItemSlots Support => support;
-        public IItemSlots Body => body;
-        public IItemSlots Quick => quick;
+        /// <summary>플레이어가 지닌 칸 전부(빠른 옮기기가 칸을 고를 때 쓴다).</summary>
+        public PlayerGear Gear => gear;
+        public IItemSlots Bag => gear.Bag;
         public ItemUser ItemUser => itemUser;
 
         /// <summary>지금 열어 둔 상자의 칸. 없으면 null.</summary>
@@ -75,11 +68,11 @@ namespace DustScrapper.UI
 
         void Start()
         {
-            weaponGrid.Bind(weapons);
-            if (supportGrid != null) supportGrid.Bind(support);
-            if (bodyGrid != null) bodyGrid.Bind(body);
-            if (quickGrid != null) quickGrid.Bind(quick);
-            bagGrid.Bind(bag);
+            weaponGrid.Bind(gear.Weapons);
+            if (supportGrid != null) supportGrid.Bind(gear.Support);
+            if (bodyGrid != null) bodyGrid.Bind(gear.Body);
+            if (quickGrid != null) quickGrid.Bind(gear.Quick);
+            bagGrid.Bind(gear.Bag);
             Close();
         }
 

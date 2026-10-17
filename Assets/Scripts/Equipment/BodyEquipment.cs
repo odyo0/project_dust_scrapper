@@ -14,7 +14,7 @@ namespace DustScrapper.Equipment
     /// 다 닳은 장비는 칸에 그대로 있지만 보너스를 주지 않는다.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class BodyEquipment : MonoBehaviour, IItemSlots, ISlotLabels
+    public sealed class BodyEquipment : MonoBehaviour, IEquipSlots, ISlotLabels
     {
         [Tooltip("칸마다 끼는 부위. 칸 수 = 배열 칸 수.")]
         [SerializeField] BodySlot[] slotKinds =
@@ -115,6 +115,11 @@ namespace DustScrapper.Equipment
             }
             return false;
         }
+
+        public bool CanAutoEquip(ItemStack stack) => !stack.IsEmpty && HasEmptySlotFor(stack);
+
+        /// <summary>그 부위의 빈 칸에 낀다(TryEquip). 못 끼면 그대로 돌려준다.</summary>
+        public ItemStack AutoEquip(ItemStack stack) => TryEquip(stack) ? ItemStack.Empty : stack;
 
         public string GetSlotLabel(int index) => slotKinds[index] switch
         {

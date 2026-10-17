@@ -1,24 +1,20 @@
 using System;
-using DustScrapper.Equipment;
 using DustScrapper.Items;
-using DustScrapper.Weapons;
+using DustScrapper.Player;
 using UnityEngine;
 
 namespace DustScrapper.Interaction
 {
     /// <summary>
     /// 손이 닿는 상호작용 대상 중 가장 가까운 하나를 고르고, F를 누르고 있는 시간을 잰다.
-    /// 다 누르면 대상에게 맡기고, 대상은 이것을 통해 플레이어의 가방·무기 슬롯에 접근한다.
+    /// 다 누르면 대상에게 맡기고, 대상은 이것을 통해 플레이어가 지닌 칸 묶음(PlayerGear: 가방·무기 칸·몸 장비 …)에 접근한다.
     /// 입력은 두뇌(PlayerBrain)가 SetHeld로 알려 준다. 고른 대상과 진행도는 화면 표시(InteractionPrompt)가 읽는다.
     /// 상자를 열면 LootOpened로, 기지 시설(상인·충전대 등)을 열면 StationOpened로 알리고, 가방 화면이 그것을 듣고 창을 띄운다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class PlayerInteractor : MonoBehaviour
     {
-        [SerializeField] Inventory inventory;
-        [SerializeField] WeaponLoadout loadout;
-        [SerializeField] SupportHand supportHand;
-        [SerializeField] BodyEquipment body;
+        [SerializeField] PlayerGear gear;
 
         [Tooltip("손이 닿는 거리 (칸)")]
         [SerializeField, Min(0.1f)] float reach = 1.2f;
@@ -30,10 +26,8 @@ namespace DustScrapper.Interaction
         bool needsRelease;
         float holdTimer;
 
-        public Inventory Inventory => inventory;
-        public WeaponLoadout Loadout => loadout;
-        public SupportHand SupportHand => supportHand;
-        public BodyEquipment Body => body;
+        /// <summary>플레이어가 지닌 칸 전부. 칸을 고르는 규칙(줍는 순서 등)도 거기에 있다.</summary>
+        public PlayerGear Gear => gear;
 
         /// <summary>지금 고른 대상. 없으면 null.</summary>
         public Interactable Target { get; private set; }
@@ -60,10 +54,7 @@ namespace DustScrapper.Interaction
 
         void Awake()
         {
-            if (inventory == null) inventory = GetComponent<Inventory>();
-            if (loadout == null) loadout = GetComponent<WeaponLoadout>();
-            if (supportHand == null) supportHand = GetComponent<SupportHand>();
-            if (body == null) body = GetComponent<BodyEquipment>();
+            if (gear == null) gear = GetComponent<PlayerGear>();
         }
 
         void OnDisable()

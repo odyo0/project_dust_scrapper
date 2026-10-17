@@ -43,7 +43,7 @@ namespace DustScrapper.UI
         public override void Bind(Station s, PlayerInteractor player)
         {
             station = s as RefineStation;
-            bag = station != null && player != null ? player.Inventory : null;
+            bag = station != null && player != null && player.Gear != null ? player.Gear.Bag : null;
             Watch(station);
             ShowMessage(string.Empty);
             if (station != null) Refresh();

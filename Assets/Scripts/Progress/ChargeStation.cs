@@ -44,8 +44,8 @@ namespace DustScrapper.Progress
         public List<GearSlot> FindGear(PlayerInteractor player)
         {
             var found = new List<GearSlot>();
-            Collect(player != null ? player.Body : null, found);
-            Collect(player != null ? player.Inventory : null, found);
+            Collect(player != null && player.Gear != null ? player.Gear.Body : null, found);
+            Collect(player != null && player.Gear != null ? player.Gear.Bag : null, found);
             Collect(Storage, found);
             return found;
         }

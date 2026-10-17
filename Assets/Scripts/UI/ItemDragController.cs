@@ -99,22 +99,22 @@ namespace DustScrapper.UI
                 screen.ItemUser.Use(from, slot.Index);
                 return;
             }
-            if (from == screen.Loot || from == screen.Weapons || from == screen.Support || from == screen.Body || from == screen.Quick)
+            // 상자나 지닌 칸(가방 말고)에서: 가방으로.
+            if (from == screen.Loot || (from != screen.Bag && screen.Gear.Holds(from)))
             {
                 ItemTransfer.QuickMove(from, slot.Index, screen.Bag);
                 return;
             }
             if (from != screen.Bag) return;
 
-            // 가방에서: 상자를 열었으면 상자로. 아니면 장비 칸으로(몸 장비는 몸 칸, 손 장비는 무기 칸 먼저, 자리가 없거나 맞지 않으면 보조 칸).
+            // 가방에서: 상자를 열었으면 상자로. 아니면 바닥에서 주울 때와 같은 순서로 낄 수 있는 첫 장착 칸으로(PlayerGear.EquipOrder).
             if (screen.Loot != null)
             {
                 ItemTransfer.QuickMove(from, slot.Index, screen.Loot);
                 return;
             }
-            if (screen.Body != null && ItemTransfer.QuickMove(from, slot.Index, screen.Body)) return;
-            if (screen.Weapons.CanPlace(0, slot.Stack) && ItemTransfer.QuickMove(from, slot.Index, screen.Weapons)) return;
-            if (screen.Support != null && screen.Support.CanPlace(0, slot.Stack)) ItemTransfer.QuickMove(from, slot.Index, screen.Support);
+            IEquipSlots target = screen.Gear.FindEquipSlot(slot.Stack);
+            if (target != null) ItemTransfer.QuickMove(from, slot.Index, target);
         }
 
         void CancelDrag()

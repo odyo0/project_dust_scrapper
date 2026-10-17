@@ -17,7 +17,7 @@ namespace DustScrapper.Weapons
     /// 주운 물건을 담는 가방(Inventory)과는 따로이고, 총이 재장전할 탄만 가방에서 꺼낸다.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class WeaponLoadout : MonoBehaviour, IItemSlots, IWeaponHolder
+    public sealed class WeaponLoadout : MonoBehaviour, IEquipSlots, IWeaponHolder
     {
         [Tooltip("무기를 붙일 손 위치. 상체 아래에 두어 조준을 따라 돌게 한다. 손잡이는 이 위치와 보조 손 위치를 맞바꿔 정한다.")]
         [SerializeField] Transform hand;
@@ -159,6 +159,12 @@ namespace DustScrapper.Weapons
             Changed?.Invoke();
             return ItemStack.Empty;
         }
+
+        /// <summary>무기 칸에 맞는 장비이고 빈 슬롯이 있는가(바닥에서 주울 때).</summary>
+        public bool CanAutoEquip(ItemStack stack) => !stack.IsEmpty && stack.Item is WeaponData data && data.FitsWeaponSlot && HasEmptySlot;
+
+        /// <summary>빈 슬롯에 넣고 바로 꺼내 든다(PutWeapon).</summary>
+        public ItemStack AutoEquip(ItemStack stack) => CanAutoEquip(stack) ? PutWeapon(stack) : stack;
 
         /// <summary>그 슬롯의 무기를 물건 묶음으로 본다(총은 지금 탄창 탄 수를 함께). 빈 슬롯이면 빈 묶음.</summary>
         public ItemStack GetSlot(int index)
