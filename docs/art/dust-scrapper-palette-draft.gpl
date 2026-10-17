@@ -1,0 +1,84 @@
+GIMP Palette
+Name: Dust Scrapper (draft 2026-10-17)
+Columns: 8
+#
+ 20  19  18 ink
+ 31  29  27 ink
+ 62  60  55 concrete
+ 85  82  74 concrete
+110 106  95 concrete
+138 133 119 concrete
+168 162 147 concrete
+ 43  42  40 asphalt
+ 55  53  50 asphalt
+ 69  66  61 asphalt
+ 59  46  34 dirt
+ 85  67  47 dirt
+110  90  63 dirt
+136 112  79 dirt
+ 47  58  31 grass
+ 69  83  42 grass
+ 95 110  53 grass
+126 138  69 grass
+163 163  90 grass
+ 63  38  32 brick
+ 90  52  38 brick
+116  67  47 brick
+140  86  57 brick
+ 76  53  36 wood
+107  76  48 wood
+143 106  66 wood
+176 138  90 wood
+ 90  58  38 rust
+138  85  48 rust
+172 111  57 rust
+ 44  57  66 steel
+ 73  91 101 steel
+111 133 140 steel
+157 176 176 steel
+ 56  72  82 water
+ 90 113 122 water
+201 212 208 water
+107  68  48 skin
+160 106  72 skin
+201 150 115 skin
+ 42  29  22 hair
+ 69  48  31 hair
+ 45  54  70 denim
+ 68  80 103 denim
+100 112 138 denim
+ 61  68  38 olive
+ 89  96  58 olive
+122 125  79 olive
+ 62  52  35 pack
+ 92  77  51 pack
+125 106  72 pack
+ 46  38  34 rag
+ 70  58  51 rag
+ 97  83  74 rag
+110 104  98 pale
+148 139 128 pale
+ 78  23  20 blood
+122  35  28 blood
+138 106  36 sign
+201 154  58 sign
+216 201 168 light
+239 230 207 light
+169 178 189 hero_hair
+223 229 236 hero_hair
+251 252 253 hero_hair
+ 85  96 110 hero_coat
+123 135 150 hero_coat
+154 166 180 hero_coat
+ 28  39  88 hero_navy
+ 44  63 142 hero_navy
+ 71 103 198 hero_navy
+ 42  58 134 hero_top
+ 63  92 188 hero_top
+106 138 224 hero_top
+ 36  29  31 hero_tights
+ 56  45  45 hero_tights
+154 166 180 hero_glove
+207 216 226 hero_glove
+238 242 246 hero_glove
+ 22  28  48 hero_outline

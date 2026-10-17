@@ -120,6 +120,8 @@ Packages/packages-lock.json linguist-generated
 *.wmv                   lfs
 
 # Images
+*.ase                   lfs
+*.aseprite              lfs
 *.bmp                   lfs
 *.exr                   lfs
 *.gif                   lfs
