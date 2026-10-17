@@ -22,6 +22,12 @@ namespace DustScrapper.Interaction
         public virtual float HoldTime => holdTime;
         public Vector2 Position => transform.position;
 
+        /// <summary>
+        /// from에서 가장 가까운 이 대상의 지점. 손이 닿는지는 여기까지의 거리로 잰다.
+        /// 보통은 대상 가운데 한 점이고, 문처럼 폭이 넓은 것은 덮어써서 문간 어디에 서 있어도 닿게 한다.
+        /// </summary>
+        public virtual Vector2 ClosestPoint(Vector2 from) => Position;
+
         /// <summary>지금 상호작용 대상이 될 수 있는가. 이미 켠 신호기처럼 다 쓴 것은 false로 둬서 고르지 않게 한다.</summary>
         public virtual bool IsAvailable => true;
 

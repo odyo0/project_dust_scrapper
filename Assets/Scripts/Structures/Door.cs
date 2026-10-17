@@ -10,11 +10,11 @@ using UnityEngine;
 namespace DustScrapper.Structures
 {
     /// <summary>
-    /// 문 하나(문짝 한 짝 또는 양쪽 문 두 짝). 문짝은 물리로 움직이는 DoorLeaf이고, 이 스크립트는 문짝들을 묶어 바깥과 잇는다.
-    /// F를 바로 누르면(누르고 있기 아님) 닫힌 문은 누른 사람 반대쪽으로 밀어 열고, 열린 문은 닫히는 쪽으로 당긴다(기획 2026-10-17).
-    /// 닫힌 문은 걸쇠가 걸려 F·발차기로만 열리고, 열린 문은 몸에 밀린다(DoorLeaf).
-    /// 적은 다가오면 스스로 밀어 연다(길찾기는 문간을 지나갈 수 있는 곳으로 본다: NavPassable).
-    /// 걷어차이면(IBashable) 차기 세기에 따라 문짝이 세게 돌거나 날아간다 — 버티는 힘은 문 종류(DoorData)가 정한다.
+    /// 문 하나(문짝 한 짝 또는 양쪽 문 두 짝). 문짝(DoorLeaf)은 각도를 스크립트로 돌리고, 이 스크립트는 문짝들을 묶어 바깥과 잇는다.
+    /// F를 바로 누르면(누르고 있기 아님) 닫힌 문은 누른 사람 반대쪽으로 90도 열고, 열린 문은 닫는다(기획 2026-10-17, 배그처럼).
+    /// 문 옆에 서 있어도 닿게, 손이 닿는지는 문간 전체와 열린 문짝까지의 가장 가까운 거리로 잰다(ClosestPoint).
+    /// 적은 다가오면 스스로 연다(길찾기는 문간을 지나갈 수 있는 곳으로 본다: NavPassable).
+    /// 걷어차이면(IBashable) 차기 세기에 따라 문짝이 아주 빠르게 열리거나 날아간다 — 버티는 힘은 문 종류(DoorData)가 정한다.
     /// 구역 바깥문이면 구역(MapZone)에 연결해 두어, 열려 있는 동안 구역 안팎으로 소리가 더 새게 한다(IZoneOpening).
     /// </summary>
     [RequireComponent(typeof(NavPassable))]
@@ -30,6 +30,9 @@ namespace DustScrapper.Structures
         [SerializeField] DoorData data;
         [Tooltip("문짝들. 양쪽 문이면 두 짝을 문간 양 끝에 두고 서로 마주 보게 한다.")]
         [SerializeField] DoorLeaf[] leaves;
+
+        [Tooltip("문간 깊이(벽 두께, 칸). F가 닿는지 잴 때 문간 가운데 선을 플레이어 쪽 벽면까지 당기는 데 쓴다.")]
+        [SerializeField, Min(0f)] float doorwayDepth = 1f;
 
         [Header("적")]
         [Tooltip("움직이는 적이 문 가운데에서 이 거리(칸) 안에 오면 문을 민다")]
@@ -50,14 +53,14 @@ namespace DustScrapper.Structures
             }
         }
 
-        /// <summary>남은 문짝이 모두 닫힌 쪽에 있는가(F를 누르면 열 차례인가).</summary>
+        /// <summary>남은 문짝이 모두 닫혀 있거나 닫히는 중인가(F를 누르면 열 차례인가).</summary>
         bool IsShut
         {
             get
             {
                 foreach (var leaf in leaves)
                 {
-                    if (!leaf.IsDetached && !leaf.IsLatched && Mathf.Abs(leaf.Angle) > data.OpenThresholdAngle) return false;
+                    if (!leaf.IsDetached && !leaf.IsClosing) return false;
                 }
                 return true;
             }
@@ -85,7 +88,7 @@ namespace DustScrapper.Structures
         void Awake()
         {
             if (data == null) Debug.LogError($"{name}: 문 종류(DoorData)가 비어 있다.", this);
-            foreach (var leaf in leaves) leaf.Setup(data, this, leaves);
+            foreach (var leaf in leaves) leaf.Setup(data, this);
         }
 
         void Update()
@@ -96,12 +99,29 @@ namespace DustScrapper.Structures
             if (IsShut) OpenForPassingEnemy();
         }
 
+        /// <summary>문간 전체와 열린 문짝 중 from에서 가장 가까운 지점.</summary>
+        public override Vector2 ClosestPoint(Vector2 from)
+        {
+            Vector2 best = Position;
+            float bestDistance = float.MaxValue;
+            foreach (var leaf in leaves)
+            {
+                if (leaf.IsDetached) continue;
+                Vector2 point = leaf.ClosestPoint(from, Mathf.Max(0f, doorwayDepth * 0.5f - 0.05f));
+                float distance = (point - from).sqrMagnitude;
+                if (distance >= bestDistance) continue;
+                best = point;
+                bestDistance = distance;
+            }
+            return best;
+        }
+
         public override string BlockedReason(PlayerInteractor interactor) => null;
 
         public override void Interact(PlayerInteractor interactor)
         {
-            if (IsShut) PushAwayFrom(interactor.transform.position, interactor.gameObject);
-            else PullClosed(interactor.gameObject);
+            if (IsShut) OpenAwayFrom(interactor.transform.position, interactor.gameObject);
+            else Close(interactor.gameObject);
         }
 
         public void Bash(Vector2 from, Vector2 direction, float force, GameObject source)
@@ -127,20 +147,20 @@ namespace DustScrapper.Structures
                 if (enemy == null || !enemy.isActiveAndEnabled) continue;
                 // 제자리에 서 있거나 두리번거리는 적은 문을 건드리지 않는다.
                 if (enemy.State == EnemyState.Idle || enemy.State == EnemyState.Search) continue;
-                PushAwayFrom(enemy.transform.position, enemy.gameObject);
+                OpenAwayFrom(enemy.transform.position, enemy.gameObject);
                 return;
             }
         }
 
-        void PushAwayFrom(Vector2 from, GameObject source)
+        void OpenAwayFrom(Vector2 from, GameObject source)
         {
-            foreach (var leaf in leaves) leaf.Push(leaf.SignAwayFrom(from));
+            foreach (var leaf in leaves) leaf.Open(leaf.SignAwayFrom(from));
             NoiseBus.Emit(new NoiseEvent(Position, data.NoiseRadius, source));
         }
 
-        void PullClosed(GameObject source)
+        void Close(GameObject source)
         {
-            foreach (var leaf in leaves) leaf.PullClosed();
+            foreach (var leaf in leaves) leaf.Close();
             NoiseBus.Emit(new NoiseEvent(Position, data.NoiseRadius, source));
         }
     }
