@@ -11,7 +11,8 @@ namespace DustScrapper.Structures
     /// 문짝 충돌체(자식 Panel, 벽 레이어)는 시야·총알을 늘 각도대로 막는다. 사람(움직이는 몸)은
     /// 문짝이 움직이는 동안에는 통과하고, 멈춘 문짝에는 막힌다. 멈춘 순간 문짝에 끼인 사람은 몸 중심 쪽으로 살짝 밀려 나간다(끼인 채 통과하지 않게).
     /// 걷어차이면 아주 빠르게 열리며 쓸고 지나간 자리의 사람이 맞아 쓰러진다. 버티는 힘보다 세게 차이면
-    /// 돌쩌귀가 떨어져 날아가고(이때만 물리 몸이 된다), 멈추면 그 자리에 낮은 엄폐물(Cover 레이어)로 남는다.
+    /// 돌쩌귀가 떨어져 날아가고(이때부터 물리 몸이 된다), 느려지면 바닥에 굴러다니는 소품이 된다 — 낮은 엄폐물(Cover 레이어)이지만
+    /// 고정되지 않아 몸으로 밀면 밀린다. 길찾기는 이 문짝을 장애물로 보지 않는다(적은 밀고 지나간다).
     /// 닫힌 자리 = 처음 놓인 자리. 처음 놓인 자리에서 이 물체(돌쩌귀)의 오른쪽(+x)이 문짝 방향이다.
     /// </summary>
     // 끼인 사람을 밀어낼 때 그 사람의 이동(ActorMotor)이 정한 속도를 고쳐야 해서, 이동 스크립트들보다 뒤에 돈다.
@@ -19,8 +20,10 @@ namespace DustScrapper.Structures
     [RequireComponent(typeof(Rigidbody2D))]
     public sealed class DoorLeaf : MonoBehaviour
     {
-        /// <summary>날아가던 문짝이 이보다 느려지면 멈춘 것으로 친다 (칸/초).</summary>
+        /// <summary>날아가던 문짝이 이보다 느려지면 소품이 된다 (칸/초).</summary>
         const float SettleSpeed = 0.4f;
+        /// <summary>소품이 된 문짝이 밀린 뒤 멈추는 정도. 클수록 덜 미끄러진다.</summary>
+        const float PropDamping = 6f;
         /// <summary>날아가는 문짝이 이보다 빠를 때만 부딪힌 사람이 맞는다 (칸/초).</summary>
         const float FlyHitSpeed = 3f;
         /// <summary>문간에서 F가 닿는 선을 양 끝에서 이만큼 줄인다(끝은 문틀 벽에 붙어 있어 손이 벽에 막힌 것으로 잡히므로).</summary>
@@ -44,6 +47,7 @@ namespace DustScrapper.Structures
         float targetAngle;
         float speed;
         bool kicked;
+        bool flying;
         float length;
         Vector2 hinge;
 
@@ -273,6 +277,9 @@ namespace DustScrapper.Structures
             passing.Clear();
 
             transform.SetParent(owner.transform.parent, true);
+            // 문에서 빠지면 문의 NavPassable도 떠나므로, 길찾기가 이 문짝을 벽으로 보지 않게 따로 붙인다.
+            if (GetComponent<NavPassable>() == null) gameObject.AddComponent<NavPassable>();
+            flying = true;
             body.bodyType = RigidbodyType2D.Dynamic;
             body.linearDamping = 3f;
             body.angularDamping = 3f;
@@ -283,9 +290,9 @@ namespace DustScrapper.Structures
 
         void UpdateFlying()
         {
-            if (body.bodyType != RigidbodyType2D.Dynamic) return;
+            if (!flying) return;
             if (body.linearVelocity.magnitude >= FlyHitSpeed) HitWhileFlying();
-            if (body.linearVelocity.magnitude < SettleSpeed && Mathf.Abs(body.angularVelocity) < 30f) Settle();
+            if (body.linearVelocity.magnitude < SettleSpeed && Mathf.Abs(body.angularVelocity) < 30f) BecomeProp();
         }
 
         /// <summary>날아가는 문짝에 닿은 사람이 맞는다(한 번씩).</summary>
@@ -308,25 +315,18 @@ namespace DustScrapper.Structures
             }
         }
 
-        /// <summary>날아간 문짝이 멈췄다. 그 자리에 낮은 엄폐물로 남는다(몸·총알은 막고 시야는 안 막음).</summary>
-        void Settle()
+        /// <summary>
+        /// 날아간 문짝이 느려졌다. 바닥에 놓인 소품이 된다: 낮은 엄폐물(몸·총알은 막고 시야는 안 막음)이지만 고정되지 않아
+        /// 몸으로 밀면 밀린다(기획 2026-10-17). 더는 부딪혀도 맞지 않는다.
+        /// </summary>
+        void BecomeProp()
         {
-            body.linearVelocity = Vector2.zero;
-            body.angularVelocity = 0f;
-            body.bodyType = RigidbodyType2D.Static;
+            flying = false;
+            body.linearDamping = PropDamping;
+            body.angularDamping = PropDamping;
             int cover = LayerMask.NameToLayer("Cover");
-            Bounds area = default;
-            for (int i = 0; i < leafColliders.Length; i++)
-            {
-                if (cover >= 0) leafColliders[i].gameObject.layer = cover;
-                if (i == 0) area = leafColliders[i].bounds;
-                else area.Encapsulate(leafColliders[i].bounds);
-            }
-            if (NavGrid.Active != null)
-            {
-                area.Expand(2f);
-                NavGrid.Active.RebuildArea(area);
-            }
+            if (cover >= 0)
+                foreach (var own in leafColliders) own.gameObject.layer = cover;
             enabled = false;
         }
 

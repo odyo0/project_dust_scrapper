@@ -1000,7 +1000,7 @@ GameObject:
   - component: {fileID: 113105052}
   - component: {fileID: 113105051}
   m_Layer: 0
-  m_Name: Door_StoreFront
+  m_Name: Door_StoreFront_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1015,12 +1015,11 @@ Transform:
   m_GameObject: {fileID: 113105049}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.5, y: 6.5, z: 0}
+  m_LocalPosition: {x: -26.25, y: 6.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1191728795}
-  - {fileID: 629649964}
   m_Father: {fileID: 1469393554}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &113105051
@@ -1040,7 +1039,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 4665a55116b654fd2abdc9a7b671f6f3, type: 2}
   leaves:
   - {fileID: 1191728796}
-  - {fileID: 629649965}
+  doorwayDepth: 1
   enemyOpenRadius: 1.3
 --- !u!114 &113105052
 MonoBehaviour:
@@ -1381,6 +1380,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: d60e1a440490e4a718c96dbe21dde0e9, type: 2}
   leaves:
   - {fileID: 540152850}
+  doorwayDepth: 1
   enemyOpenRadius: 1.3
 --- !u!114 &136440409
 MonoBehaviour:
@@ -2023,6 +2023,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: d60e1a440490e4a718c96dbe21dde0e9, type: 2}
   leaves:
   - {fileID: 161530604}
+  doorwayDepth: 1
   enemyOpenRadius: 1.3
 --- !u!114 &202861797
 MonoBehaviour:
@@ -3846,6 +3847,71 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &407050066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 407050067}
+  - component: {fileID: 407050069}
+  - component: {fileID: 407050068}
+  m_Layer: 0
+  m_Name: Door_StoreFront_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &407050067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407050066}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -24.75, y: 6.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 629649964}
+  m_Father: {fileID: 1469393554}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &407050068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407050066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e221ce956e86b4019b7a70f61369de45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
+  holdTime: 0.15
+  displayName: "\uC0C1\uC810 \uC815\uBB38"
+  data: {fileID: 11400000, guid: 4665a55116b654fd2abdc9a7b671f6f3, type: 2}
+  leaves:
+  - {fileID: 629649965}
+  doorwayDepth: 1
+  enemyOpenRadius: 1.3
+--- !u!114 &407050069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407050066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee11c1a693b994c01b2600098a437206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Navigation.NavPassable
 --- !u!1 &433480315
 GameObject:
   m_ObjectHideFlags: 0
@@ -5838,13 +5904,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629649963}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: -0.00000004371139}
-  m_LocalPosition: {x: 1.5, y: -0, z: -0}
+  m_LocalRotation: {x: -0, y: -0, z: 1, w: -0.00000004371139}
+  m_LocalPosition: {x: 0.75, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 965229314}
-  m_Father: {fileID: 113105050}
+  m_Father: {fileID: 407050067}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &629649965
 MonoBehaviour:
@@ -6407,6 +6473,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: d60e1a440490e4a718c96dbe21dde0e9, type: 2}
   leaves:
   - {fileID: 1044374491}
+  doorwayDepth: 1
   enemyOpenRadius: 1.3
 --- !u!114 &684351647
 MonoBehaviour:
@@ -6784,6 +6851,7 @@ Transform:
   - {fileID: 136440407}
   - {fileID: 202861795}
   - {fileID: 1792071304}
+  - {fileID: 1384934226}
   m_Father: {fileID: 921220188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &711719473
@@ -8191,6 +8259,7 @@ MonoBehaviour:
   - {fileID: 1761644660}
   - {fileID: 1188278767}
   - {fileID: 1995549113}
+  - {fileID: 1384934227}
 --- !u!1 &924638030
 GameObject:
   m_ObjectHideFlags: 0
@@ -9596,6 +9665,7 @@ MonoBehaviour:
   - {fileID: 1138789260}
   - {fileID: 684351646}
   - {fileID: 40569437}
+  - {fileID: 407050068}
 --- !u!1 &1044374489
 GameObject:
   m_ObjectHideFlags: 0
@@ -9858,6 +9928,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: d60e1a440490e4a718c96dbe21dde0e9, type: 2}
   leaves:
   - {fileID: 1812500090}
+  doorwayDepth: 1
   enemyOpenRadius: 1.3
 --- !u!114 &1086428024
 MonoBehaviour:
@@ -11383,7 +11454,7 @@ Transform:
   m_GameObject: {fileID: 1191728794}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 0, z: 0}
+  m_LocalPosition: {x: -0.75, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13161,6 +13232,71 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &1384934225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1384934226}
+  - component: {fileID: 1384934228}
+  - component: {fileID: 1384934227}
+  m_Layer: 0
+  m_Name: Door_PoliceFront_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1384934226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384934225}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 26.25, y: 8.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2116708553}
+  m_Father: {fileID: 704660108}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1384934227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384934225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e221ce956e86b4019b7a70f61369de45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.Door
+  holdTime: 0.15
+  displayName: "\uACBD\uCC30\uC11C \uC815\uBB38"
+  data: {fileID: 11400000, guid: 4665a55116b654fd2abdc9a7b671f6f3, type: 2}
+  leaves:
+  - {fileID: 2116708554}
+  doorwayDepth: 1
+  enemyOpenRadius: 1.3
+--- !u!114 &1384934228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384934225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee11c1a693b994c01b2600098a437206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Navigation.NavPassable
 --- !u!1 &1389190575
 GameObject:
   m_ObjectHideFlags: 0
@@ -14179,6 +14315,7 @@ Transform:
   - {fileID: 684351645}
   - {fileID: 40569436}
   - {fileID: 1086428022}
+  - {fileID: 407050067}
   m_Father: {fileID: 1044159912}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1481690461
@@ -15303,7 +15440,7 @@ Transform:
   m_GameObject: {fileID: 1619741437}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 0, z: 0}
+  m_LocalPosition: {x: -0.75, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16700,6 +16837,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: d60e1a440490e4a718c96dbe21dde0e9, type: 2}
   leaves:
   - {fileID: 1228978074}
+  doorwayDepth: 1
   enemyOpenRadius: 1.3
 --- !u!114 &1761644661
 MonoBehaviour:
@@ -17178,6 +17316,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: d60e1a440490e4a718c96dbe21dde0e9, type: 2}
   leaves:
   - {fileID: 648516465}
+  doorwayDepth: 1
   enemyOpenRadius: 1.3
 --- !u!114 &1792071306
 MonoBehaviour:
@@ -18991,7 +19130,7 @@ GameObject:
   - component: {fileID: 2032314602}
   - component: {fileID: 2032314601}
   m_Layer: 0
-  m_Name: Door_PoliceFront
+  m_Name: Door_PoliceFront_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19006,12 +19145,11 @@ Transform:
   m_GameObject: {fileID: 2032314599}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.5, y: 8.5, z: 0}
+  m_LocalPosition: {x: 24.75, y: 8.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1619741438}
-  - {fileID: 2116708553}
   m_Father: {fileID: 704660108}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2032314601
@@ -19031,7 +19169,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 4665a55116b654fd2abdc9a7b671f6f3, type: 2}
   leaves:
   - {fileID: 1619741439}
-  - {fileID: 2116708554}
+  doorwayDepth: 1
   enemyOpenRadius: 1.3
 --- !u!114 &2032314602
 MonoBehaviour:
@@ -20067,13 +20205,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116708552}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: -0.00000004371139}
-  m_LocalPosition: {x: 1.5, y: -0, z: -0}
+  m_LocalRotation: {x: -0, y: -0, z: 1, w: -0.00000004371139}
+  m_LocalPosition: {x: 0.75, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1183182868}
-  m_Father: {fileID: 2032314600}
+  m_Father: {fileID: 1384934226}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2116708554
 MonoBehaviour:
