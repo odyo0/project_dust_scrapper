@@ -27,8 +27,10 @@ namespace DustScrapper.Weapons
         [Header("맞혔을 때")]
         [Tooltip("맞은 대상에게 거는 디버프 (비워 두면 없음). 예: 샷건 발차기의 비틀거림")]
         [SerializeField] StatusEffectData hitEffect;
-        [Tooltip("걷어차기인가. 켜면 문처럼 걷어차이는 것(IBashable)에 닿을 때 그것이 반응한다(문이 확 열리며 뒤의 적이 쓰러짐).")]
+        [Tooltip("걷어차기인가. 켜면 문처럼 걷어차이는 것(IBashable)에 닿을 때 그것이 반응한다(문이 세게 열리거나 문짝이 날아감).")]
         [SerializeField] bool bashes;
+        [Tooltip("걷어차기 세기. 문은 이 세기를 자기 버티는 힘(DoorData.kickResistance)과 견줘 세게 열리거나 문짝이 날아간다.")]
+        [SerializeField, Min(0f)] float bashForce = 10f;
 
         public float Reach => reach;
         public float ArcAngle => arcAngle;
@@ -37,5 +39,6 @@ namespace DustScrapper.Weapons
         public float RecoveryTime => recoveryTime;
         public StatusEffectData HitEffect => hitEffect;
         public bool Bashes => bashes;
+        public float BashForce => bashForce;
     }
 }

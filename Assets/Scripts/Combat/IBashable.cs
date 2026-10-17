@@ -8,7 +8,7 @@ namespace DustScrapper.Combat
     /// </summary>
     public interface IBashable
     {
-        /// <summary>from에서 direction 쪽으로 걷어차였다. source는 걷어찬 캐릭터.</summary>
-        void Bash(Vector2 from, Vector2 direction, GameObject source);
+        /// <summary>from에서 direction 쪽으로 force 세기로 걷어차였다. source는 걷어찬 캐릭터.</summary>
+        void Bash(Vector2 from, Vector2 direction, float force, GameObject source);
     }
 }

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f765967a9e5d4b51bdf1361512cd7a8, type: 3}
+  m_Name: Door_Wood
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Structures.DoorData
+  leafMass: 2
+  swingDamping: 4
+  maxAngle: 100
+  openSpeed: 360
+  openTargetAngle: 90
+  closeSpeed: 300
+  pushTorque: 60
+  pushTime: 0.8
+  latchAngle: 4
+  latchSpeed: 90
+  openThresholdAngle: 15
+  kickResistance: 8
+  kickSpinSpeed: 900
+  flySpeedPerForce: 1.2
+  kickNoiseRadius: 10
+  hitSpeed: 6
+  hitDamage: 10
+  hitKnockback: 10
+  hitEffect: {fileID: 11400000, guid: c1a7a37d1019640b4b5efc206fef2467, type: 2}
+  noiseRadius: 3

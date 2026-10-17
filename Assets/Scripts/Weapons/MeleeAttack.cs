@@ -155,7 +155,7 @@ namespace DustScrapper.Weapons
                     IBashable bashable = collider.GetComponentInParent<IBashable>();
                     if (bashable != null)
                     {
-                        if (bashedThisSwing.Add(bashable)) bashable.Bash(origin, aim, Holder.gameObject);
+                        if (bashedThisSwing.Add(bashable)) bashable.Bash(origin, aim, melee.BashForce, Holder.gameObject);
                         continue;
                     }
                 }
