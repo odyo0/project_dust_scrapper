@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text;
 using DustScrapper.Crafting;
 using DustScrapper.Interaction;
@@ -20,63 +19,37 @@ namespace DustScrapper.UI
         [SerializeField] TMP_Text titleLabel;
         [SerializeField] Button rowTemplate;
         [SerializeField] RectTransform rowParent;
-        [SerializeField] TMP_Text messageLabel;
-        [SerializeField, Min(0f)] float messageDuration = 2f;
-        [SerializeField, Range(0f, 1f)] float disabledTextAlpha = 0.4f;
 
-        readonly List<Button> rows = new();
+        ButtonRows rows;
         Workbench bench;
         Inventory bag;
-        bool dirty;
-        float messageTimer;
 
-        void Awake() => rowTemplate.gameObject.SetActive(false);
+        void Awake() => rows = new ButtonRows(rowTemplate, rowParent);
 
         void OnEnable() => BaseUpgrades.Changed += MarkDirty;
         void OnDisable() => BaseUpgrades.Changed -= MarkDirty;
-        void OnDestroy() => Watch(null);
 
         public override bool Shows(Station s) => s is Workbench;
 
         public override void Bind(Station s, PlayerInteractor player)
         {
-            Watch(null);
             bench = s as Workbench;
             bag = bench != null && player != null && player.Gear != null ? player.Gear.Bag : null;
             Watch(bag);
             ShowMessage(string.Empty);
-            if (bench != null) Rebuild();
+            MarkDirty();
         }
 
-        void Watch(Inventory newBag)
+        protected override void Redraw()
         {
-            if (bag != null) bag.Changed -= MarkDirty;
-            if (newBag != null) newBag.Changed += MarkDirty;
-        }
-
-        void MarkDirty() => dirty = true;
-
-        void LateUpdate()
-        {
-            if (dirty && bench != null) Rebuild();
-
-            if (messageTimer <= 0f) return;
-            messageTimer -= Time.unscaledDeltaTime;
-            if (messageTimer <= 0f) messageLabel.text = string.Empty;
-        }
-
-        void Rebuild()
-        {
-            dirty = false;
-            foreach (var row in rows) Destroy(row.gameObject);
             rows.Clear();
-            titleLabel.text = bench.TargetName;
+            if (bench == null) return;
 
+            titleLabel.text = bench.TargetName;
             foreach (var recipe in bench.Recipes)
             {
                 if (recipe == null || recipe.Output == null) continue;
                 bool known = recipe.IsKnown;
-                bool usable = known && Workbench.HasInputs(recipe, bag);
 
                 var text = new StringBuilder();
                 text.Append(recipe.Output.DisplayName);
@@ -91,15 +64,9 @@ namespace DustScrapper.UI
                 }
                 if (!known) text.Append("   (건설판에서 배움)");
 
-                Button row = Instantiate(rowTemplate, rowParent);
-                row.gameObject.SetActive(true);
-                TMP_Text label = row.GetComponentInChildren<TMP_Text>(true);
-                label.text = text.ToString();
-                label.alpha = usable ? 1f : disabledTextAlpha;
-                row.interactable = usable;
                 RecipeData target = recipe;
-                row.onClick.AddListener(() => Craft(target));
-                rows.Add(row);
+                Button row = rows.Add(text.ToString(), () => Craft(target));
+                SetUsable(row, known && Workbench.HasInputs(recipe, bag));
             }
         }
 
@@ -107,12 +74,6 @@ namespace DustScrapper.UI
         {
             string failed = bench.TryCraft(recipe, bag);
             ShowMessage(failed ?? $"{recipe.Output.DisplayName} 만들었다");
-        }
-
-        void ShowMessage(string text)
-        {
-            messageLabel.text = text;
-            messageTimer = string.IsNullOrEmpty(text) ? 0f : messageDuration;
         }
     }
 }

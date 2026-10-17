@@ -23,50 +23,38 @@ namespace DustScrapper.UI
         [SerializeField] RectTransform offerParent;
         [Tooltip("판매 칸 (칸 하나)")]
         [SerializeField] ItemGridView sellGrid;
-        [Tooltip("방금 거래 결과 (판 값, 못 산 이유)")]
-        [SerializeField] TMP_Text messageLabel;
-        [SerializeField, Min(0f)] float messageDuration = 2f;
-        [Tooltip("돈이 모자란 줄의 글자 진하기")]
-        [SerializeField, Range(0f, 1f)] float unaffordableTextAlpha = 0.4f;
 
-        readonly List<Button> rows = new();
+        ButtonRows rows;
         Trader trader;
         Inventory bag;
-        float messageTimer;
 
-        void Awake() => offerTemplate.gameObject.SetActive(false);
+        void Awake() => rows = new ButtonRows(offerTemplate, offerParent);
 
-        void OnEnable() => Wallet.Changed += RefreshAffordable;
-        void OnDisable() => Wallet.Changed -= RefreshAffordable;
+        void OnEnable() => Wallet.Changed += MarkDirty;
+        void OnDisable() => Wallet.Changed -= MarkDirty;
 
-        void Update()
+        protected override void OnDestroy()
         {
-            if (messageTimer <= 0f) return;
-            // 게임 시간이 아니라 실제 시간으로 센다(창은 게임이 멈춰도 쓸 수 있게).
-            messageTimer -= Time.unscaledDeltaTime;
-            if (messageTimer <= 0f) messageLabel.text = string.Empty;
+            base.OnDestroy();
+            if (trader != null) trader.Counter.Sold -= OnSold;
         }
 
         public override bool Shows(Station station) => station is Trader;
 
-        /// <summary>보여 줄 상인을 바꾼다. null이면 비운다. 산 물건은 플레이어 가방에 먼저 넣는다.</summary>
         public override void Bind(Station station, PlayerInteractor player)
         {
-            var newTrader = station as Trader;
-            Inventory buyerBag = player != null && player.Gear != null ? player.Gear.Bag : null;
             if (trader != null) trader.Counter.Sold -= OnSold;
-            trader = newTrader;
-            bag = buyerBag;
+            trader = station as Trader;
+            bag = player != null && player.Gear != null ? player.Gear.Bag : null;
             if (trader != null) trader.Counter.Sold += OnSold;
 
             sellGrid.Bind(trader != null ? trader.Counter : null);
             ShowMessage(string.Empty);
-            BuildRows();
+            MarkDirty();
         }
 
-        void BuildRows()
+        protected override void Redraw()
         {
-            foreach (var row in rows) Destroy(row.gameObject);
             rows.Clear();
             if (trader == null) return;
 
@@ -76,29 +64,10 @@ namespace DustScrapper.UI
             {
                 TraderData.Offer offer = offers[i];
                 if (offer.item == null) continue;
-                Button row = Instantiate(offerTemplate, offerParent);
-                row.gameObject.SetActive(true);
+                int price = trader.Data.PriceOf(offer);
                 string count = offer.count > 1 ? $" ×{offer.count}" : string.Empty;
-                row.GetComponentInChildren<TMP_Text>(true).text = $"{offer.item.DisplayName}{count}   {trader.Data.PriceOf(offer)}";
-                row.onClick.AddListener(() => Buy(offer));
-                rows.Add(row);
-            }
-            RefreshAffordable();
-        }
-
-        void RefreshAffordable()
-        {
-            if (trader == null) return;
-            int r = 0;
-            foreach (var offer in trader.Data.Offers)
-            {
-                if (offer.item == null) continue;
-                bool affordable = Wallet.CanAfford(trader.Data.PriceOf(offer));
-                Button row = rows[r++];
-                row.interactable = affordable;
-                // 버튼 색은 바탕만 바뀌므로 글자도 함께 흐리게 해서 못 사는 줄이 한눈에 보이게 한다.
-                TMP_Text label = row.GetComponentInChildren<TMP_Text>(true);
-                label.alpha = affordable ? 1f : unaffordableTextAlpha;
+                Button row = rows.Add($"{offer.item.DisplayName}{count}   {price}", () => Buy(offer));
+                SetUsable(row, Wallet.CanAfford(price));
             }
         }
 
@@ -112,12 +81,6 @@ namespace DustScrapper.UI
         {
             string count = stack.Count > 1 ? $" ×{stack.Count}" : string.Empty;
             ShowMessage($"{stack.Item.DisplayName}{count} 팔았다  +{price}");
-        }
-
-        void ShowMessage(string text)
-        {
-            messageLabel.text = text;
-            messageTimer = string.IsNullOrEmpty(text) ? 0f : messageDuration;
         }
     }
 }

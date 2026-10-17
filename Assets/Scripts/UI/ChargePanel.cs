@@ -23,20 +23,14 @@ namespace DustScrapper.UI
         [SerializeField] RectTransform rowParent;
         [Tooltip("장비가 하나도 없을 때 보이는 글")]
         [SerializeField] TMP_Text emptyLabel;
-        [SerializeField] TMP_Text messageLabel;
-        [SerializeField, Min(0f)] float messageDuration = 2f;
-        [SerializeField, Range(0f, 1f)] float disabledTextAlpha = 0.4f;
 
-        readonly List<Button> rows = new();
-        readonly List<IItemSlots> watched = new();
+        ButtonRows rows;
         ChargeStation station;
         PlayerInteractor player;
-        bool dirty;
-        float messageTimer;
 
-        void Awake() => rowTemplate.gameObject.SetActive(false);
+        Inventory Bag => player != null && player.Gear != null ? player.Gear.Bag : null;
 
-        void OnDestroy() => Watch(null);
+        void Awake() => rows = new ButtonRows(rowTemplate, rowParent);
 
         public override bool Shows(Station s) => s is ChargeStation;
 
@@ -44,44 +38,19 @@ namespace DustScrapper.UI
         {
             station = s as ChargeStation;
             player = station != null ? who : null;
-            Watch(station);
+            if (station != null) Watch(player != null && player.Gear != null ? player.Gear.Body : null, Bag, station.Storage);
+            else Watch();
             ShowMessage(string.Empty);
-            dirty = true;
-            if (station != null) Rebuild();
+            MarkDirty();
         }
 
-        void LateUpdate()
+        protected override void Redraw()
         {
-            if (dirty && station != null) Rebuild();
-
-            if (messageTimer <= 0f) return;
-            messageTimer -= Time.unscaledDeltaTime;
-            if (messageTimer <= 0f) messageLabel.text = string.Empty;
-        }
-
-        /// <summary>장비·글로우가 있을 수 있는 칸 묶음(몸, 가방, 보관함)이 바뀌면 다음 프레임 끝에 목록을 다시 만든다.</summary>
-        void Watch(ChargeStation s)
-        {
-            foreach (var slots in watched) slots.Changed -= MarkDirty;
-            watched.Clear();
-            if (s == null) return;
-            if (player != null && player.Gear != null && player.Gear.Body != null) watched.Add(player.Gear.Body);
-            if (player != null && player.Gear != null && player.Gear.Bag != null) watched.Add(player.Gear.Bag);
-            if (s.Storage != null) watched.Add(s.Storage);
-            foreach (var slots in watched) slots.Changed += MarkDirty;
-        }
-
-        void MarkDirty() => dirty = true;
-
-        void Rebuild()
-        {
-            dirty = false;
-            foreach (var row in rows) Destroy(row.gameObject);
             rows.Clear();
+            if (station == null) return;
 
             titleLabel.text = station.TargetName;
-            Inventory bag = player != null && player.Gear != null ? player.Gear.Bag : null;
-            int material = station.MaterialCount(bag);
+            int material = station.MaterialCount(Bag);
             materialLabel.text = $"{station.ChargeMaterial.DisplayName} {material}";
 
             List<ChargeStation.GearSlot> gear = station.FindGear(player);
@@ -90,32 +59,18 @@ namespace DustScrapper.UI
             {
                 ItemStack stack = slot.Stack;
                 int cost = slot.Gear.ChargeCostOf(stack);
-                bool usable = cost > 0 && material >= cost;
-
-                Button row = Instantiate(rowTemplate, rowParent);
-                row.gameObject.SetActive(true);
-                TMP_Text label = row.GetComponentInChildren<TMP_Text>(true);
                 string state = cost > 0 ? $"충전 · {cost}개" : "새것";
-                label.text = $"{stack.Item.DisplayName}  {slot.Gear.DurabilityOf(stack):0}/{slot.Gear.MaxDurability:0}   {state}";
-                label.alpha = usable ? 1f : disabledTextAlpha;
-                row.interactable = usable;
                 ChargeStation.GearSlot target = slot;
-                row.onClick.AddListener(() => Charge(target));
-                rows.Add(row);
+                Button row = rows.Add($"{stack.Item.DisplayName}  {slot.Gear.DurabilityOf(stack):0}/{slot.Gear.MaxDurability:0}   {state}", () => Charge(target));
+                SetUsable(row, cost > 0 && material >= cost);
             }
         }
 
         void Charge(ChargeStation.GearSlot slot)
         {
             string name = slot.Stack.Item.DisplayName;
-            string failed = station.TryCharge(slot, player != null && player.Gear != null ? player.Gear.Bag : null);
+            string failed = station.TryCharge(slot, Bag);
             ShowMessage(failed ?? $"{name} 충전했다");
-        }
-
-        void ShowMessage(string text)
-        {
-            messageLabel.text = text;
-            messageTimer = string.IsNullOrEmpty(text) ? 0f : messageDuration;
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using DustScrapper.Interaction;
 using DustScrapper.Progress;
 using TMPro;
@@ -17,26 +16,22 @@ namespace DustScrapper.UI
         [SerializeField] TMP_Text titleLabel;
         [SerializeField] Button rowTemplate;
         [SerializeField] RectTransform rowParent;
-        [SerializeField] TMP_Text messageLabel;
-        [SerializeField, Min(0f)] float messageDuration = 2f;
-        [SerializeField, Range(0f, 1f)] float disabledTextAlpha = 0.4f;
 
-        readonly List<Button> rows = new();
+        ButtonRows rows;
         BuildBoard board;
-        float messageTimer;
 
-        void Awake() => rowTemplate.gameObject.SetActive(false);
+        void Awake() => rows = new ButtonRows(rowTemplate, rowParent);
 
         void OnEnable()
         {
-            Wallet.Changed += Rebuild;
-            BaseUpgrades.Changed += Rebuild;
+            Wallet.Changed += MarkDirty;
+            BaseUpgrades.Changed += MarkDirty;
         }
 
         void OnDisable()
         {
-            Wallet.Changed -= Rebuild;
-            BaseUpgrades.Changed -= Rebuild;
+            Wallet.Changed -= MarkDirty;
+            BaseUpgrades.Changed -= MarkDirty;
         }
 
         public override bool Shows(Station s) => s is BuildBoard;
@@ -45,19 +40,11 @@ namespace DustScrapper.UI
         {
             board = s as BuildBoard;
             ShowMessage(string.Empty);
-            Rebuild();
+            MarkDirty();
         }
 
-        void Update()
+        protected override void Redraw()
         {
-            if (messageTimer <= 0f) return;
-            messageTimer -= Time.unscaledDeltaTime;
-            if (messageTimer <= 0f) messageLabel.text = string.Empty;
-        }
-
-        void Rebuild()
-        {
-            foreach (var row in rows) Destroy(row.gameObject);
             rows.Clear();
             if (board == null) return;
 
@@ -67,20 +54,12 @@ namespace DustScrapper.UI
                 if (upgrade == null) continue;
                 int level = BaseUpgrades.LevelOf(upgrade);
                 int price = upgrade.PriceAt(level);
-                bool usable = price >= 0 && Wallet.CanAfford(price);
 
                 string step = upgrade.MaxLevel > 1 ? $" {level}/{upgrade.MaxLevel}" : string.Empty;
                 string state = price >= 0 ? price.ToString() : "완료";
-
-                Button row = Instantiate(rowTemplate, rowParent);
-                row.gameObject.SetActive(true);
-                TMP_Text label = row.GetComponentInChildren<TMP_Text>(true);
-                label.text = $"{upgrade.DisplayName}{step}  {upgrade.Effect}   {state}";
-                label.alpha = usable ? 1f : disabledTextAlpha;
-                row.interactable = usable;
                 BaseUpgradeData target = upgrade;
-                row.onClick.AddListener(() => Build(target));
-                rows.Add(row);
+                Button row = rows.Add($"{upgrade.DisplayName}{step}  {upgrade.Effect}   {state}", () => Build(target));
+                SetUsable(row, price >= 0 && Wallet.CanAfford(price));
             }
         }
 
@@ -88,12 +67,6 @@ namespace DustScrapper.UI
         {
             string failed = BaseUpgrades.TryUpgrade(upgrade);
             ShowMessage(failed ?? $"{upgrade.DisplayName} 지었다");
-        }
-
-        void ShowMessage(string text)
-        {
-            messageLabel.text = text;
-            messageTimer = string.IsNullOrEmpty(text) ? 0f : messageDuration;
         }
     }
 }
