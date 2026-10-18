@@ -69,12 +69,11 @@ namespace DustScrapper.UI
         void ShowDurability(ItemStack stack)
         {
             if (durabilityBar == null) return;
-            bool show = stack.Item is BodyGearData gear && gear.HasDurability;
+            float ratio = 0f;
+            bool show = !stack.IsEmpty && stack.Item.TryGetGauge(stack, out ratio);
             durabilityBar.gameObject.SetActive(show);
             if (!show) return;
 
-            var data = (BodyGearData)stack.Item;
-            float ratio = data.DurabilityOf(stack) / data.MaxDurability;
             RectTransform rect = durabilityBar.rectTransform;
             rect.anchorMax = new Vector2(ratio, rect.anchorMax.y);
             durabilityBar.color = Color.Lerp(durabilityLow, durabilityFull, ratio);

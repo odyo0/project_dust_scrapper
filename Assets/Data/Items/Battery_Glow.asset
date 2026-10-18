@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9c49f7d37cfe4ab9b65c3c5cac0ddb4, type: 3}
+  m_Name: Battery_Glow
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Lantern.LanternBatteryData
+  saveId: Battery_Glow
+  displayName: "\uB79C\uD134 \uBC30\uD130\uB9AC"
+  maxStack: 1
+  value: 45
+  placeholderColor: {r: 0.45, g: 0.95, b: 0.85, a: 1}
+  capacity: 5
+  spentItem: {fileID: 11400000, guid: d814264bc9b7042e6ab8bb0d39aebb69, type: 2}

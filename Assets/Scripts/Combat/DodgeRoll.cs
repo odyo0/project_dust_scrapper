@@ -1,12 +1,13 @@
 using System;
-using DustScrapper.Combat;
+using DustScrapper.Actors;
 using UnityEngine;
 
-namespace DustScrapper.Actors
+namespace DustScrapper.Combat
 {
     /// <summary>
     /// 구르기: 정한 방향으로 짧게 빠르게 구르고, 구르는 동안만 무적이다(구르기가 끝나면 무적도 끝난다).
     /// 움직이는 일은 ActorMotor의 강제 이동에, 무적은 Health에 맡긴다. 누가 구르라고 시키는지(플레이어 Space, 나중에 적 AI)는 모른다.
+    /// 몸 부품(Actors)은 아무것도 부르지 않는 바닥 층이라, 체력을 부르는 구르기는 맞는 쪽(Combat)에 둔다.
     /// 소음은 따로 내지 않는다: 발소리가 실제 속도로 정해지고 달리기 속도에서 더 커지지 않으므로 구르는 소리는 저절로 달리기와 같다.
     /// </summary>
     [DisallowMultipleComponent]

@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using DustScrapper.Equipment;
 using DustScrapper.Items;
+using DustScrapper.Lantern;
 using DustScrapper.Weapons;
 using UnityEngine;
 
 namespace DustScrapper.Player
 {
     /// <summary>
-    /// 플레이어가 몸에 지닌 칸 전부(무기 칸, 보조 칸, 몸 장비, 가방, 소모품 단축 칸)를 한곳에 모은 목록.
+    /// 플레이어가 몸에 지닌 칸 전부(무기 칸, 보조 칸, 몸 장비, 랜턴·배터리 칸, 가방, 소모품 단축 칸)를 한곳에 모은 목록.
     /// 칸의 종류를 아는 곳은 여기 하나다. 줍기(WorldItem)·빠른 옮기기·판 결과·저장은 이 목록만 돌기 때문에,
     /// 새 칸(예: 랜턴 칸)은 칸 스크립트를 만들고 아래 두 목록에 넣기만 하면 된다(가방 화면에 칸 그림 하나는 따로 붙인다).
     /// </summary>
@@ -22,6 +23,7 @@ namespace DustScrapper.Player
             public const string Body = "body";
             public const string Bag = "bag";
             public const string Quick = "quick";
+            public const string Lantern = "lantern";
         }
 
         /// <summary>저장할 칸 하나: 이름표와 칸.</summary>
@@ -42,6 +44,7 @@ namespace DustScrapper.Player
         [SerializeField] SupportHand support;
         [SerializeField] BodyEquipment body;
         [SerializeField] QuickSlots quick;
+        [SerializeField] LanternSlots lantern;
 
         readonly List<IEquipSlots> equipOrder = new();
         readonly List<SlotEntry> saveOrder = new();
@@ -52,9 +55,10 @@ namespace DustScrapper.Player
         public SupportHand Support { get { Build(); return support; } }
         public BodyEquipment Body { get { Build(); return body; } }
         public QuickSlots Quick { get { Build(); return quick; } }
+        public LanternSlots Lantern { get { Build(); return lantern; } }
 
         /// <summary>
-        /// 주운 장비를 끼울 빈 칸을 찾는 순서. 무기 칸 → 보조 칸 → 몸 장비.
+        /// 주운 장비를 끼울 빈 칸을 찾는 순서. 무기 칸 → 보조 칸 → 몸 장비 → 랜턴·배터리 칸.
         /// 스태프처럼 무기 칸과 보조 칸에 다 맞으면 무기 칸이 먼저다(기획).
         /// </summary>
         public IReadOnlyList<IEquipSlots> EquipOrder { get { Build(); return equipOrder; } }
@@ -76,16 +80,19 @@ namespace DustScrapper.Player
             if (support == null) support = GetComponent<SupportHand>();
             if (body == null) body = GetComponent<BodyEquipment>();
             if (quick == null) quick = GetComponent<QuickSlots>();
+            if (lantern == null) lantern = GetComponent<LanternSlots>();
 
             AddEquip(weapons);
             AddEquip(support);
             AddEquip(body);
+            AddEquip(lantern);
 
             AddSaved(Keys.Body, body);
             AddSaved(Keys.Bag, bag);
             AddSaved(Keys.Weapons, weapons);
             AddSaved(Keys.Support, support);
             AddSaved(Keys.Quick, quick);
+            AddSaved(Keys.Lantern, lantern);
         }
 
         void AddEquip(IEquipSlots slots)

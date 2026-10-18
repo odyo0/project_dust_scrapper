@@ -8,7 +8,7 @@ using UnityEngine;
 namespace DustScrapper.UI
 {
     /// <summary>
-    /// 가방 화면을 열고 닫는다. Tab으로 가방(무기 슬롯 + 보조 칸 + 몸 장비 + 가방)을 열고, 상자를 열면 상자 칸까지 함께 띄운다.
+    /// 가방 화면을 열고 닫는다. Tab으로 가방(무기 슬롯 + 보조 칸 + 몸 장비 + 랜턴·배터리 칸 + 가방)을 열고, 상자를 열면 상자 칸까지 함께 띄운다.
     /// 기지 시설(상인·충전대 등)을 열면 그 시설을 보여 줄 수 있는 창(StationPanel)을 띄우고, 시설에 보관함이 연결돼 있으면 보관함 칸도 함께 띄운다.
     /// Tab·Esc로 닫고, 연 상자·시설에서 멀어지거나 플레이어가 쓰러지면 저절로 닫힌다. 게임은 멈추지 않는다.
     /// 열려 있는 동안에는 입력 층에 "창이 마우스를 쓴다"고 알려 조준·발사를 막고 이동만 받게 한다.
@@ -29,6 +29,7 @@ namespace DustScrapper.UI
         [SerializeField] ItemGridView weaponGrid;
         [SerializeField] ItemGridView supportGrid;
         [SerializeField] ItemGridView bodyGrid;
+        [SerializeField] ItemGridView lanternGrid;
         [SerializeField] ItemGridView quickGrid;
         [SerializeField] ItemGridView bagGrid;
         [SerializeField] ItemGridView lootGrid;
@@ -71,6 +72,7 @@ namespace DustScrapper.UI
             weaponGrid.Bind(gear.Weapons);
             if (supportGrid != null) supportGrid.Bind(gear.Support);
             if (bodyGrid != null) bodyGrid.Bind(gear.Body);
+            if (lanternGrid != null) lanternGrid.Bind(gear.Lantern);
             if (quickGrid != null) quickGrid.Bind(gear.Quick);
             bagGrid.Bind(gear.Bag);
             Close();

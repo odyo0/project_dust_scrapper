@@ -30,5 +30,15 @@ namespace DustScrapper.Items
         public virtual int MaxStack => maxStack;
         public int Value => value;
         public Color PlaceholderColor => placeholderColor;
+
+        /// <summary>
+        /// 칸에 막대로 보여 줄 남은 양(0~1: 장비 내구도, 랜턴 배터리 …). 막대가 없는 물건이면 false.
+        /// 칸 그림이 물건 종류를 하나하나 알지 않게, 남은 양을 가진 물건이 스스로 답한다.
+        /// </summary>
+        public virtual bool TryGetGauge(ItemStack stack, out float ratio)
+        {
+            ratio = 0f;
+            return false;
+        }
     }
 }

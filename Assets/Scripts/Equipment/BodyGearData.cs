@@ -28,6 +28,12 @@ namespace DustScrapper.Equipment
         /// <summary>남은 내구도.</summary>
         public float DurabilityOf(ItemStack stack) => HasDurability ? Mathf.Max(0f, maxDurability - stack.Wear) : 0f;
 
+        public override bool TryGetGauge(ItemStack stack, out float ratio)
+        {
+            ratio = HasDurability ? DurabilityOf(stack) / maxDurability : 0f;
+            return HasDurability;
+        }
+
         /// <summary>다 닳아서 보너스를 주지 못하는가.</summary>
         public bool IsBroken(ItemStack stack) => HasDurability && stack.Wear >= maxDurability;
 
