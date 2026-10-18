@@ -45,6 +45,9 @@ namespace DustScrapper.Player
         /// <summary>이번 프레임에 재장전 키를 눌렀는가.</summary>
         public bool ReloadPressed { get; private set; }
 
+        /// <summary>이번 프레임에 랜턴 키(Space)를 눌렀는가. 랜턴 칸이 비어 있으면 구르기다.</summary>
+        public bool LanternPressed { get; private set; }
+
         /// <summary>상호작용 키(줍기·뒤지기)를 누르고 있는가.</summary>
         public bool InteractHeld { get; private set; }
 
@@ -100,6 +103,7 @@ namespace DustScrapper.Player
             SupportPrimaryHeld = false;
             SupportSpecialHeld = false;
             ReloadPressed = false;
+            LanternPressed = false;
             InteractHeld = false;
             InventoryPressed = false;
             CancelPressed = false;
@@ -131,6 +135,7 @@ namespace DustScrapper.Player
                 SupportPrimaryHeld = false;
                 SupportSpecialHeld = false;
                 ReloadPressed = false;
+                LanternPressed = false;
                 InteractHeld = false;
                 SlotPressed = -1;
                 QuickPressed = -1;
@@ -144,6 +149,7 @@ namespace DustScrapper.Player
             SupportPrimaryHeld = player.SupportPrimary.IsPressed() || player.SupportPrimary.WasPressedThisFrame();
             SupportSpecialHeld = player.SupportSpecial.IsPressed() || player.SupportSpecial.WasPressedThisFrame();
             ReloadPressed = player.Reload.WasPressedThisFrame();
+            LanternPressed = player.Lantern.WasPressedThisFrame();
             InteractHeld = player.Interact.IsPressed();
             SlotPressed = ReadSlotPressed(player);
             QuickPressed = player.Quick1.WasPressedThisFrame() ? 0 : player.Quick2.WasPressedThisFrame() ? 1 : player.Quick3.WasPressedThisFrame() ? 2 : -1;

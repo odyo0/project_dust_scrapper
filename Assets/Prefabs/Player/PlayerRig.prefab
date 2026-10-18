@@ -366,14 +366,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae5aa321cb2a14725b07e1e64ad1f5f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.UI.RefinePanel
+  messageLabel: {fileID: 4549145838833998109}
+  messageDuration: 2
+  disabledTextAlpha: 0.4
   titleLabel: {fileID: 2202995936573660836}
   countLabel: {fileID: 2679992117494695081}
   rateLabel: {fileID: 3948294361520089281}
   refineOneButton: {fileID: 4045216441973416216}
   refineAllButton: {fileID: 4491631198528616816}
-  messageLabel: {fileID: 4549145838833998109}
-  messageDuration: 2
-  disabledTextAlpha: 0.4
 --- !u!1 &316682336508622478
 GameObject:
   m_ObjectHideFlags: 0
@@ -3958,14 +3958,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0db55c4e336174341a06a56c4299a3b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.UI.ChargePanel
+  messageLabel: {fileID: 3212040435520049428}
+  messageDuration: 2
+  disabledTextAlpha: 0.4
   titleLabel: {fileID: 8739978448471355165}
   materialLabel: {fileID: 1188133168570680516}
   rowTemplate: {fileID: 4362040771272167645}
   rowParent: {fileID: 7580876330631778852}
   emptyLabel: {fileID: 294113205607290478}
-  messageLabel: {fileID: 3212040435520049428}
-  messageDuration: 2
-  disabledTextAlpha: 0.4
 --- !u!1 &3161972055930252406
 GameObject:
   m_ObjectHideFlags: 0
@@ -4174,12 +4174,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0894e0008dfc648cbbd0caa45292054c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.UI.CraftPanel
-  titleLabel: {fileID: 5348820341059134569}
-  rowTemplate: {fileID: 123538048983170319}
-  rowParent: {fileID: 6491679338326607506}
   messageLabel: {fileID: 1042610019070430561}
   messageDuration: 2
   disabledTextAlpha: 0.4
+  titleLabel: {fileID: 5348820341059134569}
+  rowTemplate: {fileID: 123538048983170319}
+  rowParent: {fileID: 6491679338326607506}
 --- !u!1 &3405625374017708484
 GameObject:
   m_ObjectHideFlags: 0
@@ -8303,6 +8303,7 @@ GameObject:
   - component: {fileID: 1978478012564607348}
   - component: {fileID: 2173659138882034314}
   - component: {fileID: 7149488261097901289}
+  - component: {fileID: 1435746756278132577}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -8466,6 +8467,7 @@ MonoBehaviour:
   interactor: {fileID: 3159405446461485855}
   itemUser: {fileID: 0}
   quickSlots: {fileID: 0}
+  dodge: {fileID: 1435746756278132577}
   viewCamera: {fileID: 1668800972632348362}
   sneakIntent: 0.4
 --- !u!114 &3546826882085899621
@@ -8856,6 +8858,23 @@ MonoBehaviour:
   support: {fileID: 1054850131724343842}
   body: {fileID: 3884634077196169047}
   quick: {fileID: 7641850285813904658}
+--- !u!114 &1435746756278132577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6046059241362902689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90cdb6cd75aa14f6aba55d40c37b3c0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DustScrapper::DustScrapper.Actors.DodgeRoll
+  motor: {fileID: 5758311763641997921}
+  health: {fileID: 3546826882085899621}
+  speed: 9
+  duration: 0.3
+  cooldown: 0.35
 --- !u!1 &6060339057344606049
 GameObject:
   m_ObjectHideFlags: 0
@@ -9836,12 +9855,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abd47ecc3bfe84064aba8072fe0fe748, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.UI.BuildPanel
-  titleLabel: {fileID: 1420371318762026660}
-  rowTemplate: {fileID: 5571488101700362573}
-  rowParent: {fileID: 8970524789116039403}
   messageLabel: {fileID: 3894503378719796149}
   messageDuration: 2
   disabledTextAlpha: 0.4
+  titleLabel: {fileID: 1420371318762026660}
+  rowTemplate: {fileID: 5571488101700362573}
+  rowParent: {fileID: 8970524789116039403}
 --- !u!1 &6671714858905463902
 GameObject:
   m_ObjectHideFlags: 0
@@ -10264,13 +10283,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62d3f7543fbcd43eabe5b7d82fadcae6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.UI.TradePanel
+  messageLabel: {fileID: 5464570067905304615}
+  messageDuration: 2
+  disabledTextAlpha: 0.4
   titleLabel: {fileID: 7687486639592388207}
   offerTemplate: {fileID: 3452454583142076622}
   offerParent: {fileID: 7133981418163954241}
   sellGrid: {fileID: 4356031683270966053}
-  messageLabel: {fileID: 5464570067905304615}
-  messageDuration: 2
-  unaffordableTextAlpha: 0.4
 --- !u!1 &7028532079424376880
 GameObject:
   m_ObjectHideFlags: 0

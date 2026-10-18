@@ -159,6 +159,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Lantern",
+                    "type": "Button",
+                    "id": "d4512ed5-794e-44a5-b9da-3bad5fb1318e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Quick1",
                     "type": "Button",
                     "id": "1652357d-28c9-481d-af1a-96e3635aebb7",
@@ -415,6 +424,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Craft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "62d74456-91db-41c3-92f6-8229a9c64e59",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Lantern",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

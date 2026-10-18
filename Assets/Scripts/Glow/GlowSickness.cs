@@ -43,7 +43,7 @@ namespace DustScrapper.Glow
             Value = Mathf.Min(lethal, Value + amount);
             Changed?.Invoke();
             if (Value >= lethal && health != null)
-                health.TakeDamage(new DamageInfo(health.Current + 1f, transform.position, Vector2.zero, 0f, gameObject));
+                health.Kill(new DamageInfo(health.Current, transform.position, Vector2.zero, 0f, gameObject));
         }
 
         /// <summary>낮춘다(치료). 기획 빈칸이라 아직 부르는 곳이 없다.</summary>

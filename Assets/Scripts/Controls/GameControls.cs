@@ -265,6 +265,16 @@ namespace DustScrapper.Controls
                     ""priority"": 0
                 },
                 {
+                    ""name"": ""Lantern"",
+                    ""type"": ""Button"",
+                    ""id"": ""d4512ed5-794e-44a5-b9da-3bad5fb1318e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
                     ""name"": ""Quick1"",
                     ""type"": ""Button"",
                     ""id"": ""1652357d-28c9-481d-af1a-96e3635aebb7"",
@@ -529,6 +539,17 @@ namespace DustScrapper.Controls
                 },
                 {
                     ""name"": """",
+                    ""id"": ""62d74456-91db-41c3-92f6-8229a9c64e59"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Lantern"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""0caa0790-18b9-4986-a88f-6688e8e8bd88"",
                     ""path"": ""<Keyboard>/4"",
                     ""interactions"": """",
@@ -601,6 +622,7 @@ namespace DustScrapper.Controls
             m_Player_Slot2 = m_Player.FindAction("Slot2", throwIfNotFound: true);
             m_Player_Slot3 = m_Player.FindAction("Slot3", throwIfNotFound: true);
             m_Player_Craft = m_Player.FindAction("Craft", throwIfNotFound: true);
+            m_Player_Lantern = m_Player.FindAction("Lantern", throwIfNotFound: true);
             m_Player_Quick1 = m_Player.FindAction("Quick1", throwIfNotFound: true);
             m_Player_Quick2 = m_Player.FindAction("Quick2", throwIfNotFound: true);
             m_Player_Quick3 = m_Player.FindAction("Quick3", throwIfNotFound: true);
@@ -701,6 +723,7 @@ namespace DustScrapper.Controls
         private readonly InputAction m_Player_Slot2;
         private readonly InputAction m_Player_Slot3;
         private readonly InputAction m_Player_Craft;
+        private readonly InputAction m_Player_Lantern;
         private readonly InputAction m_Player_Quick1;
         private readonly InputAction m_Player_Quick2;
         private readonly InputAction m_Player_Quick3;
@@ -783,6 +806,10 @@ namespace DustScrapper.Controls
             /// Provides access to the underlying input action "Player/Craft".
             /// </summary>
             public InputAction @Craft => m_Wrapper.m_Player_Craft;
+            /// <summary>
+            /// Provides access to the underlying input action "Player/Lantern".
+            /// </summary>
+            public InputAction @Lantern => m_Wrapper.m_Player_Lantern;
             /// <summary>
             /// Provides access to the underlying input action "Player/Quick1".
             /// </summary>
@@ -872,6 +899,9 @@ namespace DustScrapper.Controls
                 @Craft.started += instance.OnCraft;
                 @Craft.performed += instance.OnCraft;
                 @Craft.canceled += instance.OnCraft;
+                @Lantern.started += instance.OnLantern;
+                @Lantern.performed += instance.OnLantern;
+                @Lantern.canceled += instance.OnLantern;
                 @Quick1.started += instance.OnQuick1;
                 @Quick1.performed += instance.OnQuick1;
                 @Quick1.canceled += instance.OnQuick1;
@@ -943,6 +973,9 @@ namespace DustScrapper.Controls
                 @Craft.started -= instance.OnCraft;
                 @Craft.performed -= instance.OnCraft;
                 @Craft.canceled -= instance.OnCraft;
+                @Lantern.started -= instance.OnLantern;
+                @Lantern.performed -= instance.OnLantern;
+                @Lantern.canceled -= instance.OnLantern;
                 @Quick1.started -= instance.OnQuick1;
                 @Quick1.performed -= instance.OnQuick1;
                 @Quick1.canceled -= instance.OnQuick1;
@@ -1124,6 +1157,13 @@ namespace DustScrapper.Controls
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnCraft(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Lantern" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnLantern(InputAction.CallbackContext context);
             /// <summary>
             /// Method invoked when associated input action "Quick1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>
