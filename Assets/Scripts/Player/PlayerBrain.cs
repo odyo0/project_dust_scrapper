@@ -12,8 +12,7 @@ namespace DustScrapper.Player
     /// 플레이어 입력(의도)을 몸에 전달한다: 이동 의도는 ActorMotor로, 조준점은 BodyAim으로,
     /// 스킬 키(좌클릭·E·우클릭·Q)와 재장전은 SkillRouter로(어느 손의 어느 스킬인지는 거기서 정한다), 슬롯 바꾸기는 WeaponLoadout으로, 줍기·뒤지기 키는 PlayerInteractor로, 소모품 단축 키(4·5·6)는 ItemUser로. 살금살금 키를 누르면 이동 세기를 줄인다(발소리가 안 나는 속도).
     /// 달리기 키를 누르면 몸에 달리라고 알린다. 살금살금 키와 같이 누르면 살금살금이 이긴다(조용히 하려던 것이 무시되어 들키지 않게).
-    /// 랜턴 키(Space)는 LanternUser로 보낸다(랜턴이 있으면 랜턴, 없으면 구르기 — 거기서 정함). 구르게 되면 이동 키 방향으로, 안 누르고 있으면 바라보는 쪽으로 구른다.
-    /// 구르는 동안은 총·마법을 쓸 수 없다(기획). 재장전은 막지 않는다.
+    /// 랜턴 키(Space)는 LanternUser로 보낸다(무엇을 할지는 거기서 정함).
     /// 적은 같은 몸 부품을 쓰고 이 자리에 자기 AI 두뇌를 붙인다.
     /// </summary>
     [DefaultExecutionOrder(-50)]
@@ -28,7 +27,6 @@ namespace DustScrapper.Player
         [SerializeField] PlayerInteractor interactor;
         [SerializeField] ItemUser itemUser;
         [SerializeField] QuickSlots quickSlots;
-        [SerializeField] DodgeRoll dodge;
         [SerializeField] LanternUser lantern;
         [Tooltip("비워 두면 Main Camera를 쓴다.")]
         [SerializeField] Camera viewCamera;
@@ -46,7 +44,6 @@ namespace DustScrapper.Player
             if (interactor == null) interactor = GetComponent<PlayerInteractor>();
             if (itemUser == null) itemUser = GetComponent<ItemUser>();
             if (quickSlots == null) quickSlots = GetComponent<QuickSlots>();
-            if (dodge == null) dodge = GetComponent<DodgeRoll>();
             if (lantern == null) lantern = GetComponent<LanternUser>();
             if (viewCamera == null) viewCamera = Camera.main;
         }
@@ -76,20 +73,10 @@ namespace DustScrapper.Player
             if (loadout != null && input.SlotPressed >= 0) loadout.Equip(input.SlotPressed);
             if (itemUser != null && quickSlots != null && input.QuickPressed >= 0) itemUser.Use(quickSlots, input.QuickPressed);
 
-            if (input.LanternPressed)
-            {
-                Vector2 rollDirection = input.Move.sqrMagnitude > 0.01f ? input.Move : bodyAim.AimDirection;
-                if (lantern != null) lantern.Press(rollDirection);
-                else if (dodge != null) dodge.TryRoll(rollDirection);
-            }
+            if (lantern != null && input.LanternPressed) lantern.Press();
 
             if (skills == null) return;
             if (input.ReloadPressed) skills.Reload();
-            if (dodge != null && dodge.IsRolling)
-            {
-                skills.ReleaseAll();
-                return;
-            }
             skills.SetWeaponHand(input.FireHeld, input.SpecialHeld);
             skills.SetSupportHand(input.SupportPrimaryHeld, input.SupportSpecialHeld);
         }

@@ -45,7 +45,7 @@ namespace DustScrapper.Player
         /// <summary>이번 프레임에 재장전 키를 눌렀는가.</summary>
         public bool ReloadPressed { get; private set; }
 
-        /// <summary>이번 프레임에 랜턴 키(Space)를 눌렀는가. 랜턴 칸이 비어 있으면 구르기다.</summary>
+        /// <summary>이번 프레임에 랜턴 키(Space)를 눌렀는가.</summary>
         public bool LanternPressed { get; private set; }
 
         /// <summary>상호작용 키(줍기·뒤지기)를 누르고 있는가.</summary>

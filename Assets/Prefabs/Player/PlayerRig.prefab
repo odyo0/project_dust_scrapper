@@ -8441,7 +8441,6 @@ GameObject:
   - component: {fileID: 1978478012564607348}
   - component: {fileID: 2173659138882034314}
   - component: {fileID: 7149488261097901289}
-  - component: {fileID: 1435746756278132577}
   - component: {fileID: 8421746040229658878}
   - component: {fileID: 5388000722683664588}
   m_Layer: 0
@@ -8607,7 +8606,6 @@ MonoBehaviour:
   interactor: {fileID: 3159405446461485855}
   itemUser: {fileID: 0}
   quickSlots: {fileID: 0}
-  dodge: {fileID: 1435746756278132577}
   lantern: {fileID: 5388000722683664588}
   viewCamera: {fileID: 1668800972632348362}
   sneakIntent: 0.4
@@ -9001,23 +8999,6 @@ MonoBehaviour:
   body: {fileID: 3884634077196169047}
   quick: {fileID: 7641850285813904658}
   lantern: {fileID: 8421746040229658878}
---- !u!114 &1435746756278132577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6046059241362902689}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90cdb6cd75aa14f6aba55d40c37b3c0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DustScrapper::DustScrapper.Actors.DodgeRoll
-  motor: {fileID: 5758311763641997921}
-  health: {fileID: 3546826882085899621}
-  speed: 9
-  duration: 0.3
-  cooldown: 0.35
 --- !u!114 &8421746040229658878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9045,7 +9026,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DustScrapper::DustScrapper.Lantern.LanternUser
   slots: {fileID: 8421746040229658878}
-  dodge: {fileID: 1435746756278132577}
 --- !u!1 &6060339057344606049
 GameObject:
   m_ObjectHideFlags: 0

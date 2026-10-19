@@ -30,7 +30,7 @@ namespace DustScrapper.Lantern
         /// <summary>배터리를 다 써서 산화된 배터리로 바꿨을 때. 가방의 같은 배터리를 끼웠으면 true.</summary>
         public event Action<bool> BatterySpent;
 
-        /// <summary>끼운 랜턴. 없으면 null(Space는 구르기).</summary>
+        /// <summary>끼운 랜턴. 없으면 null(Space는 아무것도 하지 않는다).</summary>
         public LanternData Lantern => slots[LanternIndex].Item as LanternData;
 
         public ItemStack Battery => slots[BatteryIndex];
