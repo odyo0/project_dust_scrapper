@@ -57,7 +57,9 @@ namespace DustScrapper.Navigation
         {
             Width = Mathf.Max(1, Mathf.CeilToInt(size.x / cellSize));
             Height = Mathf.Max(1, Mathf.CeilToInt(size.y / cellSize));
-            origin = (Vector2)transform.position - new Vector2(Width, Height) * (cellSize * 0.5f);
+            // 칸 중심이 cellSize의 배수 위에 오게 맞춘다 → 타일 한 칸(1×1)의 가운데에도 칸 중심이 있어서, 폭 1칸 문·통로 한가운데를 검사한다.
+            Vector2 raw = (Vector2)transform.position - new Vector2(Width, Height) * (cellSize * 0.5f);
+            origin = new Vector2(Mathf.Round(raw.x / cellSize + 0.5f), Mathf.Round(raw.y / cellSize + 0.5f)) * cellSize - Vector2.one * (cellSize * 0.5f);
             walkable = new bool[Width * Height];
             obstacleFilter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = obstacleMask };
             UpdateCells(0, 0, Width - 1, Height - 1);
@@ -75,21 +77,22 @@ namespace DustScrapper.Navigation
 
         void UpdateCells(int minX, int minY, int maxX, int maxY)
         {
-            Vector2 probe = Vector2.one * (cellSize + clearance * 2f);
             for (int y = minY; y <= maxY; y++)
             {
                 for (int x = minX; x <= maxX; x++)
                 {
-                    walkable[Index(x, y)] = IsCellClear(CellToWorld(new Vector2Int(x, y)), probe);
+                    walkable[Index(x, y)] = IsCellClear(CellToWorld(new Vector2Int(x, y)));
                 }
             }
         }
 
-        bool IsCellClear(Vector2 center, Vector2 probe)
+        // 칸 중심에 반지름 clearance의 몸이 설 수 있는가. (2026-10-22 전에는 '칸 + 여유' 네모로 재서 폭 1칸 문을 늘 막힌 것으로 봤다.
+        // 몸 반지름 0.35 < 0.5라 실제로는 지나간다. 걸어갈 수 있는지 보는 IsWalkLineClear의 원과도 맞춘다.)
+        bool IsCellClear(Vector2 center)
         {
             // 대부분의 칸은 아무것도 없어서 빠른 검사 하나로 끝난다. 무언가 있으면 문만 있는지 확인한다.
-            if (Physics2D.OverlapBox(center, probe, 0f, obstacleMask) == null) return true;
-            int count = Physics2D.OverlapBox(center, probe, 0f, obstacleFilter, ProbeHits);
+            if (Physics2D.OverlapCircle(center, clearance, obstacleMask) == null) return true;
+            int count = Physics2D.OverlapCircle(center, clearance, obstacleFilter, ProbeHits);
             for (int i = 0; i < count; i++)
             {
                 if (ProbeHits[i].GetComponentInParent<NavPassable>() == null) return false;
