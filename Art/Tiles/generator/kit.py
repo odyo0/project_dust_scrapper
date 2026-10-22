@@ -110,12 +110,21 @@ def deco_wood(im, box, rng, lo):
     for _ in range(3): hline(im, rng.integers(x0 + 1, max(x0 + 2, x1 - 7)), rng.integers(y0 + 2, y1 - 2), rng.integers(3, 7), lo)
     specks(im, rng, 4, [lo], region=(x0 + 1, y0 + 1, x1 - 1, y1 - 1))
 def deco_goods(im, box, rng, nesw):
-    x0, y0, x1, y1 = box
-    for y in range(y0 + 2, y1 - 3, 5):
-        for x in range(x0 + 2, x1 - 3, 5):
-            if rng.random() < 0.28: px(im, x + 1, y + 1, C['con'][1]); continue
-            col = GOODS[rng.integers(len(GOODS))]
-            rect(im, x, y, 4, 4, col); px(im, x, y, light_of(col)); px(im, x + 3, y + 3, dark_of(col))
+    """털린 진열대: 선반 판과 가격표 줄만 남고 물건은 거의 없음"""
+    x0, y0, x1, y1 = box; n, e, s, w = nesw
+    horiz = (e or w) or not (n or s)
+    if horiz:
+        for y in range(y0 + 7, y1 - 1, 8): hline(im, x0, y, x1 - x0, C['pack'][0]); hline(im, x0, y - 1, x1 - x0, C['pack'][2])
+    else:
+        for x in range(x0 + 7, x1 - 1, 8): vline(im, x, y0, y1 - y0, C['pack'][0]); vline(im, x - 1, y0, y1 - y0, C['pack'][2])
+    specks(im, rng, 10, [C['pack'][0], C['dirt'][1], C['con'][2]], region=(x0 + 1, y0 + 1, x1 - 1, y1 - 1))
+    for _ in range(rng.integers(0, 3)):      # 남은 물건 몇 개 (일부는 쓰러짐)
+        col = GOODS[rng.integers(len(GOODS))]
+        x = rng.integers(x0 + 2, x1 - 6); y = rng.integers(y0 + 2, y1 - 6)
+        if rng.random() < 0.5: rect(im, x, y, 3, 4, col); px(im, x, y, light_of(col))
+        else: rect(im, x, y, 5, 2, col); px(im, x, y, light_of(col))
+    if rng.random() < 0.4:                    # 찢어진 상자 조각
+        x = rng.integers(x0 + 2, x1 - 7); y = rng.integers(y0 + 2, y1 - 5); rect(im, x, y, 5, 3, C['pack'][2]); px(im, x + 4, y + 2, C['pack'][0])
 def light_of(c):
     for v in C.values():
         if c in v:
@@ -145,10 +154,13 @@ def deco_books(im, box, rng, nesw):
 def deco_cooler(im, box, rng, nesw):
     x0, y0, x1, y1 = box
     rect(im, x0 + 2, y0 + 2, x1 - x0 - 4, y1 - y0 - 4, C['steel'][1])
-    for y in range(y0 + 4, y1 - 5, 6):
-        for x in range(x0 + 4, x1 - 4, 4):
-            if rng.random() < 0.3: continue
-            col = GOODS[rng.integers(len(GOODS))]; rect(im, x, y, 2, 4, col); px(im, x, y, C['light'][1])
+    for y in range(y0 + 7, y1 - 3, 7): hline(im, x0 + 2, y, x1 - x0 - 4, C['steel'][0])   # 빈 선반
+    specks(im, rng, 6, [C['steel'][0], C['steel'][2]], region=(x0 + 2, y0 + 2, x1 - 2, y1 - 2))
+    for _ in range(rng.integers(0, 2)):
+        col = GOODS[rng.integers(len(GOODS))]; x = rng.integers(x0 + 4, x1 - 6); y = rng.integers(y0 + 4, y1 - 7)
+        rect(im, x, y, 2, 4, col); px(im, x, y, C['light'][1])
+    if rng.random() < 0.5:                    # 깨진 유리
+        x = rng.integers(x0 + 4, x1 - 8); crack(im, rng, x, y0 + 4, 10, C['water'][2], ang=1.2)
     for x in range(x0 + 3, x1 - 3, 9): px(im, x, y0 + 3, C['water'][2]); px(im, x + 1, y0 + 4, C['water'][2])
 def deco_kitchen(im, box, rng, nesw):
     x0, y0, x1, y1 = box; n, e, s, w = nesw
@@ -318,7 +330,7 @@ def fruit_crate():
     for (x0, col) in ((4, C['blood'][1]), (17, C['grass'][3])):
         for y in range(5, 26, 5):
             for x in range(x0, x0 + 10, 5):
-                if rng.random() < 0.25: continue
+                if rng.random() < 0.8: continue
                 c = col if rng.random() > 0.2 else C['dirt'][1]
                 rect(im, x, y, 4, 4, c); px(im, x, y, light_of(c))
     return im
